@@ -14,7 +14,8 @@ exports.create = async (req, res, next) => {
       console.log(message)
       return res.status(422).send({ error: message })
     } else {
-      const user = await testUser.save()
+      const user = new User(data)
+      await user.save()
       return res.status(201).send(user)
     }
   } catch (e) {
