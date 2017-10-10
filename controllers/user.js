@@ -3,17 +3,14 @@ const _ = require('underscore')
 
 const User = require('../models/user')
 
-const testUser = new User({
-  username: 'jmar777',
-  password: 'Password123'
-})
-
 exports.create = async (req, res, next) => {
+  const data = req.body
+
   try {
-    const existing = await User.findOne({ value: testUser.username })
+    const existing = await User.findOne({ email: data.email })
 
     if (existing) {
-      let message = `Username already taken`
+      let message = 'There is already an account associated with this email'
       console.log(message)
       return res.status(422).send({ error: message })
     } else {
@@ -21,8 +18,40 @@ exports.create = async (req, res, next) => {
       return res.status(201).send(user)
     }
   } catch (e) {
-    let message = `Error creating user: ${e}`
-    console.log(message)
+    let message = 'Error creating user'
+    console.log(`${message}: ${e}`)
+    return res.status(422).send({ error: message })
+  }
+}
+
+exports.login = async (req, res, next) => {
+  const data = req.body
+
+  try {
+    const existing = await User.findOne({ email: data.email })
+    if (existing) {
+      existing.comparePassword(data.password, function(err, isMatch) {
+        let result, statusCode
+        if (err) {
+          result = { error: `Error matching password: ${err}` }
+          statusCode = 422
+        } else if (isMatch) {
+          result = { success: true }
+          statusCode = 201
+        } else {
+          result = { error: 'Incorrect password' }
+          statusCode = 422
+        }
+        return res.status(statusCode).send(result)
+      })
+    } else {
+      let message = 'Email not found'
+      console.log(message)
+      return res.status(422).send({ error: message })
+    }
+  } catch (e) {
+    let message = 'Error finding user'
+    console.log(`${message}: ${e}`)
     return res.status(422).send({ error: message })
   }
 }
