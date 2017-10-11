@@ -9,7 +9,21 @@ const userSchema = new Schema({
   lastName: { type: String, required: true },
   email: { type: String, index: { unique: true } },
   password: String,
-  classes: [Schema.Types.ObjectId]
+  classes: [Schema.Types.ObjectId],
+  experience: {
+    words: {
+      type: [
+        {
+          value: { type: String, required: true, index: { unique: true } },
+          seen: { type: Number, required: true },
+          correct: { type: Number, required: true },
+          experience: { type: Number, required: true },
+          totalTime: { type: Number, required: true } // total seconds spent w/ word
+        }
+      ],
+      required: true
+    }
+  }
 })
 
 userSchema.pre('save', function(next) {
