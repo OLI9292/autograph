@@ -3,6 +3,34 @@ const _ = require('underscore')
 
 const User = require('../models/user')
 
+exports.read = async (req, res, next) => {
+  if (_.isEmpty(req.query)) {
+    User.find({}, async (err, users) => {
+      if (err) {
+        return res.status(422).send({ error: `Error retrieving users -> ${err.message}` })
+      }
+      return res.status(201).send({ count: users.length, users: users })
+    })
+  } else {
+    const query = _.has(req.query, 'facebookId')
+      ? { facebookId: req.query.facebookId }
+      : _.has(req.query, 'email') ? { email: req.query.email } : null
+
+    if (query) {
+      User.findOne(query, async (err, user) => {
+        if (err) {
+          return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
+        } else if (user) {
+          return res.status(201).send({ user: user })
+        }
+        return res.status(422).send({ error: `Could not find user: ${JSON.stringify(query)}` })
+      })
+    } else {
+      return res.status(422).send({ error: 'Unsupported user query' })    
+    }
+  }
+}
+
 exports.create = async (req, res, next) => {
   const data = req.body
 
@@ -14,7 +42,8 @@ exports.create = async (req, res, next) => {
       console.log(message)
       return res.status(422).send({ error: message })
     } else {
-      const user = await testUser.save()
+      const user = new User(data)
+      await user.save()
       return res.status(201).send(user)
     }
   } catch (e) {
@@ -36,7 +65,7 @@ exports.login = async (req, res, next) => {
           result = { error: `Error matching password: ${err}` }
           statusCode = 422
         } else if (isMatch) {
-          result = { success: true }
+          result = existing
           statusCode = 201
         } else {
           result = { error: 'Incorrect password' }
@@ -54,4 +83,20 @@ exports.login = async (req, res, next) => {
     console.log(`${message}: ${e}`)
     return res.status(422).send({ error: message })
   }
+}
+
+exports.update = async (req, res, next) => {
+  const data = req.body
+  console.log(data)
+  return res.status(201).send('hi')
+}
+
+
+exports.delete = (req, res, next) => {
+  User.remove({}, async (err) => {
+    if (err) {
+      return res.status(422).send({ error: `Error deleting users -> ${err.message}` })
+    }
+    return res.status(201).send('Deleted all users')
+  })
 }
