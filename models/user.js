@@ -8,7 +8,7 @@ const userSchema = new Schema({
   categories: {
     type: [
       {
-        name: { type: String, required: true, unique: true },
+        name: { type: String, required: true },
         progress: { type: Number, required: true, default: 0 }
       }
     ],
@@ -31,7 +31,7 @@ const userSchema = new Schema({
   words: {
     type: [
       {
-        name: { type: String, required: true, unique: true },
+        name: { type: String, required: true },
         seen: { type: Number, required: true, default: 1 },
         correct: { type: Number, required: true },
         experience: { type: Number, required: true, default: 1 },

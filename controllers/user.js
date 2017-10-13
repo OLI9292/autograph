@@ -21,7 +21,7 @@ exports.read = async (req, res, next) => {
         if (err) {
           return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
         } else if (user) {
-          return res.status(201).send({ user: user })
+          return res.status(201).send({ success: true, user: user })
         }
         return res.status(422).send({ error: `Could not find user: ${JSON.stringify(query)}` })
       })
@@ -44,7 +44,7 @@ exports.create = async (req, res, next) => {
     } else {
       const user = new User(data)
       await user.save()
-      return res.status(201).send(user)
+      return res.status(201).send({ success: true, user: user })
     }
   } catch (e) {
     let message = 'Error creating user'
