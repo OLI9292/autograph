@@ -90,3 +90,13 @@ exports.update = async (req, res, next) => {
   console.log(data)
   return res.status(201).send('hi')
 }
+
+
+exports.delete = (req, res, next) => {
+  User.remove({}, async (err) => {
+    if (err) {
+      return res.status(422).send({ error: `Error deleting users -> ${err.message}` })
+    }
+    return res.status(201).send('Deleted all users')
+  })
+}
