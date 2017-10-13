@@ -5,19 +5,31 @@ const bcrypt = require('bcrypt')
 const SALT_WORK_FACTOR = 10
 
 const userSchema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
+  firstName: { type: String, required: true, default: "" },
+  lastName: { type: String, required: true, default: "" },
   email: { type: String, index: { unique: true } },
+  optedIntoEmail: Boolean,
+  roundsCompleted: { type: Number, required: true, default: 0 },
+  facebookId: String,
   password: String,
   classes: [Schema.Types.ObjectId],
   words: {
     type: [
       {
         name: { type: String, required: true, unique: true },
-        seen: { type: Number, required: true },
+        seen: { type: Number, required: true, default: 1 },
         correct: { type: Number, required: true },
-        experience: { type: Number, required: true },
-        totalTime: { type: Number, required: true } // total seconds spent w/ word
+        experience: { type: Number, required: true, default: 1 },
+        totalTime: { type: Number, required: true, default: 0 } // total seconds spent w/ word
+      }
+    ],
+    default: []
+  },
+  categories: {
+    type: [
+      {
+        name: { type: String, required: true, unique: true },
+        progress: { type: Number, required: true, default: 0 }
       }
     ],
     default: []
