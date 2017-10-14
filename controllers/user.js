@@ -3,6 +3,38 @@ const _ = require('underscore')
 
 const User = require('../models/user')
 
+const userIdQuery = (query) => {
+  return _.has(query, 'facebookId')
+    ? { facebookId: query.facebookId }
+    : _.has(query, 'email') ? { email: query.email } : null
+}
+
+exports.update = async (req, res, next) => {
+  const keys = ['name', 'correct', 'seen', 'experience']
+  let wordExperience = req.body.wordExperience
+  wordExperience = wordExperience.filter((e) => _.isEqual(_.sortBy(keys), _.sortBy(_.keys(e))))
+  const query = userIdQuery(req.query)
+
+  if (query && !_.isEmpty(wordExperience)) {
+    User.findOne(query, async (err, user) => {
+      if (err) {
+        return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
+      } else if (user) {
+        user.words = wordExperience
+        try {
+          await user.save()
+          return res.status(201).send({ success: true, wordExperience: wordExperience })
+        } catch (e) {
+          return res.status(422).send({ error: 'Error saving word experience' })
+        }
+      }
+      return res.status(422).send({ error: `Could not find user: ${JSON.stringify(query)}` })
+    })
+  } else {
+    return res.status(422).send({ error: 'Unsupported user query' })    
+  }
+}
+
 exports.read = async (req, res, next) => {
   if (_.isEmpty(req.query)) {
     User.find({}, async (err, users) => {
@@ -12,9 +44,7 @@ exports.read = async (req, res, next) => {
       return res.status(201).send({ count: users.length, users: users })
     })
   } else {
-    const query = _.has(req.query, 'facebookId')
-      ? { facebookId: req.query.facebookId }
-      : _.has(req.query, 'email') ? { email: req.query.email } : null
+    const query = userIdQuery(req.query)
 
     if (query) {
       User.findOne(query, async (err, user) => {
@@ -85,17 +115,12 @@ exports.login = async (req, res, next) => {
   }
 }
 
-exports.update = async (req, res, next) => {
-  const data = req.body
-  console.log(data)
-  return res.status(201).send('hi')
-}
-
-
 exports.delete = (req, res, next) => {
   User.remove({}, async (err) => {
     if (err) {
-      return res.status(422).send({ error: `Error deleting users -> ${err.message}` })
+      let message = `Error deleting users -> ${err.message}`
+      console.log(message)
+      return res.status(422).send({ error: message })
     }
     return res.status(201).send('Deleted all users')
   })

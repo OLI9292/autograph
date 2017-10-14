@@ -34,8 +34,7 @@ const userSchema = new Schema({
         name: { type: String, required: true },
         seen: { type: Number, required: true, default: 1 },
         correct: { type: Number, required: true },
-        experience: { type: Number, required: true, default: 1 },
-        totalTime: { type: Number, required: true, default: 0 } // total seconds spent w/ word
+        experience: { type: Number, required: true, default: 1 }
       }
     ],
     default: []
