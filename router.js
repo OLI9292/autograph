@@ -7,8 +7,9 @@ module.exports = (app) => {
   
   apiRoutes.post('/user/create', UserController.create)
   apiRoutes.post('/user/login', UserController.login)
-  apiRoutes.post('/user/:userId', UserController.update)
   apiRoutes.get('/user', UserController.read)
+  apiRoutes.get('/user/:id', UserController.read)
+  apiRoutes.patch('/user', UserController.update)
   apiRoutes.delete('/user', UserController.delete)
 
   app.use('/api', apiRoutes)
