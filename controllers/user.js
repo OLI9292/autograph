@@ -95,7 +95,7 @@ exports.login = async (req, res, next) => {
           result = { error: `Error matching password: ${err}` }
           statusCode = 422
         } else if (isMatch) {
-          result = existing
+          result = { user: existing, success: true }
           statusCode = 201
         } else {
           result = { error: 'Incorrect password' }
