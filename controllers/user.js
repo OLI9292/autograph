@@ -36,7 +36,14 @@ exports.update = async (req, res, next) => {
 }
 
 exports.read = async (req, res, next) => {
-  if (_.isEmpty(req.query)) {
+  if (_.has(req.params, 'id')) {
+    User.findById(req.params.id, async (err, user) => {
+      if (err) {
+        return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
+      }
+      return res.status(201).send({ user: user })
+    })
+  } else if (_.isEmpty(req.query)) {
     User.find({}, async (err, users) => {
       if (err) {
         return res.status(422).send({ error: `Error retrieving users -> ${err.message}` })
