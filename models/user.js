@@ -18,6 +18,7 @@ const userSchema = new Schema({
   deviceId: String,
   email: { type: String },
   facebookId: String,
+  mobileIapUnlocked: { type: Boolean, default: false },
   ranking: { type: Number, default: 100 },
   firstName: { type: String, required: true, default: "" },
   lastName: { type: String, required: true, default: "" },
