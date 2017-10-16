@@ -120,7 +120,7 @@ exports.login = async (req, res, next) => {
   const data = req.body
 
   try {
-    const existing = await User.findOne({ email: data.email })
+    const existing = await User.findOne({ email: data.email.toLowerCase() })
     if (existing) {
       existing.comparePassword(data.password, function(err, isMatch) {
         let result, statusCode
