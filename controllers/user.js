@@ -34,15 +34,22 @@ const updateFromMobile = async (req, res, next) => {
   wordExperience = wordExperience.filter((e) => _.isEqual(_.sortBy(keys), _.sortBy(_.keys(e))))
   const query = userIdQuery(req.query)
 
-  if (query && !_.isEmpty(wordExperience)) {
+  if (query /*&& !_.isEmpty(wordExperience)*/) {
     User.findOne(query, async (err, user) => {
       if (err) {
         return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
       } else if (user) {
         user.words = wordExperience
         try {
+          const users = await User.aggregate([
+            { '$project': { '_id': 1, 'words': 1, 'length': { '$size': '$words' } }},
+            { '$sort': { 'length': -1 } }])
+          const ranking = _.findIndex(users, (u) => user._id.equals(u._id))
+          if (ranking >= 0) {
+            user.ranking = ranking + 1
+          }
           await user.save()
-          return res.status(201).send({ success: true, wordExperience: wordExperience })
+          return res.status(201).send({ success: true, user: user })
         } catch (e) {
           return res.status(422).send({ error: 'Error saving word experience' })
         }
