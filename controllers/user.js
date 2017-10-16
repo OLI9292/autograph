@@ -10,7 +10,26 @@ const userIdQuery = (query) => {
 }
 
 exports.update = async (req, res, next) => {
-  const keys = ['name', 'correct', 'seen', 'experience']
+  if (req.body.platform === 'web') {
+    return await updateFromWeb(req, res, next)
+  } else {
+    return await updateFromMobile(req, res, next)
+  }
+}
+
+const updateFromWeb = async (req, res, next) => {
+  const data = req.body.stats;
+  
+  User.findById(req.body.id, async (err, user) => {
+    if (err) {
+      return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
+    }
+    return res.status(201).send({ success: true })
+  })
+}
+
+const updateFromMobile = async (req, res, next) => {
+  const keys = ['name', 'correct', 'seen', 'experience', 'timeSpent']
   let wordExperience = req.body.wordExperience
   wordExperience = wordExperience.filter((e) => _.isEqual(_.sortBy(keys), _.sortBy(_.keys(e))))
   const query = userIdQuery(req.query)
