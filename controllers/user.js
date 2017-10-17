@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const _ = require('underscore')
 
 const User = require('../models/user')
+const Class = require('../models/class')
 
 const userIdQuery = (query) => {
   return _.has(query, 'facebookId')
@@ -10,20 +11,46 @@ const userIdQuery = (query) => {
 }
 
 exports.update = async (req, res, next) => {
-  const keys = ['name', 'correct', 'seen', 'experience']
+  if (req.body.platform === 'web') {
+    return await updateFromWeb(req, res, next)
+  } else {
+    return await updateFromMobile(req, res, next)
+  }
+}
+
+const updateFromWeb = async (req, res, next) => {
+  const data = req.body.stats;
+  
+  User.findById(req.body.id, async (err, user) => {
+    if (err) {
+      return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
+    }
+    return res.status(201).send({ success: true })
+  })
+}
+
+const updateFromMobile = async (req, res, next) => {
+  const keys = ['name', 'correct', 'seen', 'experience', 'timeSpent']
   let wordExperience = req.body.wordExperience
   wordExperience = wordExperience.filter((e) => _.isEqual(_.sortBy(keys), _.sortBy(_.keys(e))))
   const query = userIdQuery(req.query)
 
-  if (query && !_.isEmpty(wordExperience)) {
+  if (query /*&& !_.isEmpty(wordExperience)*/) {
     User.findOne(query, async (err, user) => {
       if (err) {
         return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
       } else if (user) {
         user.words = wordExperience
         try {
+          const users = await User.aggregate([
+            { '$project': { '_id': 1, 'words': 1, 'length': { '$size': '$words' } }},
+            { '$sort': { 'length': -1 } }])
+          const ranking = _.findIndex(users, (u) => user._id.equals(u._id))
+          if (ranking >= 0) {
+            user.ranking = ranking + 1
+          }
           await user.save()
-          return res.status(201).send({ success: true, wordExperience: wordExperience })
+          return res.status(201).send({ success: true, user: user })
         } catch (e) {
           return res.status(422).send({ error: 'Error saving word experience' })
         }
@@ -94,7 +121,7 @@ exports.login = async (req, res, next) => {
   const data = req.body
 
   try {
-    const existing = await User.findOne({ email: data.email })
+    const existing = await User.findOne({ email: data.email.toLowerCase() })
     if (existing) {
       existing.comparePassword(data.password, function(err, isMatch) {
         let result, statusCode

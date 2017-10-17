@@ -14,10 +14,21 @@ const userSchema = new Schema({
     ],
     default: []
   },
-  classes: [Schema.Types.ObjectId],
+  classes: {
+    type: [
+      {
+        id: Schema.Types.ObjectId,
+        role: { type: String, enum: ['teacher', 'student'], default: 'student' }
+      }
+    ],
+    default: []
+  },
+  isTeacher: { type: Boolean, default: false },
   deviceId: String,
-  email: { type: String, index: { unique: true } },
+  email: { type: String },
   facebookId: String,
+  mobileIapUnlocked: { type: Boolean, default: false },
+  ranking: { type: Number, default: 100 },
   firstName: { type: String, required: true, default: "" },
   lastName: { type: String, required: true, default: "" },
   optedIntoEmail: Boolean,
@@ -34,7 +45,8 @@ const userSchema = new Schema({
         name: { type: String, required: true },
         seen: { type: Number, required: true, default: 1 },
         correct: { type: Number, required: true },
-        experience: { type: Number, required: true, default: 1 }
+        experience: { type: Number, required: true, default: 1 },
+        timeSpent: { type: Number, required: true, default: 0 }
       }
     ],
     default: []

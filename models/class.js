@@ -4,7 +4,10 @@ const _ = require('underscore')
 
 const classSchema = new Schema({
   teacher: Schema.Types.ObjectId,
-  students: [Schema.Types.ObjectId]
+  students: {
+    type: [Schema.Types.ObjectId],
+    default: []
+  }
 })
 
 const Class = mongoose.model('Class', classSchema)
