@@ -13,10 +13,11 @@ module.exports = (app) => {
   apiRoutes.post('/user/create', UserController.create)
   apiRoutes.post('/user/login', UserController.login)
 
+  apiRoutes.get('/class', ClassController.read)
+  apiRoutes.get('/class/:id', ClassController.read)
+  apiRoutes.delete('/class', ClassController.delete)
   apiRoutes.post('/class', ClassController.create)
   apiRoutes.post('/class/:id', ClassController.join)
-  apiRoutes.get('/class', ClassController.read)
-  apiRoutes.delete('/class', ClassController.delete)
 
   app.use('/api', apiRoutes)
 }

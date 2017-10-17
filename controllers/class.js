@@ -12,16 +12,14 @@ exports.read = async (req, res, next) => {
       }
       return res.status(201).send({ class: klass })
     })
-  } else if (_.isEmpty(req.query)) {
-    Class.find({}, async (err, classes) => {
-      if (err) {
-        return res.status(422).send({ error: `Error retrieving classes -> ${err.message}` })
-      }
-      return res.status(201).send({ count: classes.length, classes: classes })
-    })
-  } else {
-    return res.status(422).send({ error: 'Unsupported class query' })    
   }
+  
+  Class.find({}, async (err, classes) => {
+    if (err) {
+      return res.status(422).send({ error: `Error retrieving classes -> ${err.message}` })
+    }
+    return res.status(201).send({ count: classes.length, classes: classes })
+  })
 }
 
 exports.create = (req, res, next) => {
