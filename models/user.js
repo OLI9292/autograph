@@ -24,6 +24,7 @@ const userSchema = new Schema({
     default: []
   },
   isTeacher: { type: Boolean, default: false },
+  gender: { type: String, enum: ['male', 'female'] },
   deviceId: String,
   email: { type: String },
   facebookId: String,
