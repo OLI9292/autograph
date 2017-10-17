@@ -35,7 +35,7 @@ const updateFromMobile = async (req, res, next) => {
   wordExperience = wordExperience.filter((e) => _.isEqual(_.sortBy(keys), _.sortBy(_.keys(e))))
   const query = userIdQuery(req.query)
 
-  if (query /*&& !_.isEmpty(wordExperience)*/) {
+  if (query !_.isEmpty(wordExperience)) {
     User.findOne(query, async (err, user) => {
       if (err) {
         return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
