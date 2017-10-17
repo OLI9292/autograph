@@ -14,7 +14,16 @@ const userSchema = new Schema({
     ],
     default: []
   },
-  classes: [Schema.Types.ObjectId],
+  classes: {
+    type: [
+      {
+        id: Schema.Types.ObjectId,
+        role: { type: String, enum: ['teacher', 'student'], default: 'student' }
+      }
+    ],
+    default: []
+  },
+  isTeacher: { type: Boolean, default: false },
   deviceId: String,
   email: { type: String },
   facebookId: String,

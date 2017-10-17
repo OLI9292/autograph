@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const _ = require('underscore')
 
 const User = require('../models/user')
+const Class = require('../models/class')
 
 const userIdQuery = (query) => {
   return _.has(query, 'facebookId')
