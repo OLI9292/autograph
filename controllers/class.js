@@ -12,15 +12,30 @@ exports.read = async (req, res, next) => {
       }
       return res.status(201).send({ class: klass })
     })
-  } else if (_.isEmpty(req.query)) {
-    Class.find({}, async (err, classes) => {
+  }
+  
+  Class.find({}, async (err, classes) => {
+    if (err) {
+      return res.status(422).send({ error: `Error retrieving classes -> ${err.message}` })
+    }
+    return res.status(201).send({ count: classes.length, classes: classes })
+  })
+}
+
+exports.readStudents = async (req, res, next) => {
+  if (_.has(req.params, 'id')) {
+    Class.findById(req.params.id, async (err, klass) => {
       if (err) {
-        return res.status(422).send({ error: `Error retrieving classes -> ${err.message}` })
+        return res.status(422).send({ error: `Error finding class ${req.params.id} -> ${err.message}` })
       }
-      return res.status(201).send({ count: classes.length, classes: classes })
+
+      try {
+        const students = await User.find({ _id: { $in: klass.students } })
+        return res.status(201).send({ students })
+      } catch (e) {
+        return res.status(422).send({ error: `Error finding students for class ${klass.id} -> ${err.message}` })
+      }
     })
-  } else {
-    return res.status(422).send({ error: 'Unsupported class query' })    
   }
 }
 
