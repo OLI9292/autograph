@@ -19,13 +19,38 @@ exports.update = async (req, res, next) => {
 }
 
 const updateFromWeb = async (req, res, next) => {
-  const data = req.body.stats;
+  const stats = req.body.stats;
+
+  if (_.isNull(stats) || _.isEmpty(stats)) {
+    return res.status(422).send({ error: 'No stats found in body' })
+  }
   
   User.findById(req.body.id, async (err, user) => {
-    if (err) {
+    if (user) {
+      stats.forEach((s) => {
+        const existingIdx = _.findIndex(user.words, (w) => s.word === w.name);
+        if (existingIdx >= 0) {
+          const copy = user.words[existingIdx];
+          copy.seen += 1;
+          copy.correct += s.correct ? 1 : 0;
+          copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0;
+          copy.timeSpent += 2;
+          user.words[existingIdx] = copy;
+        } else {
+          const word = { name: s.word, correct: s.correct ? 1 : 0, timeSpent: 2 }
+          user.words.push(word);
+        }
+      })
+
+      try {
+        await user.save()
+        return res.status(201).send({ user: user })      
+      } catch (e) {
+        return res.status(422).send({ error: `Error saving stats for user -> ${e}` })
+      }
+    } else {
       return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
     }
-    return res.status(201).send({ success: true })
   })
 }
 
@@ -40,7 +65,9 @@ const updateFromMobile = async (req, res, next) => {
       if (err) {
         return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
       } else if (user) {
-        user.words = wordExperience
+        if (wordExperience.length >= user.words) {
+          user.words = wordExperience
+        }
         try {
           const users = await User.aggregate([
             { '$project': { '_id': 1, 'words': 1, 'length': { '$size': '$words' } }},
