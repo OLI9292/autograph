@@ -34,7 +34,7 @@ const updateFromWeb = async (req, res, next) => {
           copy.seen += 1;
           copy.correct += s.correct ? 1 : 0;
           copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0;
-          copy.timeSpent += 2;
+          copy.timeSpent += s.time || 0;
           user.words[existingIdx] = copy;
         } else {
           const word = { name: s.word, correct: s.correct ? 1 : 0, timeSpent: 2 }
