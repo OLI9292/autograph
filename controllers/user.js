@@ -4,6 +4,16 @@ const _ = require('underscore')
 const User = require('../models/user')
 const Class = require('../models/class')
 
+let redis
+
+if (process.env.REDISTOGO_URL) {
+  const rtg = require('url').parse(process.env.REDISTOGO_URL)
+  redis = require('redis').createClient(rtg.port, rtg.hostname)
+  redis.auth(rtg.auth.split(":")[1])
+} else {
+  redis = require("redis").createClient()
+}
+
 const userIdQuery = (query) => {
   return _.has(query, 'facebookId')
     ? { facebookId: query.facebookId }
@@ -98,11 +108,21 @@ exports.read = async (req, res, next) => {
       return res.status(201).send({ user: user })
     })
   } else if (_.isEmpty(req.query)) {
-    User.find({}, async (err, users) => {
+    redis.get('users', (err, reply) => {
       if (err) {
-        return res.status(422).send({ error: `Error retrieving users -> ${err.message}` })
+        next()
+      } else if (reply) {
+        const users = JSON.parse(reply)
+        return res.status(201).send({ count: users.length, users: users })
+      } else {
+        User.find({}, (err, users) => {
+          if (err) {
+            return res.status(422).send({ error: `Error retrieving users -> ${err.message}` })
+          }
+          redis.set('users', JSON.stringify(users))
+          return res.status(201).send({ count: users.length, users: users })
+        })
       }
-      return res.status(201).send({ count: users.length, users: users })
     })
   } else {
     const query = userIdQuery(req.query)
