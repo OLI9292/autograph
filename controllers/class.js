@@ -40,28 +40,30 @@ exports.readStudents = async (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-  if (!_.has(req.query, 'teacherId')) {
-    return res.status(422).send({ error: 'Create class requires a valid teacher id' })
-  }
+  const data = req.body
+  
+  if (data && data.teacherId) {
+    User.findById(data.teacherId, async (err, user) => {
+      if (err) {
+        return res.status(422).send({ error: `Error finding user ${data.teacherId} -> ${err.message}` })
+      }
 
-  User.findById(req.query.teacherId, async (err, user) => {
-    if (err) {
-      return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
-    }
-    const klass = new Class({ teacher: user._id })
-    try {
-      await klass.save()
-      user.isTeacher = true
-      user.classes.push({ id: klass._id, role: 'teacher' })
-      await user.save()
-      return res.status(201).send({ success: true, class: klass, teacher: user })
-    } catch (e) {
-      let message = `Error creating class (teacherId: ${req.params.teacherId}) -> ${e.message}`
-      console.log(message)
-      return { error: message }
-    }
-    return res.status(422).send({ error: 'Could not find teacher' })
-  })    
+      const klass = new Class(data)
+
+      try {
+        await klass.save()
+        user.isTeacher = true
+        user.classes.push({ id: klass._id, role: 'teacher' })
+        await user.save()
+        return res.status(201).send({ class: klass, teacher: user })
+      } catch (e) {
+        return { error: `Error creating class (teacherId: ${data.teacherId}) -> ${e.message}` }
+      }
+      return res.status(422).send({ error: 'Could not find teacher' })
+    }) 
+  } else {
+    return res.status(422).send({ error: 'Create class requires a teacher id' })
+  }
 }
 
 exports.join = async (req, res, next) => {
