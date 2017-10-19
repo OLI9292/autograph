@@ -142,25 +142,54 @@ exports.read = async (req, res, next) => {
   }
 }
 
-exports.create = async (req, res, next) => {
-  const data = req.body
-
+const createUser = async (data) => {
   try {
     const existing = await User.findOne({ email: data.email })
 
     if (existing) {
       let message = 'There is already an account associated with this email'
       console.log(message)
-      return res.status(422).send({ error: message })
+      return { error: message }
     } else {
       const user = new User(data)
       await user.save()
-      return res.status(201).send({ success: true, user: user })
+      return { user: user }
     }
   } catch (e) {
-    let message = 'Error creating user'
-    console.log(`${message}: ${e}`)
-    return res.status(422).send({ error: message })
+    let message = `Error creating user -> ${e}`
+    console.log(message)
+    return { error: message }
+  }
+}
+
+const createMultipleResult = (results) => {
+  const errors = _.compact(_.pluck(results, 'error'))
+  const succesful = results.filter((r) => !_.has(r, 'error'))
+  return { 
+    errorCount: errors.length,
+    errors: errors,
+    succesfulCount: succesful.length,
+    results: succesful
+  }
+}
+
+exports.create = async (req, res, next) => {
+  const data = req.body
+  const batch = _.isArray(data)
+
+  if (batch) {
+    const results = await Promise.all(data.map(createUser))
+    const response = createMultipleResult(results, res)
+    const statusCode = response.results.length > 0 ? 201 : 422
+    return res.status(statusCode).send({ response })
+  } else {
+    let response = await createUser(data)
+    if (_.has(response, 'error')) {
+      return res.status(422).send(response)
+    } else {
+      response.success = true
+      return res.status(201).send(response)
+    }
   }
 }
 
