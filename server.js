@@ -8,6 +8,14 @@ const router = require('./router')
 
 const CONFIG = require('./config/main')
 
+if (process.env.NODE_ENV === 'production') {
+  const nullfun = function () {};
+  console.log = nullfun;
+  console.info = nullfun;
+  console.error = nullfun;
+  console.warn = nullfun;
+}
+
 mongoose.connect(CONFIG.MONGODB_URI, { useMongoClient: true, promiseLibrary: global.Promise })
 
 app.use(bodyParser.urlencoded({ extended: false }))
