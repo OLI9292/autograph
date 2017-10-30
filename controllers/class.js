@@ -113,7 +113,7 @@ exports.delete = async (req, res, next) => {
 
     return removed
       ? res.status(201).send({ word: removed })
-      : res.status(422).send({ error: `Could not find class (${req.params.value})` })
+      : res.status(422).send({ error: `Could not find class (${req.params.id})` })
   })  
 }
 
