@@ -105,7 +105,19 @@ exports.join = async (req, res, next) => {
   })
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = async (req, res, next) => {
+  Class.findOneAndRemove({ value: req.params.id }, async (err, removed) => {
+    if (err) {
+      return res.status(422).send({ error: `Error retrieving class -> ${err.message}` })
+    }
+
+    return removed
+      ? res.status(201).send({ word: removed })
+      : res.status(422).send({ error: `Could not find class (${req.params.value})` })
+  })  
+}
+
+exports.deleteAll = (req, res, next) => {
   Class.remove({}, async (err) => {
     if (err) {
       let message = `Error deleting classes -> ${err.message}`
