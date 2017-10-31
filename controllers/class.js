@@ -42,10 +42,10 @@ exports.readStudents = async (req, res, next) => {
 exports.create = (req, res, next) => {
   const data = req.body
 
-  if (data && data.teacherId) {
-    User.findById(data.teacherId, async (err, user) => {
+  if (data && data.teacher) {
+    User.findById(data.teacher, async (err, user) => {
       if (err) {
-        return res.status(422).send({ error: `Error finding user ${data.teacherId} -> ${err.message}` })
+        return res.status(422).send({ error: `Error finding user ${data.teacher} -> ${err.message}` })
       }
 
       const klass = new Class(data)
@@ -57,7 +57,7 @@ exports.create = (req, res, next) => {
         await user.save()
         return res.status(201).send({ class: klass, teacher: user })
       } catch (e) {
-        return res.status(422).send({ error: `Error creating class (teacherId: ${data.teacherId}) -> ${e.message}` })
+        return res.status(422).send({ error: `Error creating class (teacher: ${data.teacher}) -> ${e.message}` })
       }
       return res.status(422).send({ error: 'Could not find teacher' })
     }) 
