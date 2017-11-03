@@ -13,6 +13,15 @@ exports.read = async (req, res, next) => {
       return res.status(201).send({ class: klass })
     })
   }
+
+  if (req.query.teacher) {
+    Class.find({ teacher: req.query.teacher }, async (err, classes) => {
+      if (err) {
+        return res.status(422).send({ error: `Error finding classes -> ${err.message}` })
+      }
+      return res.status(201).send(classes)
+    })    
+  }
   
   Class.find({}, async (err, classes) => {
     if (err) {
