@@ -23,5 +23,9 @@ module.exports = (app) => {
   apiRoutes.post('/class', ClassController.create)
   apiRoutes.post('/class/:id', ClassController.join)
 
+  apiRoutes.get('/lesson', LessonController.read)
+  apiRoutes.get('/lesson/:id', LessonController.read)
+  apiRoutes.post('/lesson', LessonController.create)
+
   app.use('/api', apiRoutes)
 }

@@ -8,6 +8,10 @@ const classSchema = new Schema({
   students: {
     type: [Schema.Types.ObjectId],
     default: []
+  },
+  lessons: {
+    type: [Schema.Types.ObjectId],
+    default: []    
   }
 })
 
