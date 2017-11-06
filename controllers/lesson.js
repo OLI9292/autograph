@@ -55,3 +55,15 @@ exports.create = async (req, res, next) => {
     }  
   })
 }
+
+exports.delete = async (req, res, next) => {
+  Lesson.findOneAndRemove({ _id: req.params.id }, async (err, removed) => {
+    if (err) {
+      return res.status(422).send({ error: `Error retrieving lesson -> ${err.message}` })
+    }
+
+    return removed
+      ? res.status(201).send(removed)
+      : res.status(422).send({ error: `Could not find lesson (${req.params.id})` })
+  })  
+}

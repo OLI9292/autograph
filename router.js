@@ -26,6 +26,7 @@ module.exports = (app) => {
   apiRoutes.get('/lesson', LessonController.read)
   apiRoutes.get('/lesson/:id', LessonController.read)
   apiRoutes.post('/lesson', LessonController.create)
+  apiRoutes.delete('/lesson/:id', LessonController.delete)
 
   app.use('/api', apiRoutes)
 }
