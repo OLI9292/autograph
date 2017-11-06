@@ -11,14 +11,28 @@ exports.read = async (req, res, next) => {
       }
       return res.status(201).send(lesson)
     })
+  } else if (req.query.teacher) {
+    Class.find({ teacher: req.query.teacher }, async (err, classes) => {
+      if (err) {
+        return res.status(422).send({ error: `Error finding classes -> ${err.message}` })
+      }
+      
+      Lesson.find({ classes: { "$in": _.pluck(classes, '_id') }}, async (err, lessons) => {
+        if (err) {
+          return res.status(422).send({ error: `Error finding lessons -> ${err.message}` })
+        }
+
+        return res.status(201).send(lessons)
+      })  
+    })    
+  } else {
+    Lesson.find({}, async (err, lessons) => {
+      if (err) {
+        return res.status(422).send({ error: `Error retrieving lessons -> ${err.message}` })
+      }
+      return res.status(201).send(lessons)
+    })
   }
-  
-  Lesson.find({}, async (err, lessons) => {
-    if (err) {
-      return res.status(422).send({ error: `Error retrieving lessons -> ${err.message}` })
-    }
-    return res.status(201).send(lessons)
-  })
 }
 
 exports.create = async (req, res, next) => {
