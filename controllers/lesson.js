@@ -25,6 +25,20 @@ exports.read = async (req, res, next) => {
         return res.status(201).send(lessons)
       })  
     })    
+  } else if (req.query.student) {
+    Class.find({ students: req.query.student }, async (err, classes) => {
+      if (err) {
+        return res.status(422).send({ error: `Error finding classes -> ${err.message}` })
+      }
+      
+      Lesson.find({ classes: { "$in": _.pluck(classes, '_id') }}, async (err, lessons) => {
+        if (err) {
+          return res.status(422).send({ error: `Error finding lessons -> ${err.message}` })
+        }
+
+        return res.status(201).send(lessons)
+      })  
+    })  
   } else {
     Lesson.find({}, async (err, lessons) => {
       if (err) {
