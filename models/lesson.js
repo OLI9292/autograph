@@ -9,7 +9,8 @@ const lessonSchema = new Schema({
   questions: {
     type: {
       word: { type: String, required: true },
-      context: { type: String, required: true}
+      context: { type: String, required: true },
+      related: { type: [String], default: [] }
     },
     default: []
   },
