@@ -10,25 +10,27 @@ exports.read = async (req, res, next) => {
       if (err) {
         return res.status(422).send({ error: `Error finding class ${req.params.id} -> ${err.message}` })
       }
+      
       return res.status(201).send({ class: klass })
     })
-  }
+  } else if (req.query.teacher) {
+      Class.find({ teacher: req.query.teacher }, async (err, classes) => {
+        if (err) {
+          return res.status(422).send({ error: `Error finding classes -> ${err.message}` })
+        }
 
-  if (req.query.teacher) {
-    Class.find({ teacher: req.query.teacher }, async (err, classes) => {
+        return res.status(201).send(classes)
+      })    
+    }
+  } else {
+    Class.find({}, async (err, classes) => {
       if (err) {
-        return res.status(422).send({ error: `Error finding classes -> ${err.message}` })
+        return res.status(422).send({ error: `Error retrieving classes -> ${err.message}` })
       }
-      return res.status(201).send(classes)
+
+      return res.status(201).send({ count: classes.length, classes: classes })
     })    
   }
-  
-  Class.find({}, async (err, classes) => {
-    if (err) {
-      return res.status(422).send({ error: `Error retrieving classes -> ${err.message}` })
-    }
-    return res.status(201).send({ count: classes.length, classes: classes })
-  })
 }
 
 exports.readStudents = async (req, res, next) => {
@@ -45,6 +47,8 @@ exports.readStudents = async (req, res, next) => {
         return res.status(422).send({ error: `Error finding students for class ${klass.id} -> ${err.message}` })
       }
     })
+  } else {
+    return res.status(422).send({ error: 'id required' })
   }
 }
 
