@@ -18,6 +18,7 @@ const lessonSchema = new Schema({
     type: [Schema.Types.ObjectId],
     default: []
   },
+  public: { type: Boolean, default: false }
 })
 
 const Lesson = mongoose.model('Lesson', lessonSchema)
