@@ -56,6 +56,7 @@ exports.read = async (req, res, next) => {
       Lesson.find({}, async (error, lessons) => {
         if (error) { return res.status(422).send({ error: error.message }) }
         
+        return res.status(201).send(lessons);
       })
     })
 
