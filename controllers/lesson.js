@@ -60,8 +60,9 @@ exports.read = async (req, res, next) => {
     })
 
   } else if (req.query.student) {
-
-    Class.find({ students: req.query.student }, async (error, classes) => {
+    const query = req.query.student === 'anon' ? {} : { students: req.query.student };
+    
+    Class.find(query, async (error, classes) => {
       if (error) { return res.status(422).send({ error: error.message }) }
 
       Lesson.find({}, async (error, lessons) => {
