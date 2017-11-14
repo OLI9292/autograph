@@ -67,10 +67,9 @@ exports.read = async (req, res, next) => {
       Lesson.find({}, async (error, lessons) => {
         if (error) { return res.status(422).send({ error: error.message }) }
 
-        let [isPublic, notPublic] = _.partition(lessons, (l) => l.public)
-        notPublic = notPublic.filter((n) => _.intersection(n.classes, _.pluck(classes, '_id')))
+        lessons = lessons.filter((l) => l.public || _.intersection(l.classes, _.pluck(classes, '_id')))
 
-        return res.status(201).send({ public: isPublic, private: notPublic });
+        return res.status(201).send(lessons);
       })    
     })
 
