@@ -8,9 +8,11 @@ const Class = require('../models/class')
 //
 
 exports.create = async (req, res, next) => {
-  if (req.body.classes) {
+  const data = req.body
+  
+  if (data.classes) {
 
-    Class.find({ _id: { $in: req.body.classes } }, async (error, classes) => {
+    Class.find({ _id: { $in: data.classes } }, async (error, classes) => {
       if (error) { return res.status(422).send({ error: error.message }) }
       
       if (classes.length !== data.classes.length) {
