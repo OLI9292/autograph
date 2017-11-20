@@ -40,7 +40,7 @@ exports.readStudents = async (req, res, next) => {
       User.find({ _id: { $in: klass.students } }, async (err, students) => {
         if (error) { return res.status(422).send({ error: error.message }) }
 
-        return res.status(201).send({ students })
+        return res.status(201).send(students)
       })  
     } else {
       return res.status(422).send({ error: 'Class not found.' })
