@@ -33,22 +33,19 @@ exports.read = async (req, res, next) => {
 }
 
 exports.readStudents = async (req, res, next) => {
-  if (_.has(req.params, 'id')) {
-    Class.findById(req.params.id, async (err, klass) => {
-      if (err) {
-        return res.status(422).send({ error: `Error finding class ${req.params.id} -> ${err.message}` })
-      }
+  Class.findById(req.params.id, async (error, klass) => {
+    if (error) { return res.status(422).send({ error: error.message }) }
 
-      try {
-        const students = await User.find({ _id: { $in: klass.students } })
+    if (klass) {
+      User.find({ _id: { $in: klass.students } }, async (err, students) => {
+        if (error) { return res.status(422).send({ error: error.message }) }
+
         return res.status(201).send({ students })
-      } catch (e) {
-        return res.status(422).send({ error: `Error finding students for class ${klass.id} -> ${err.message}` })
-      }
-    })
-  } else {
-    return res.status(422).send({ error: 'id required' })
-  }
+      })  
+    } else {
+      return res.status(422).send({ error: 'Class not found.' })
+    }
+  })
 }
 
 exports.create = (req, res, next) => {
