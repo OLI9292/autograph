@@ -9,7 +9,8 @@ const lessonSchema = new Schema({
   questions: {
     type: {
       word: { type: String, required: true },
-      context: { type: String, required: true}
+      context: { type: String, required: true },
+      related: { type: [String], default: [] }
     },
     default: []
   },
@@ -17,6 +18,7 @@ const lessonSchema = new Schema({
     type: [Schema.Types.ObjectId],
     default: []
   },
+  public: { type: Boolean, default: false }
 })
 
 const Lesson = mongoose.model('Lesson', lessonSchema)
