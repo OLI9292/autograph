@@ -6,6 +6,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const router = require('./router')
 
+require('dotenv').config()
+
 const CONFIG = require('./config/main')
 
 if (process.env.NODE_ENV === 'production') {

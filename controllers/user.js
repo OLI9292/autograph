@@ -1,6 +1,8 @@
+const jwt = require('jwt-simple')
 const mongoose = require('mongoose')
 const _ = require('underscore')
 
+const CONFIG = require('../config/main')
 const User = require('../models/user')
 const Class = require('../models/class')
 
@@ -11,14 +13,116 @@ if (process.env.REDISTOGO_URL) {
   redis = require('redis').createClient(rtg.port, rtg.hostname)
   redis.auth(rtg.auth.split(":")[1])
 } else {
-  redis = require("redis").createClient()
+  redis = require('redis').createClient()
 }
+
+//
+// CREATE
+//
+
+exports.create = async (req, res, next) => {
+  const data = req.body
+  const batch = _.isArray(data)
+
+  if (batch) {
+    const results = await Promise.all(data.map(createUser))
+    const response = createMultipleResult(results, res)
+    const statusCode = response.results.length > 0 ? 201 : 422
+    return res.status(statusCode).send({ response })
+  } else {
+    let response = await createUser(data)
+    if (_.has(response, 'error')) {
+      return res.status(422).send(response)
+    } else {
+      response.success = true
+      return res.status(201).send(response)
+    }
+  }
+}
+
+const createUser = async (data) => {
+  try {
+    const existing = await User.findOne({ email: data.email })
+
+    if (existing) {
+      return { error: 'There is already an account associated with this email.' }
+    } else {
+      const user = new User(data)
+      await user.save()
+      return { user: user }
+    }
+  } catch (error) {
+    return { error: 'Something went wrong.' }
+  }
+}
+
+const createMultipleResult = (results) => {
+  const errors = _.compact(_.pluck(results, 'error'))
+  const succesful = results.filter((r) => !_.has(r, 'error'))
+  return { 
+    errorCount: errors.length,
+    errors: errors,
+    succesfulCount: succesful.length,
+    results: succesful
+  }
+}
+
+//
+// READ
+//
 
 const userIdQuery = (query) => {
   return _.has(query, 'facebookId')
     ? { facebookId: query.facebookId }
     : _.has(query, 'email') ? { email: query.email } : null
 }
+
+exports.read = async (req, res, next) => {
+  if (_.has(req.params, 'id')) {
+    User.findById(req.params.id, async (err, user) => {
+      if (err) {
+        return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
+      }
+      return res.status(201).send({ user: user })
+    })
+  } else if (_.isEmpty(req.query)) {
+    redis.get('users', (err, reply) => {
+      if (err) {
+        next()
+      } else if (reply) {
+        const users = JSON.parse(reply)
+        return res.status(201).send({ count: users.length, users: users })
+      } else {
+        User.find({}, (err, users) => {
+          if (err) {
+            return res.status(422).send({ error: `Error retrieving users -> ${err.message}` })
+          }
+          redis.set('users', JSON.stringify(users))
+          return res.status(201).send({ count: users.length, users: users })
+        })
+      }
+    })
+  } else {
+    const query = userIdQuery(req.query)
+
+    if (query) {
+      User.findOne(query, async (err, user) => {
+        if (err) {
+          return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
+        } else if (user) {
+          return res.status(201).send({ success: true, user: user })
+        }
+        return res.status(422).send({ error: `Could not find user: ${JSON.stringify(query)}` })
+      })
+    } else {
+      return res.status(422).send({ error: 'Unsupported user query' })    
+    }
+  }
+}
+
+//
+// UPDATE
+//
 
 exports.update = async (req, res, next) => {
   if (req.body.platform === 'web') {
@@ -99,139 +203,60 @@ const updateFromMobile = async (req, res, next) => {
   }
 }
 
-exports.read = async (req, res, next) => {
-  if (_.has(req.params, 'id')) {
-    User.findById(req.params.id, async (err, user) => {
-      if (err) {
-        return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
-      }
-      return res.status(201).send({ user: user })
-    })
-  } else if (_.isEmpty(req.query)) {
-    redis.get('users', (err, reply) => {
-      if (err) {
-        next()
-      } else if (reply) {
-        const users = JSON.parse(reply)
-        return res.status(201).send({ count: users.length, users: users })
-      } else {
-        User.find({}, (err, users) => {
-          if (err) {
-            return res.status(422).send({ error: `Error retrieving users -> ${err.message}` })
-          }
-          redis.set('users', JSON.stringify(users))
-          return res.status(201).send({ count: users.length, users: users })
-        })
-      }
-    })
-  } else {
-    const query = userIdQuery(req.query)
+//
+// DELETE
+//
 
-    if (query) {
-      User.findOne(query, async (err, user) => {
-        if (err) {
-          return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
-        } else if (user) {
-          return res.status(201).send({ success: true, user: user })
-        }
-        return res.status(422).send({ error: `Could not find user: ${JSON.stringify(query)}` })
-      })
-    } else {
-      return res.status(422).send({ error: 'Unsupported user query' })    
-    }
-  }
+exports.delete = (req, res, next) => {
+  User.remove({}, async (error) => {
+    return error
+      ? res.status(422).send({ error: 'Something went wrong.' })
+      : res.status(201).send('Deleted all users');
+  })
 }
 
-const createUser = async (data) => {
-  try {
-    const existing = await User.findOne({ email: data.email })
+//
+// LOGIN
+//
 
-    if (existing) {
-      let message = 'There is already an account associated with this email'
-      console.log(message)
-      return { error: message }
-    } else {
-      const user = new User(data)
-      await user.save()
-      return { user: user }
-    }
-  } catch (e) {
-    let message = `Error creating user -> ${e}`
-    console.log(message)
-    return { error: message }
-  }
+const expiresIn = (numDays) => {
+  var dateObj = new Date()
+  return dateObj.setDate(dateObj.getDate() + numDays)
 }
 
-const createMultipleResult = (results) => {
-  const errors = _.compact(_.pluck(results, 'error'))
-  const succesful = results.filter((r) => !_.has(r, 'error'))
-  return { 
-    errorCount: errors.length,
-    errors: errors,
-    succesfulCount: succesful.length,
-    results: succesful
-  }
-}
-
-exports.create = async (req, res, next) => {
-  const data = req.body
-  const batch = _.isArray(data)
-
-  if (batch) {
-    const results = await Promise.all(data.map(createUser))
-    const response = createMultipleResult(results, res)
-    const statusCode = response.results.length > 0 ? 201 : 422
-    return res.status(statusCode).send({ response })
-  } else {
-    let response = await createUser(data)
-    if (_.has(response, 'error')) {
-      return res.status(422).send(response)
-    } else {
-      response.success = true
-      return res.status(201).send(response)
-    }
-  }
+const genToken = (user) => {
+  const expires = expiresIn(7)
+  const token = jwt.encode({ exp: expires }, process.env.VALIDATION_TOKEN)
+  return { user: user._id, expires: expires, token: token }
 }
 
 exports.login = async (req, res, next) => {
   const data = req.body
 
   try {
-    const existing = await User.findOne({ email: data.email.toLowerCase() })
-    if (existing) {
-      existing.comparePassword(data.password, function(err, isMatch) {
+    const user = await User.findOne({ email: data.email.toLowerCase() })
+
+    if (user) {
+      user.comparePassword(data.password, function(error, isMatch) {
         let result, statusCode
-        if (err) {
-          result = { error: `Error matching password: ${err}` }
+
+        if (error) {
           statusCode = 422
+          result = { error: 'Something went wrong.' }
         } else if (isMatch) {
-          result = { user: existing, success: true }
           statusCode = 201
+          result = { user: user, success: true, token: genToken(user) }
         } else {
-          result = { error: 'Incorrect password' }
           statusCode = 422
+          result = { error: 'Incorrect password.' }
         }
+
         return res.status(statusCode).send(result)
       })
     } else {
-      let message = 'Email not found'
-      console.log(message)
-      return res.status(422).send({ error: message })
+      return res.status(422).send({ error: 'Email not found.' })
     }
-  } catch (e) {
-    let message = 'Error finding user'
-    console.log(`${message}: ${e}`)
-    return res.status(422).send({ error: message })
+  } catch (error) {
+    return res.status(422).send({ error: 'Error finding user.' })
   }
-}
-
-exports.delete = (req, res, next) => {
-  User.remove({}, async (err) => {
-    if (err) {
-      let message = `Error deleting users -> ${err.message}`
-      console.log(message)
-      return res.status(422).send({ error: message })
-    }
-    return res.status(201).send('Deleted all users')
-  })
 }
