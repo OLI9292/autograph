@@ -4,7 +4,7 @@ const _ = require('underscore')
 
 const lessonSchema = new Schema({
   name: { type: String, required: true },
-  filename: { type: String, required: true },
+  filenames: [String],
   updatedOn: { type: String, required: true },
   questions: {
     type: {
