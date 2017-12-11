@@ -145,11 +145,13 @@ exports.update = async (req, res, next) => {
 const updateFromWeb = async (req, res, next) => {
   const stats = req.body.stats;
 
-  if (_.isNull(stats) || _.isEmpty(stats)) {
+  if (!_.isArray(stats)) {
     return res.status(422).send({ error: 'No stats found in body' })
   }
   
-  User.findById(req.body.id, async (err, user) => {
+  User.findById(req.body.id, async (error, user) => {
+    if (error) { return res.status(422).send({ error: error.message }); }
+
     if (user) {
       stats.forEach((s) => {
         const existingIdx = _.findIndex(user.words, (w) => s.word === w.name);
@@ -173,7 +175,7 @@ const updateFromWeb = async (req, res, next) => {
         return res.status(422).send({ error: `Error saving stats for user -> ${e}` })
       }
     } else {
-      return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
+      return res.status(422).send({ error: 'No user.' });
     }
   })
 }
