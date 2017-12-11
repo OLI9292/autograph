@@ -125,7 +125,7 @@ exports.read = async (req, res, next) => {
 //
 
 exports.update2 = async (req, res, next) => {
-  User.update({ value: req.params.id }, req.body, async (error, user) => {
+  User.update({ _id: req.params.id }, req.body, async (error, user) => {
     if (error) { return res.status(422).send({ error: error.message }) }
 
     return user.n > 0
