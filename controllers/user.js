@@ -124,6 +124,16 @@ exports.read = async (req, res, next) => {
 // UPDATE
 //
 
+exports.update2 = async (req, res, next) => {
+  User.update({ _id: req.params.id }, req.body, async (error, user) => {
+    if (error) { return res.status(422).send({ error: error.message }) }
+
+    return user.n > 0
+      ? res.status(201).send(user)
+      : res.status(422).send({ error: `Could not find user: (${req.params.value})` })
+  })  
+}
+
 exports.update = async (req, res, next) => {
   if (req.body.platform === 'web') {
     return await updateFromWeb(req, res, next)
@@ -135,11 +145,13 @@ exports.update = async (req, res, next) => {
 const updateFromWeb = async (req, res, next) => {
   const stats = req.body.stats;
 
-  if (_.isNull(stats) || _.isEmpty(stats)) {
+  if (!_.isArray(stats)) {
     return res.status(422).send({ error: 'No stats found in body' })
   }
   
-  User.findById(req.body.id, async (err, user) => {
+  User.findById(req.body.id, async (error, user) => {
+    if (error) { return res.status(422).send({ error: error.message }); }
+
     if (user) {
       stats.forEach((s) => {
         const existingIdx = _.findIndex(user.words, (w) => s.word === w.name);
@@ -156,6 +168,10 @@ const updateFromWeb = async (req, res, next) => {
         }
       })
 
+      if (req.body.wordList) {
+        user.wordListsCompleted = _.uniq(_.union(user.wordListsCompleted || [], [req.body.wordList]));
+      }
+
       try {
         await user.save()
         return res.status(201).send({ user: user })      
@@ -163,7 +179,7 @@ const updateFromWeb = async (req, res, next) => {
         return res.status(422).send({ error: `Error saving stats for user -> ${e}` })
       }
     } else {
-      return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
+      return res.status(422).send({ error: 'No user.' });
     }
   })
 }

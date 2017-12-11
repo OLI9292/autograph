@@ -12,6 +12,7 @@ module.exports = (app) => {
   apiRoutes.get('/user/:id', UserController.read)
   apiRoutes.delete('/user', UserController.delete)
   apiRoutes.patch('/user', UserController.update)
+  apiRoutes.patch('/user/:id', UserController.update2)
   apiRoutes.post('/user/create', UserController.create)
   apiRoutes.post('/user/login', UserController.login)
   apiRoutes.post('/user/:id/lesson', LessonController.create)
