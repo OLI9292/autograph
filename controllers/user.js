@@ -124,6 +124,16 @@ exports.read = async (req, res, next) => {
 // UPDATE
 //
 
+exports.update2 = async (req, res, next) => {
+  User.update({ value: req.params.id }, req.body, async (error, user) => {
+    if (error) { return res.status(422).send({ error: error.message }) }
+
+    return user.n > 0
+      ? res.status(201).send(user)
+      : res.status(422).send({ error: `Could not find user: (${req.params.value})` })
+  })  
+}
+
 exports.update = async (req, res, next) => {
   if (req.body.platform === 'web') {
     return await updateFromWeb(req, res, next)
