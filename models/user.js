@@ -40,7 +40,7 @@ const userSchema = new Schema({
     enum: ['email', 'facebook', 'google'], 
     required: true
   },
-  wordListsCompleted: [Schema.Types.ObjectId],  
+  wordListsCompleted: [String],  
   words: {
     type: [
       {
