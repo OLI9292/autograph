@@ -168,6 +168,10 @@ const updateFromWeb = async (req, res, next) => {
         }
       })
 
+      if (req.body.wordList) {
+        user.wordListsCompleted = _.uniq(_.union(user.wordListsCompleted || [], [req.body.wordList]));
+      }
+
       try {
         await user.save()
         return res.status(201).send({ user: user })      
