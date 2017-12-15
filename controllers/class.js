@@ -4,31 +4,67 @@ const _ = require('underscore')
 const Class = require('../models/class')
 const User = require('../models/user')
 
-exports.read = async (req, res, next) => {
-  if (_.has(req.params, 'id')) {
-    Class.findById(req.params.id, async (err, klass) => {
-      if (err) {
-        return res.status(422).send({ error: `Error finding class ${req.params.id} -> ${err.message}` })
-      }
+//
+// CREATE
+//
 
-      return res.status(201).send({ class: klass })
-    })
-  } else if (req.query.teacher) {
-    Class.find({ teacher: req.query.teacher }, async (err, classes) => {
-      if (err) {
-        return res.status(422).send({ error: `Error finding classes -> ${err.message}` })
-      }
+exports.create = (req, res, next) => {
+  const data = req.body
+  const teacher = data.teacher
 
-      return res.status(201).send(classes)
-    })    
+  if (teacher) {
+    User.findById(teacher, async (error, teacher) => {
+      if (error) { return res.status(422).send({ error: error.message }) }
+
+      if (teacher) {
+        try {
+          const _class = new Class(data)
+          teacher.isTeacher = true
+          teacher.classes.push({ id: _class._id, role: 'teacher' })
+          await teacher.save()
+          await _class.save()
+          return res.status(201).send(_class)
+        } catch (error) {
+          return res.status(422).send({ error: error.message })
+        }
+      } else {
+        return res.status(422).send({ error: 'Teacher not found.' })
+      }      
+    }) 
   } else {
-    Class.find({}, async (err, classes) => {
-      if (err) {
-        return res.status(422).send({ error: `Error retrieving classes -> ${err.message}` })
-      }
+    return res.status(422).send({ error: 'Create class requires a teacher id' })
+  }
+}
 
-      return res.status(201).send({ count: classes.length, classes: classes })
+//
+// READ
+//
+
+exports.read = async (req, res, next) => {
+  if (req.params.id) {
+    
+    Class.findById(req.params.id, async (error, _class) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(_class)
+    })
+
+  } else if (req.query.teacher) {
+    
+    Class.find({ teacher: req.query.teacher }, async (error, classes) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(classes)
     })    
+
+  } else {
+    
+    Class.find({}, async (error, classes) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(classes)
+    })    
+
   }
 }
 
@@ -46,33 +82,6 @@ exports.readStudents = async (req, res, next) => {
       return res.status(422).send({ error: 'Class not found.' })
     }
   })
-}
-
-exports.create = (req, res, next) => {
-  const data = req.body
-
-  if (data && data.teacher) {
-    User.findById(data.teacher, async (err, user) => {
-      if (err) {
-        return res.status(422).send({ error: `Error finding user ${data.teacher} -> ${err.message}` })
-      }
-
-      const klass = new Class(data)
-
-      try {
-        await klass.save()
-        user.isTeacher = true
-        user.classes.push({ id: klass._id, role: 'teacher' })
-        await user.save()
-        return res.status(201).send({ class: klass, teacher: user })
-      } catch (e) {
-        return res.status(422).send({ error: `Error creating class (teacher: ${data.teacher}) -> ${e.message}` })
-      }
-      return res.status(422).send({ error: 'Could not find teacher' })
-    }) 
-  } else {
-    return res.status(422).send({ error: 'Create class requires a teacher id' })
-  }
 }
 
 exports.join = async (req, res, next) => {
@@ -114,25 +123,16 @@ exports.join = async (req, res, next) => {
   })
 }
 
+//
+// DELETE
+//
+
 exports.delete = async (req, res, next) => {
-  Class.findOneAndRemove({ _id: req.params.id }, async (err, removed) => {
-    if (err) {
-      return res.status(422).send({ error: `Error retrieving class -> ${err.message}` })
-    }
+  Class.findOneAndRemove({ _id: req.params.id }, async (error, removed) => {
+    if (error) { return res.status(422).send({ error: error.message }) }
 
     return removed
-      ? res.status(201).send(removed)
-      : res.status(422).send({ error: `Could not find class (${req.params.id})` })
+      ? res.status(200).send(removed)
+      : res.status(422).send({ error: 'Not found' })
   })  
-}
-
-exports.deleteAll = (req, res, next) => {
-  Class.remove({}, async (err) => {
-    if (err) {
-      let message = `Error deleting classes -> ${err.message}`
-      console.log(message)
-      return res.status(422).send({ error: message })
-    }
-    return res.status(201).send('Deleted all classes')
-  })
 }

@@ -6,64 +6,41 @@ const CONFIG = require('../config/main')
 const User = require('../models/user')
 const Class = require('../models/class')
 
-let redis
-
-if (process.env.REDISTOGO_URL) {
-  const rtg = require('url').parse(process.env.REDISTOGO_URL)
-  redis = require('redis').createClient(rtg.port, rtg.hostname)
-  redis.auth(rtg.auth.split(":")[1])
-} else {
-  redis = require('redis').createClient()
-}
-
 //
 // CREATE
 //
 
 exports.create = async (req, res, next) => {
   const data = req.body
-  const batch = _.isArray(data)
 
-  if (batch) {
+  if (_.isArray(data)) {
+
     const results = await Promise.all(data.map(createUser))
-    const response = createMultipleResult(results, res)
-    const statusCode = response.results.length > 0 ? 201 : 422
-    return res.status(statusCode).send({ response })
+    return res.status(201).send(results)
+
   } else {
+
     let response = await createUser(data)
-    if (_.has(response, 'error')) {
-      return res.status(422).send(response)
-    } else {
-      response.success = true
-      return res.status(201).send(response)
-    }
+    return response.error
+      ? res.status(422).send(response)
+      : res.status(201).send(response)
+
   }
 }
 
 const createUser = async (data) => {
   try {
     const existing = await User.findOne({ email: data.email })
-
+    
     if (existing) {
       return { error: 'There is already an account associated with this email.' }
-    } else {
-      const user = new User(data)
-      await user.save()
-      return { user: user }
     }
+
+    const user = new User(data)
+    await user.save()
+    return user
   } catch (error) {
     return { error: 'Something went wrong.' }
-  }
-}
-
-const createMultipleResult = (results) => {
-  const errors = _.compact(_.pluck(results, 'error'))
-  const succesful = results.filter((r) => !_.has(r, 'error'))
-  return { 
-    errorCount: errors.length,
-    errors: errors,
-    succesfulCount: succesful.length,
-    results: succesful
   }
 }
 
@@ -71,52 +48,23 @@ const createMultipleResult = (results) => {
 // READ
 //
 
-const userIdQuery = (query) => {
-  return _.has(query, 'facebookId')
-    ? { facebookId: query.facebookId }
-    : _.has(query, 'email') ? { email: query.email } : null
-}
-
 exports.read = async (req, res, next) => {
-  if (_.has(req.params, 'id')) {
-    User.findById(req.params.id, async (err, user) => {
-      if (err) {
-        return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
-      }
-      return res.status(201).send({ user: user })
-    })
-  } else if (_.isEmpty(req.query)) {
-    redis.get('users', (err, reply) => {
-      if (err) {
-        next()
-      } else if (reply) {
-        const users = JSON.parse(reply)
-        return res.status(201).send({ count: users.length, users: users })
-      } else {
-        User.find({}, (err, users) => {
-          if (err) {
-            return res.status(422).send({ error: `Error retrieving users -> ${err.message}` })
-          }
-          redis.set('users', JSON.stringify(users))
-          return res.status(201).send({ count: users.length, users: users })
-        })
-      }
-    })
-  } else {
-    const query = userIdQuery(req.query)
+  if (req.params.id) {
 
-    if (query) {
-      User.findOne(query, async (err, user) => {
-        if (err) {
-          return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
-        } else if (user) {
-          return res.status(201).send({ success: true, user: user })
-        }
-        return res.status(422).send({ error: `Could not find user: ${JSON.stringify(query)}` })
-      })
-    } else {
-      return res.status(422).send({ error: 'Unsupported user query' })    
-    }
+    User.findById(req.params.id, async (error, user) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(user)
+    })
+
+  } else {
+
+    User.find({}, (error, users) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(users)
+    })    
+
   }
 }
 
@@ -125,12 +73,12 @@ exports.read = async (req, res, next) => {
 //
 
 exports.update2 = async (req, res, next) => {
-  User.update({ _id: req.params.id }, req.body, async (error, user) => {
+  User.update({ _id: req.params.id }, req.body, async (error, result) => {
     if (error) { return res.status(422).send({ error: error.message }) }
 
-    return user.n > 0
-      ? res.status(201).send(user)
-      : res.status(422).send({ error: `Could not find user: (${req.params.value})` })
+    return result.n > 0
+      ? res.status(200).send(req.body)
+      : res.status(422).send({ error: 'Not found.' })
   })  
 }
 
@@ -224,10 +172,10 @@ const updateFromMobile = async (req, res, next) => {
 //
 
 exports.delete = (req, res, next) => {
-  User.remove({}, async (error) => {
+  User.findOneAndRemove({ _id: req.params.id }, async (error, user) => {
     return error
-      ? res.status(422).send({ error: 'Something went wrong.' })
-      : res.status(201).send('Deleted all users');
+      ? res.status(422).send({ error: error.message })
+      : res.status(200).send(user)
   })
 }
 

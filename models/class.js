@@ -4,7 +4,7 @@ const _ = require('underscore')
 
 const classSchema = new Schema({
   teacher: Schema.Types.ObjectId,
-  name: String,
+  name: { type: String, required: true },
   students: {
     type: [Schema.Types.ObjectId],
     default: []
