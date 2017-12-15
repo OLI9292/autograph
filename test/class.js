@@ -58,6 +58,7 @@ describe('Classes', () => {
         chai.request(server)
           .get('/api/v2/auth/class?teacher=' + _class.teacher)
           .end((err, res) => {
+            console.log(res.body)
               res.should.have.status(200)
               res.body.should.be.a('array').lengthOf(1)
               res.body[0].should.have.property('_id').eql(_class.id)

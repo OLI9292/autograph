@@ -47,6 +47,12 @@ const createUser = async (data) => {
 // READ
 //
 
+const userIdQuery = (query) => {
+  return _.has(query, 'facebookId')
+    ? { facebookId: query.facebookId }
+    : _.has(query, 'email') ? { email: query.email } : null
+}
+
 exports.read = async (req, res, next) => {
   if (req.params.id) {
 
@@ -55,6 +61,22 @@ exports.read = async (req, res, next) => {
         ? res.status(422).send({ error: error.message })
         : res.status(200).send(user)
     })
+
+  } else if (!_.isEmpty(req.query)) {
+
+    const query = userIdQuery(req.query)
+
+    if (query) {
+      User.findOne(query, async (error, user) => {
+        if (error) { return res.status(422).send({ error: error.message }) }
+
+        return user
+          ? res.status(200).send({ success: true, user: user })
+          : res.status(422).send({ error: 'Not found.' })
+      })
+    } else {
+      return res.status(422).send({ error: 'Unsupported user query.' })    
+    }
 
   } else {
 
