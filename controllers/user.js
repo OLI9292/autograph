@@ -1,20 +1,8 @@
-const jwt = require('jwt-simple')
 const mongoose = require('mongoose')
 const _ = require('underscore')
 
-const CONFIG = require('../config/main')
-const User = require('../models/user')
 const Class = require('../models/class')
-
-let redis
-
-if (process.env.REDISTOGO_URL) {
-  const rtg = require('url').parse(process.env.REDISTOGO_URL)
-  redis = require('redis').createClient(rtg.port, rtg.hostname)
-  redis.auth(rtg.auth.split(":")[1])
-} else {
-  redis = require('redis').createClient()
-}
+const User = require('../models/user')
 
 //
 // CREATE
@@ -22,48 +10,35 @@ if (process.env.REDISTOGO_URL) {
 
 exports.create = async (req, res, next) => {
   const data = req.body
-  const batch = _.isArray(data)
 
-  if (batch) {
+  if (_.isArray(data)) {
+
     const results = await Promise.all(data.map(createUser))
-    const response = createMultipleResult(results, res)
-    const statusCode = response.results.length > 0 ? 201 : 422
-    return res.status(statusCode).send({ response })
+    return res.status(201).send(results)
+
   } else {
+
     let response = await createUser(data)
-    if (_.has(response, 'error')) {
-      return res.status(422).send(response)
-    } else {
-      response.success = true
-      return res.status(201).send(response)
-    }
+    return response.error
+      ? res.status(422).send(response)
+      : res.status(201).send(response)
+
   }
 }
 
 const createUser = async (data) => {
   try {
     const existing = await User.findOne({ email: data.email })
-
+    
     if (existing) {
       return { error: 'There is already an account associated with this email.' }
-    } else {
-      const user = new User(data)
-      await user.save()
-      return { user: user }
     }
+
+    const user = new User(data)
+    await user.save()
+    return user
   } catch (error) {
     return { error: 'Something went wrong.' }
-  }
-}
-
-const createMultipleResult = (results) => {
-  const errors = _.compact(_.pluck(results, 'error'))
-  const succesful = results.filter((r) => !_.has(r, 'error'))
-  return { 
-    errorCount: errors.length,
-    errors: errors,
-    succesfulCount: succesful.length,
-    results: succesful
   }
 }
 
@@ -71,52 +46,23 @@ const createMultipleResult = (results) => {
 // READ
 //
 
-const userIdQuery = (query) => {
-  return _.has(query, 'facebookId')
-    ? { facebookId: query.facebookId }
-    : _.has(query, 'email') ? { email: query.email } : null
-}
-
 exports.read = async (req, res, next) => {
-  if (_.has(req.params, 'id')) {
-    User.findById(req.params.id, async (err, user) => {
-      if (err) {
-        return res.status(422).send({ error: `Error finding user ${req.params.id} -> ${err.message}` })
-      }
-      return res.status(201).send({ user: user })
-    })
-  } else if (_.isEmpty(req.query)) {
-    redis.get('users', (err, reply) => {
-      if (err) {
-        next()
-      } else if (reply) {
-        const users = JSON.parse(reply)
-        return res.status(201).send({ count: users.length, users: users })
-      } else {
-        User.find({}, (err, users) => {
-          if (err) {
-            return res.status(422).send({ error: `Error retrieving users -> ${err.message}` })
-          }
-          redis.set('users', JSON.stringify(users))
-          return res.status(201).send({ count: users.length, users: users })
-        })
-      }
-    })
-  } else {
-    const query = userIdQuery(req.query)
+  if (req.params.id) {
 
-    if (query) {
-      User.findOne(query, async (err, user) => {
-        if (err) {
-          return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
-        } else if (user) {
-          return res.status(201).send({ success: true, user: user })
-        }
-        return res.status(422).send({ error: `Could not find user: ${JSON.stringify(query)}` })
-      })
-    } else {
-      return res.status(422).send({ error: 'Unsupported user query' })    
-    }
+    User.findById(req.params.id, async (error, user) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(user)
+    })
+
+  } else {
+
+    User.find({}, (error, users) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(users)
+    })    
+
   }
 }
 
@@ -125,12 +71,12 @@ exports.read = async (req, res, next) => {
 //
 
 exports.update2 = async (req, res, next) => {
-  User.update({ _id: req.params.id }, req.body, async (error, user) => {
+  User.update({ _id: req.params.id }, req.body, async (error, result) => {
     if (error) { return res.status(422).send({ error: error.message }) }
 
-    return user.n > 0
-      ? res.status(201).send(user)
-      : res.status(422).send({ error: `Could not find user: (${req.params.value})` })
+    return result.n > 0
+      ? res.status(200).send(req.body)
+      : res.status(422).send({ error: 'Not found.' })
   })  
 }
 
@@ -143,28 +89,35 @@ exports.update = async (req, res, next) => {
 }
 
 const updateFromWeb = async (req, res, next) => {
-  const stats = req.body.stats;
+  const [id, stats] = [req.body.id, req.body.stats]
 
-  if (!_.isArray(stats)) {
-    return res.status(422).send({ error: 'No stats found in body' })
-  }
+  if (!id || !_.isArray(stats)) { return res.status(422).send({ error: 'Id and stats required.' }) }
   
   User.findById(req.body.id, async (error, user) => {
     if (error) { return res.status(422).send({ error: error.message }); }
 
     if (user) {
+
       stats.forEach((s) => {
-        const existingIdx = _.findIndex(user.words, (w) => s.word === w.name);
-        if (existingIdx >= 0) {
-          const copy = user.words[existingIdx];
-          copy.seen += 1;
-          copy.correct += s.correct ? 1 : 0;
-          copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0;
-          copy.timeSpent += s.time || 0;
-          user.words[existingIdx] = copy;
+        const idx = _.findIndex(user.words, (w) => s.word === w.name)
+
+        if (idx >= 0) {
+          
+          const copy = user.words[existingIdx]
+          copy.seen += 1
+          copy.correct += s.correct ? 1 : 0
+          copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0
+          copy.timeSpent += s.time || 0
+          user.words[existingIdx] = copy
+
         } else {
-          const word = { name: s.word, correct: s.correct ? 1 : 0, timeSpent: 2 }
-          user.words.push(word);
+          
+          user.words.push({
+            name: s.word,
+            correct: s.correct ? 1 : 0,
+            timeSpent: s.time
+          })
+          
         }
       })
 
@@ -174,12 +127,12 @@ const updateFromWeb = async (req, res, next) => {
 
       try {
         await user.save()
-        return res.status(201).send({ user: user })      
-      } catch (e) {
-        return res.status(422).send({ error: `Error saving stats for user -> ${e}` })
+        return res.status(200).send({ user: user })      
+      } catch (error) {
+        return res.status(422).send({ error: error.message })
       }
     } else {
-      return res.status(422).send({ error: 'No user.' });
+      return res.status(422).send({ error: 'User not found.' });
     }
   })
 }
@@ -219,15 +172,44 @@ const updateFromMobile = async (req, res, next) => {
   }
 }
 
+exports.joinClass = async (req, res, next) => {
+  const [classId, students] = [req.body.classId, req.body.students]
+
+  if (!classId || !_.isArray(students)) { return res.status(422).send({ error: 'Invalid query.' }) }
+
+  await Class.findById(classId, (err, _class) => {
+    if (error)  { return res.status(422).send({ error: error.message }) }
+    if (_class) { return res.status(422).send({ error: 'Class not found.' }) }
+
+    User.find({ _id: { $in: students } }, async (err, students) => {
+      if (error) { return res.status(422).send({ error: error.message }) }
+
+      const newStudents = _.reject(students, (s) => _class.students.some((o) => o.equals(s._id)))
+
+      await newStudents.forEach(async (n) => {
+        if (!_.some(n.classes, (c) => c.equals(classId))) {
+          n.classes.push({ id: classId, role: 'student' })
+          await n.save()
+        }
+      })
+
+      _.pluck(newStudents, '_id').forEach((id) => _class.students.push(id))
+      
+      await _class.save()
+      return res.status(200).send(_class)
+    });
+  })
+}
+
 //
 // DELETE
 //
 
 exports.delete = (req, res, next) => {
-  User.remove({}, async (error) => {
+  User.findOneAndRemove({ _id: req.params.id }, async (error, user) => {
     return error
-      ? res.status(422).send({ error: 'Something went wrong.' })
-      : res.status(201).send('Deleted all users');
+      ? res.status(422).send({ error: error.message })
+      : res.status(200).send(user)
   })
 }
 

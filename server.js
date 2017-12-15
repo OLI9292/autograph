@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -6,18 +8,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const router = require('./router')
 
-require('dotenv').config()
-
 const CONFIG = require('./config/main')
 
-if (process.env.NODE_ENV === 'production') {
-  const nullfun = function () {};
-  console.log = nullfun;
-  console.info = nullfun;
-  console.error = nullfun;
-  console.warn = nullfun;
-}
-
+mongoose.Promise = global.Promise
+console.log(CONFIG.MONGODB_URI)
 mongoose.connect(CONFIG.MONGODB_URI, { useMongoClient: true, promiseLibrary: global.Promise })
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -34,6 +28,14 @@ app.use((req, res, next) => {
   next()
 })
 
+// Don't validate requests during testing
+if (process.env.NODE_ENV === 'production') {
+  app.all('/api/v2/*', [require('./middlewares/validateRequest')])  
+}
+
 app.listen(CONFIG.PORT, () => console.log(`App listening on port ${CONFIG.PORT}`))
 
 router(app)
+
+// For testing
+module.exports = app

@@ -13,12 +13,7 @@ const lessonSchema = new Schema({
       related: { type: [String], default: [] }
     },
     default: []
-  },
-  classes: {
-    type: [Schema.Types.ObjectId],
-    default: []
-  },
-  public: { type: Boolean, default: false }
+  }
 })
 
 const Lesson = mongoose.model('Lesson', lessonSchema)
