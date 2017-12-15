@@ -24,7 +24,7 @@ describe('Users', () => {
   describe('/GET users', () => {
     it('it should GET all the users', (done) => {
       chai.request(server)
-        .get('/api/v2/admin/user')
+        .get('/api/v2/auth/user')
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
@@ -51,7 +51,22 @@ describe('Users', () => {
             done()
         })
       })
-    })     
+    })
+
+    it('it should GET a user by their email', (done) => {
+      const user = new User(userMock)
+      user.save((err, user) => {
+        chai.request(server)
+          .get('/api/v2/auth/user?email=' + user.email)
+          .end((err, res) => {
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.should.have.property('user')
+              res.body.user.should.have.property('_id').eql(user.id)
+            done()
+        })
+      })
+    })    
   });  
 
   describe('/POST user', () => {

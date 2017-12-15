@@ -39,10 +39,8 @@ module.exports = (app) => {
 
   // CLASS ROUTES
   apiRoutes.post('/v2/admin/class', ClassController.create)
-  
   // TODO: - cleaner implementation
   apiRoutes.post('/v2/class/:id', ClassController.join)  
-
   apiRoutes.get('/v2/auth/class', ClassController.read)
   apiRoutes.get('/v2/auth/class/:id', ClassController.read)
   apiRoutes.get('/v2/auth/class/:id/students', ClassController.readStudents)  
@@ -58,7 +56,7 @@ module.exports = (app) => {
   // USER ROUTES
 
   apiRoutes.post('/v2/user', UserController.create)
-  apiRoutes.get('/v2/admin/user', UserController.read) // ADMIN
+  apiRoutes.get('/v2/auth/user', UserController.read) // ADMIN
   apiRoutes.get('/v2/auth/user/:id', UserController.read) // AUTH
   // TODO: - cleaner implementation
   apiRoutes.patch('/v2/auth/user/stats', UserController.update) // AUTH
