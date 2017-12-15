@@ -45,7 +45,6 @@ describe('Classes', () => {
               res.should.have.status(200)
               res.body.should.be.a('object')
               res.body.students.should.have.lengthOf(2)
-              res.body.lessons.should.have.lengthOf(0)
               res.body.should.have.property('name').eql(classMock.name)
               res.body.should.have.property('_id').eql(_class.id)
             done()

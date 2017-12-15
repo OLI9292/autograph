@@ -34,25 +34,24 @@ describe('Users', () => {
     });
   });
 
-
   describe('/GET/:id user', () => {
-      it('it should GET a user by the given id', (done) => {
-        const user = new User(userMock)
-        user.save((err, user) => {
-          chai.request(server)
-            .get('/api/v2/auth/user/' + user.id)
-            .end((err, res) => {
-                res.should.have.status(200)
-                res.body.should.be.a('object')
-                res.body.should.have.property('firstName')
-                res.body.should.have.property('lastName')
-                res.body.should.have.property('signUpMethod')
-                res.body.should.have.property('email')
-                res.body.should.have.property('_id').eql(user.id)
-              done()
-          })
+    it('it should GET a user by the given id', (done) => {
+      const user = new User(userMock)
+      user.save((err, user) => {
+        chai.request(server)
+          .get('/api/v2/auth/user/' + user.id)
+          .end((err, res) => {
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.should.have.property('firstName')
+              res.body.should.have.property('lastName')
+              res.body.should.have.property('signUpMethod')
+              res.body.should.have.property('email')
+              res.body.should.have.property('_id').eql(user.id)
+            done()
         })
-      })     
+      })
+    })     
   });  
 
   describe('/POST user', () => {
@@ -99,7 +98,7 @@ describe('Users', () => {
     });    
   });
 
-  describe('/PUT/:id user', () => {
+  describe('/PATCH/:id user', () => {
     it('it should UPDATE a user given the id', (done) => {
       const user = new User(userMock)
       user.save((err, user) => {
@@ -118,6 +117,42 @@ describe('Users', () => {
         })
     })
   });
+
+  describe('/PATCH user/stats', () => {
+    it('it should UPDATE stats for a user', (done) => {
+      const user = new User(userMock)
+      user.save((err, user) => {
+        
+        const data = {
+          id: user.id,
+          platform: 'web',
+          stats: [
+            { word: 'hypnotism', correct: false, difficulty: 8, time: 3 },
+            { word: 'carnivore', correct: true, difficulty: 2, time: 4 },
+            { word: 'herbivore', correct: true, difficulty: 4, time: 2 }
+          ]
+        }        
+
+        chai.request(server)
+          .patch('/api/v2/auth/user/stats')
+          .send(data)
+          .end((err, res) => {
+              res.should.have.status(200)
+              res.body.should.have.property('user')
+              res.body.user.should.have.property('words')
+              res.body.user.words.should.be.a('array').lengthOf(3)
+              res.body.user.words[0].should.have.property('name').eql(data.stats[0].word)
+              res.body.user.words[0].should.have.property('correct').eql(0)
+              res.body.user.words[0].should.have.property('experience').eql(1)
+              res.body.user.words[0].should.have.property('timeSpent').eql(3)
+              res.body.user.words[1].should.have.property('name').eql(data.stats[1].word)
+              res.body.user.words[1].should.have.property('correct').eql(1)
+              res.body.should.be.a('object')
+            done()
+          })
+        })
+    })
+  });  
 
   describe('/DELETE/:id word', () => {
     it('it should DELETE a word given the id', (done) => {

@@ -1,10 +1,8 @@
-const jwt = require('jwt-simple')
 const mongoose = require('mongoose')
 const _ = require('underscore')
 
-const CONFIG = require('../config/main')
-const User = require('../models/user')
 const Class = require('../models/class')
+const User = require('../models/user')
 
 //
 // CREATE
@@ -91,28 +89,35 @@ exports.update = async (req, res, next) => {
 }
 
 const updateFromWeb = async (req, res, next) => {
-  const stats = req.body.stats;
+  const [id, stats] = [req.body.id, req.body.stats]
 
-  if (!_.isArray(stats)) {
-    return res.status(422).send({ error: 'No stats found in body' })
-  }
+  if (!id || !_.isArray(stats)) { return res.status(422).send({ error: 'Id and stats required.' }) }
   
   User.findById(req.body.id, async (error, user) => {
     if (error) { return res.status(422).send({ error: error.message }); }
 
     if (user) {
+
       stats.forEach((s) => {
-        const existingIdx = _.findIndex(user.words, (w) => s.word === w.name);
-        if (existingIdx >= 0) {
-          const copy = user.words[existingIdx];
-          copy.seen += 1;
-          copy.correct += s.correct ? 1 : 0;
-          copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0;
-          copy.timeSpent += s.time || 0;
-          user.words[existingIdx] = copy;
+        const idx = _.findIndex(user.words, (w) => s.word === w.name)
+
+        if (idx >= 0) {
+          
+          const copy = user.words[existingIdx]
+          copy.seen += 1
+          copy.correct += s.correct ? 1 : 0
+          copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0
+          copy.timeSpent += s.time || 0
+          user.words[existingIdx] = copy
+
         } else {
-          const word = { name: s.word, correct: s.correct ? 1 : 0, timeSpent: 2 }
-          user.words.push(word);
+          
+          user.words.push({
+            name: s.word,
+            correct: s.correct ? 1 : 0,
+            timeSpent: s.time
+          })
+          
         }
       })
 
@@ -122,12 +127,12 @@ const updateFromWeb = async (req, res, next) => {
 
       try {
         await user.save()
-        return res.status(201).send({ user: user })      
-      } catch (e) {
-        return res.status(422).send({ error: `Error saving stats for user -> ${e}` })
+        return res.status(200).send({ user: user })      
+      } catch (error) {
+        return res.status(422).send({ error: error.message })
       }
     } else {
-      return res.status(422).send({ error: 'No user.' });
+      return res.status(422).send({ error: 'User not found.' });
     }
   })
 }
@@ -165,6 +170,35 @@ const updateFromMobile = async (req, res, next) => {
   } else {
     return res.status(422).send({ error: 'Unsupported user query' })    
   }
+}
+
+exports.joinClass = async (req, res, next) => {
+  const [classId, students] = [req.body.classId, req.body.students]
+
+  if (!classId || !_.isArray(students)) { return res.status(422).send({ error: 'Invalid query.' }) }
+
+  await Class.findById(classId, (err, _class) => {
+    if (error)  { return res.status(422).send({ error: error.message }) }
+    if (_class) { return res.status(422).send({ error: 'Class not found.' }) }
+
+    User.find({ _id: { $in: students } }, async (err, students) => {
+      if (error) { return res.status(422).send({ error: error.message }) }
+
+      const newStudents = _.reject(students, (s) => _class.students.some((o) => o.equals(s._id)))
+
+      await newStudents.forEach(async (n) => {
+        if (!_.some(n.classes, (c) => c.equals(classId))) {
+          n.classes.push({ id: classId, role: 'student' })
+          await n.save()
+        }
+      })
+
+      _.pluck(newStudents, '_id').forEach((id) => _class.students.push(id))
+      
+      await _class.save()
+      return res.status(200).send(_class)
+    });
+  })
 }
 
 //

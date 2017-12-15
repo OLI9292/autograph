@@ -1,8 +1,9 @@
 const express = require('express')
 
-const UserController = require('./controllers/user')
 const ClassController = require('./controllers/class')
 const LessonController = require('./controllers/lesson')
+const LoginController = require('./controllers/login')
+const UserController = require('./controllers/user')
 
 module.exports = (app) => {  
   const apiRoutes = express.Router()
@@ -34,14 +35,18 @@ module.exports = (app) => {
 
   // V2
 
+  apiRoutes.post('/v2/login', LoginController.login)  
+
   // CLASS ROUTES
   apiRoutes.post('/v2/admin/class', ClassController.create)
+  
+  // TODO: - cleaner implementation
+  apiRoutes.post('/v2/class/:id', ClassController.join)  
+
   apiRoutes.get('/v2/auth/class', ClassController.read)
   apiRoutes.get('/v2/auth/class/:id', ClassController.read)
   apiRoutes.get('/v2/auth/class/:id/students', ClassController.readStudents)  
   apiRoutes.delete('/v2/admin/class/:id', ClassController.delete)
-
-  //apiRoutes.post('/class/:id', ClassController.join)
 
   // LESSON ROUTES
   apiRoutes.post('/v2/admin/lesson', LessonController.create)
@@ -51,15 +56,15 @@ module.exports = (app) => {
   apiRoutes.delete('/v2/admin/lesson/:id', LessonController.delete)  
 
   // USER ROUTES
+
   apiRoutes.post('/v2/user', UserController.create)
   apiRoutes.get('/v2/admin/user', UserController.read) // ADMIN
   apiRoutes.get('/v2/auth/user/:id', UserController.read) // AUTH
+  // TODO: - cleaner implementation
+  apiRoutes.patch('/v2/auth/user/stats', UserController.update) // AUTH
   apiRoutes.patch('/v2/auth/user/:id', UserController.update2) // AUTH
+  apiRoutes.patch('/v2/auth/user/joinClass', UserController.joinClass) // AUTH
   apiRoutes.delete('/v2/admin/user/:id', UserController.delete) // ADMIN
-
-  //apiRoutes.patch('/v2/auth/user', UserController.update) // AUTH
-  //apiRoutes.post('/v2/user/login', UserController.login)
-  //apiRoutes.post('/v2/auth/user/:id/lesson', LessonController.create) // AUTH  
 
   app.use('/api', apiRoutes)
 }
