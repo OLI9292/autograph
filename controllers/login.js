@@ -29,7 +29,7 @@ exports.login = async (req, res, next) => {
       if (error) { return res.status(422).send({ error: 'Something went wrong.' }) }
 
       return isMatch
-        ? res.status(200).send({ user: user, success: true, token: genToken(user) })
+        ? res.status(200).send(genToken(user))
         : res.status(422).send({ error: 'Incorrect password.' })
     })
 
