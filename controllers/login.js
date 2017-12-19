@@ -13,7 +13,7 @@ const expiresIn = (numDays) => {
 const genToken = (user) => {
   const expires = expiresIn(7)
   const token = jwt.encode({ exp: expires }, process.env.VALIDATION_TOKEN)
-  return { user: user._id, expires: expires, token: token }
+  return { user: user, expires: expires, token: token }
 }
 
 exports.login = async (req, res, next) => {
