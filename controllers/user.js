@@ -126,12 +126,12 @@ const updateFromWeb = async (req, res, next) => {
 
         if (idx >= 0) {
           
-          const copy = user.words[existingIdx]
+          const copy = user.words[idx]
           copy.seen += 1
           copy.correct += s.correct ? 1 : 0
           copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0
           copy.timeSpent += s.time || 0
-          user.words[existingIdx] = copy
+          user.words[idx] = copy
 
         } else {
           
