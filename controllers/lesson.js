@@ -48,11 +48,11 @@ exports.read = async (req, res, next) => {
 //
 
 exports.update = async (req, res, next) => {
-  Lesson.update({ _id: req.params.id }, req.body, async (error, lesson) => {
+  Lesson.findOneAndReplace({ _id: req.params.id }, req.body, { returnNewDocument: true }, async (error, lesson) => {
     if (error) { return res.status(422).send({ error: error.message }) }
 
-    return lesson.n > 0
-      ? res.status(200).send(req.body)
+    return lesson
+      ? res.status(200).send(lesson)
       : res.status(422).send({ error: 'Not found.' })
   })
 }
