@@ -48,7 +48,9 @@ exports.read = async (req, res, next) => {
 //
 
 exports.update = async (req, res, next) => {
-  Lesson.findOneAndReplace({ _id: req.params.id }, req.body, { returnNewDocument: true }, async (error, lesson) => {
+  console.log(1)
+  Lesson.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, async (error, lesson) => {
+    console.log(2)
     if (error) { return res.status(422).send({ error: error.message }) }
 
     return lesson
