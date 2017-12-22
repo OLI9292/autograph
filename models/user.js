@@ -31,7 +31,7 @@ const userSchema = new Schema({
   mobileIapUnlocked: { type: Boolean, default: false },
   ranking: { type: Number, default: 100 },
   firstName: { type: String, required: true, default: "" },
-  lastName: { type: String, required: true, default: "" },
+  lastName: { type: String, default: "" },
   optedIntoEmail: Boolean,
   password: String,
   roundsCompleted: { type: Number, required: true, default: 0 },
