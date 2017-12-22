@@ -3,6 +3,7 @@ const express = require('express')
 const ClassController = require('./controllers/class')
 const LessonController = require('./controllers/lesson')
 const LoginController = require('./controllers/login')
+const SchoolController = require('./controllers/school')
 const UserController = require('./controllers/user')
 
 module.exports = (app) => {  
@@ -52,6 +53,13 @@ module.exports = (app) => {
   apiRoutes.get('/v2/lesson/:id', LessonController.read)
   apiRoutes.patch('/v2/admin/lesson/:id', LessonController.update)
   apiRoutes.delete('/v2/admin/lesson/:id', LessonController.delete)  
+
+  // SCHOOL ROUTES
+  apiRoutes.post('/v2/admin/school', SchoolController.create)
+  apiRoutes.get('/v2/admin/school', SchoolController.read)
+  apiRoutes.get('/v2/admin/school/:id', SchoolController.read)
+  apiRoutes.patch('/v2/admin/school/:id', SchoolController.update)
+  apiRoutes.delete('/v2/admin/school/:id', SchoolController.delete)    
 
   // USER ROUTES
 
