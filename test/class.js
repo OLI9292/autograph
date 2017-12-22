@@ -111,6 +111,23 @@ describe('Classes', () => {
     });      
   });
 
+  describe('/PATCH/:id class', () => {
+    it('it should UPDATE a class given the id', (done) => {
+      const _class = new Class(classMock)
+      _class.save((err, _class) => {
+        chai.request(server)
+          .patch('/api/v2/admin/class/' + _class.id)
+          .send(_.extend(_class, { name: 'Lower Lab' }))
+          .end((err, res) => {
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.should.have.property('name').eql('Lower Lab')
+              res.body.should.have.property('_id').eql(_class.id)
+            done()
+          })
+        })
+    })
+  }); 
 
   describe('/DELETE/:id word', () => {
     it('it should DELETE a word given the id', (done) => {

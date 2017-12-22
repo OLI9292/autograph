@@ -45,6 +45,7 @@ module.exports = (app) => {
   apiRoutes.get('/v2/auth/class', ClassController.read)
   apiRoutes.get('/v2/auth/class/:id', ClassController.read)
   apiRoutes.get('/v2/auth/class/:id/students', ClassController.readStudents)  
+  apiRoutes.patch('/v2/admin/class/:id', ClassController.update)
   apiRoutes.delete('/v2/admin/class/:id', ClassController.delete)
 
   // LESSON ROUTES

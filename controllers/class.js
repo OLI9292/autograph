@@ -124,6 +124,20 @@ exports.join = async (req, res, next) => {
 }
 
 //
+// UPDATE
+//
+
+exports.update = async (req, res, next) => {
+  Class.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, async (error, _class) => {
+    if (error) { return res.status(422).send({ error: error.message }) }
+
+    return _class
+      ? res.status(200).send(_class)
+      : res.status(422).send({ error: 'Not found.' })
+  })
+}
+
+//
 // DELETE
 //
 

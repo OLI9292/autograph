@@ -74,7 +74,7 @@ describe('Schools', () => {
     }); 
   });
 
-  describe('/PUT/:id school', () => {
+  describe('/PATCH/:id school', () => {
     it('it should UPDATE a school given the id', (done) => {
       const school = new School(schoolMock)
       school.save((err, school) => {
