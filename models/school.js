@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 const _ = require('underscore')
 
 const schoolSchema = new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   address: String,
   city: String,
   state: String,
