@@ -7,8 +7,10 @@ const mongoose = require('mongoose')
 const server = require('../server')
 const should = chai.should()
 
+const School = require('../models/school')
 const User = require('../models/user')
 
+const schoolMock = require('./mocks/school');
 const userMocks = require('./mocks/user');
 const userMock = userMocks[0];
 
@@ -17,9 +19,29 @@ chai.use(chaiHttp)
 describe('Users', () => {
   beforeEach((done) => {
     User.remove({}, (err) => { 
-      done()         
+      School.remove({}, (err) => { 
+        done()         
+      })
     })     
   })
+
+  describe('user.fullname()', () => {
+    it('it should return the user\`s fullname', (done) => {
+      const user = new User(userMock)
+      user.save((err, user) => {
+        user.fullName().should.eql('Don Draper')
+        done()
+      })
+    });
+
+    it('it should return the user\`s first name if they don\'t have a last name', (done) => {
+      const user = new User(_.omit(userMock, 'lastName'))
+      user.save((err, user) => {
+        user.fullName().should.eql('Don')
+        done()
+      })
+    });    
+  });  
 
   describe('/GET users', () => {
     it('it should GET all the users', (done) => {
@@ -85,7 +107,7 @@ describe('Users', () => {
         })
     });
 
-    ['firstName', 'lastName', 'signUpMethod'].forEach(attr => {
+    ['firstName', 'signUpMethod'].forEach(attr => {
       it(`it should not POST a user missing ${attr}`, (done) => {
         chai.request(server)
           .post('/api/v2/user')
@@ -132,6 +154,26 @@ describe('Users', () => {
         })
     })
   });
+
+  describe('/PATCH/joinSchool user', () => {
+    it('it should UPDATE school for multiple users', (done) => {
+      const user = new User(userMock)
+      const school = new School(schoolMock)
+
+      user.save((err, user) => {
+        school.save((err, school) => {
+          chai.request(server)
+            .patch('/api/v2/admin/user/joinSchool')
+            .send({ school: school.id, students: [user.id] })
+            .end((err, res) => {
+                res.should.have.status(200)
+                res.body.should.have.property('success')
+                done()
+            })
+          })
+        })
+    })
+  });  
 
   describe('/PATCH user/stats', () => {
     it('it should UPDATE stats for a user', (done) => {

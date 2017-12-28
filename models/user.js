@@ -31,10 +31,11 @@ const userSchema = new Schema({
   mobileIapUnlocked: { type: Boolean, default: false },
   ranking: { type: Number, default: 100 },
   firstName: { type: String, required: true, default: "" },
-  lastName: { type: String, required: true, default: "" },
+  lastName: String,
   optedIntoEmail: Boolean,
   password: String,
   roundsCompleted: { type: Number, required: true, default: 0 },
+  school: Schema.Types.ObjectId,
   signUpMethod: {
     type: String, 
     enum: ['email', 'facebook', 'google'], 
@@ -86,6 +87,10 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
     
     cb(null, isMatch)
   })
+}
+
+userSchema.methods.fullName = function() {
+  return this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName
 }
 
 const User = mongoose.model('User', userSchema)

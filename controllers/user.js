@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const _ = require('underscore')
 
 const Class = require('../models/class')
+const School = require('../models/school')
 const User = require('../models/user')
 
 //
@@ -72,7 +73,7 @@ exports.read = async (req, res, next) => {
 
         return user
           ? res.status(200).send({ success: true, user: user })
-          : res.status(422).send({ error: 'Not found.' })
+          : res.status(404).send({ error: 'Not found.' })
       })
     } else {
       return res.status(422).send({ error: 'Unsupported user query.' })    
@@ -99,7 +100,7 @@ exports.update2 = async (req, res, next) => {
 
     return result.n > 0
       ? res.status(200).send(req.body)
-      : res.status(422).send({ error: 'Not found.' })
+      : res.status(404).send({ error: 'Not found.' })
   })  
 }
 
@@ -155,7 +156,7 @@ const updateFromWeb = async (req, res, next) => {
         return res.status(422).send({ error: error.message })
       }
     } else {
-      return res.status(422).send({ error: 'User not found.' });
+      return res.status(404).send({ error: 'User not found.' });
     }
   })
 }
@@ -188,7 +189,7 @@ const updateFromMobile = async (req, res, next) => {
           return res.status(422).send({ error: 'Error saving word experience' })
         }
       }
-      return res.status(422).send({ error: `Could not find user: ${JSON.stringify(query)}` })
+      return res.status(404).send({ error: 'Not found.' })
     })
   } else {
     return res.status(422).send({ error: 'Unsupported user query' })    
@@ -202,7 +203,7 @@ exports.joinClass = async (req, res, next) => {
 
   await Class.findById(classId, (err, _class) => {
     if (error)  { return res.status(422).send({ error: error.message }) }
-    if (_class) { return res.status(422).send({ error: 'Class not found.' }) }
+    if (_class) { return res.status(404).send({ error: 'Not found.' }) }
 
     User.find({ _id: { $in: students } }, async (err, students) => {
       if (error) { return res.status(422).send({ error: error.message }) }
@@ -221,6 +222,23 @@ exports.joinClass = async (req, res, next) => {
       await _class.save()
       return res.status(200).send(_class)
     });
+  })
+}
+
+exports.joinSchool = async (req, res, next) => {
+  const [schoolId, students] = [req.body.school, req.body.students]
+  
+  if (!schoolId || !_.isArray(students)) { return res.status(422).send({ error: 'Invalid params.' }) }
+
+  School.findById(schoolId, async (error, school) => {
+    if (error) { return res.status(422).send({ error: error.message }) }
+    if (!school) { return res.status(404).send({ error: 'Not found.' }) }
+
+    User.updateMany({ _id: { $in: students } }, { $set: { 'school': school._id } }, async (error, users) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send({ success: true })
+    })
   })
 }
 
@@ -275,7 +293,7 @@ exports.login = async (req, res, next) => {
         return res.status(statusCode).send(result)
       })
     } else {
-      return res.status(422).send({ error: 'Email not found.' })
+      return res.status(404).send({ error: 'Email not found.' })
     }
   } catch (error) {
     return res.status(422).send({ error: 'Error finding user.' })

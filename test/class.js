@@ -8,17 +8,22 @@ const server = require('../server')
 const should = chai.should()
 
 const Class = require('../models/class')
+const School = require('../models/school')
 const User = require('../models/user')
 
 const classMock = require('./mocks/class');
+const schoolMock = require('./mocks/school');
 const userMock = require('./mocks/user')[0];
-
 chai.use(chaiHttp)
 
 describe('Classes', () => {
   beforeEach((done) => {
     Class.remove({}, (err) => { 
-      done()         
+      School.remove({}, (err) => { 
+        User.remove({}, (err) => { 
+          done()         
+        })     
+      })     
     })     
   })
 
@@ -66,6 +71,29 @@ describe('Classes', () => {
       })
     })             
   });  
+
+  describe('/GET/:id/leaderboards class', () => {
+    it('it should GET leaderboards for the given id', (done) => {
+      const school = new School(schoolMock)
+      console.log(schoolMock)
+      school.save((err, school) => {
+        console.log(school)
+        console.log('hiiii')
+        const _class = new Class(_.extend({}, classMock, { school: school.id }))
+        _class.save((err, _class) => {
+          chai.request(server)
+            .get('/api/v2/auth/class/' + _class.id + '/leaderboards')
+            .end((err, res) => {
+                res.should.have.status(200)
+                res.body.should.be.a('object')
+                res.body.should.have.property('earth').eql([])
+                res.body.should.have.property(school.name).eql([])
+              done()
+          })
+        })
+      })
+    })           
+  });   
 
   describe('/POST class', () => {
     it('it should not POST a class without a valid teacher', (done) => {
