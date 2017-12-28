@@ -44,7 +44,6 @@ module.exports = (app) => {
   apiRoutes.post('/v2/class/:id', ClassController.join)  
   apiRoutes.get('/v2/auth/class', ClassController.read) // AUTH
   apiRoutes.get('/v2/auth/class/:id', ClassController.read) // AUTH
-  apiRoutes.get('/v2/auth/class/:id/leaderboards', ClassController.leaderboards) // AUTH
   apiRoutes.get('/v2/auth/class/:id/students', ClassController.readStudents) // AUTH
   apiRoutes.patch('/v2/admin/class/:id', ClassController.update) // ADMIN
   apiRoutes.delete('/v2/admin/class/:id', ClassController.delete) // ADMIN
@@ -60,6 +59,7 @@ module.exports = (app) => {
   apiRoutes.post('/v2/admin/school', SchoolController.create)
   apiRoutes.get('/v2/admin/school', SchoolController.read)
   apiRoutes.get('/v2/admin/school/:id', SchoolController.read)
+  apiRoutes.get('/v2/auth/school/:id/leaderboards', SchoolController.leaderboards) // AUTH  
   apiRoutes.patch('/v2/admin/school/:id', SchoolController.update)
   apiRoutes.delete('/v2/admin/school/:id', SchoolController.delete)    
 

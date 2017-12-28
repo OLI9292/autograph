@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const _ = require('underscore')
 
 const Class = require('../models/class')
-const School = require('../models/school')
 const User = require('../models/user')
 
 //
@@ -83,42 +82,6 @@ exports.readStudents = async (req, res, next) => {
       return res.status(422).send({ error: 'Class not found.' })
     }
   })
-}
-
-const getLeaderboard = students => {
-  return _.sortBy(students
-    .map((s) => {
-      return {
-        _id: s._id,
-        name: s.fullName(),
-        score: _.reduce(s.words, (acc, w) => acc + w.experience, 0)
-      }
-    }), 'score')
-    .reverse()
-}
-
-exports.leaderboards = async (req, res, next) => {
-  try {
-    const classes = await Class.find()
-    const allStudents = await User.find()
-    
-    const _class = _.find(classes, (c) => c.id === req.params.id)
-    if (!_class || !_class.school) { return res.status(404).send({ error: 'Not found.' }) }
-
-    const school = await School.findById(_class.school)
-    if (!school) { return res.status(404).send({ error: 'Not found.' }) }
-
-    const ids = _.flatten(classes.filter((c) => c.school === _class.school).map((c) => c.students))
-    const fellowStudents = allStudents.filter((s) => _.contains(ids, s._id))
-
-    const leaderboards = {}
-    leaderboards.earth = getLeaderboard(allStudents)
-    leaderboards[school.name] = getLeaderboard(fellowStudents)
-
-    return res.status(200).send(leaderboards)
-  } catch (error) {
-    return res.status(422).send({ error: error.message })
-  }
 }
 
 exports.join = async (req, res, next) => {

@@ -72,29 +72,6 @@ describe('Classes', () => {
     })             
   });  
 
-  describe('/GET/:id/leaderboards class', () => {
-    it('it should GET leaderboards for the given id', (done) => {
-      const school = new School(schoolMock)
-      console.log(schoolMock)
-      school.save((err, school) => {
-        console.log(school)
-        console.log('hiiii')
-        const _class = new Class(_.extend({}, classMock, { school: school.id }))
-        _class.save((err, _class) => {
-          chai.request(server)
-            .get('/api/v2/auth/class/' + _class.id + '/leaderboards')
-            .end((err, res) => {
-                res.should.have.status(200)
-                res.body.should.be.a('object')
-                res.body.should.have.property('earth').eql([])
-                res.body.should.have.property(school.name).eql([])
-              done()
-          })
-        })
-      })
-    })           
-  });   
-
   describe('/POST class', () => {
     it('it should not POST a class without a valid teacher', (done) => {
       chai.request(server)

@@ -74,6 +74,24 @@ describe('Schools', () => {
     }); 
   });
 
+  // TODO: - add more test cases
+  describe('/GET/:id/leaderboards school', () => {
+    it('it should GET leaderboards for the given id', (done) => {
+      const school = new School(schoolMock)
+      school.save((err, school) => {
+        chai.request(server)
+          .get('/api/v2/auth/school/' + school.id + '/leaderboards')
+          .end((err, res) => {
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              res.body.should.have.property('earth').eql([])
+              res.body.should.have.property(school.name).eql([])
+            done()
+        })
+      })
+    })           
+  });   
+
   describe('/PATCH/:id school', () => {
     it('it should UPDATE a school given the id', (done) => {
       const school = new School(schoolMock)

@@ -1,6 +1,7 @@
 const _ = require('underscore')
 
 const School = require('../models/school')
+const User = require('../models/user')
 
 //
 // CREATE
@@ -39,6 +40,39 @@ exports.read = async (req, res, next) => {
         : res.status(200).send(schools)
     })
 
+  }
+}
+
+const getLeaderboard = students => {
+  return _.sortBy(students
+    .map((s) => {
+      return {
+        _id: s._id,
+        name: s.fullName(),
+        score: _.reduce(s.words, (acc, w) => acc + w.experience, 0)
+      }
+    }), 'score')
+    .reverse()
+}
+
+exports.leaderboards = async (req, res, next) => {
+  try {
+    const school = await School.findById(req.params.id)
+
+    if (school) {
+      const students = await User.find({ school: { $exists: true } })
+      const classmates = students.filter((s) => s.school === req.params.id)
+      
+      const leaderboards = {}
+      leaderboards.earth = getLeaderboard(students)
+      leaderboards[school.name] = getLeaderboard(classmates)
+
+      return res.status(200).send(leaderboards)
+    } else {
+      return res.status(404).send({ error: 'Not found.' })
+    }
+  } catch (error) {
+    return res.status(422).send({ error: error.message })
   }
 }
 
