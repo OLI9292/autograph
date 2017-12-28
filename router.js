@@ -39,14 +39,15 @@ module.exports = (app) => {
   apiRoutes.post('/v2/login', LoginController.login)  
 
   // CLASS ROUTES
-  apiRoutes.post('/v2/admin/class', ClassController.create)
+  apiRoutes.post('/v2/admin/class', ClassController.create) // ADMIN
   // TODO: - cleaner implementation
   apiRoutes.post('/v2/class/:id', ClassController.join)  
-  apiRoutes.get('/v2/auth/class', ClassController.read)
-  apiRoutes.get('/v2/auth/class/:id', ClassController.read)
-  apiRoutes.get('/v2/auth/class/:id/students', ClassController.readStudents)  
-  apiRoutes.patch('/v2/admin/class/:id', ClassController.update)
-  apiRoutes.delete('/v2/admin/class/:id', ClassController.delete)
+  apiRoutes.get('/v2/auth/class', ClassController.read) // AUTH
+  apiRoutes.get('/v2/auth/class/:id', ClassController.read) // AUTH
+  apiRoutes.get('/v2/auth/class/:id/leaderboards', ClassController.leaderboards) // AUTH
+  apiRoutes.get('/v2/auth/class/:id/students', ClassController.readStudents) // AUTH
+  apiRoutes.patch('/v2/admin/class/:id', ClassController.update) // ADMIN
+  apiRoutes.delete('/v2/admin/class/:id', ClassController.delete) // ADMIN
 
   // LESSON ROUTES
   apiRoutes.post('/v2/admin/lesson', LessonController.create)
@@ -63,7 +64,6 @@ module.exports = (app) => {
   apiRoutes.delete('/v2/admin/school/:id', SchoolController.delete)    
 
   // USER ROUTES
-
   apiRoutes.post('/v2/user', UserController.create)
   apiRoutes.get('/v2/auth/user', UserController.read) // ADMIN
   apiRoutes.get('/v2/auth/user/:id', UserController.read) // AUTH

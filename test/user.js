@@ -85,7 +85,7 @@ describe('Users', () => {
         })
     });
 
-    ['firstName', 'lastName', 'signUpMethod'].forEach(attr => {
+    ['firstName', 'signUpMethod'].forEach(attr => {
       it(`it should not POST a user missing ${attr}`, (done) => {
         chai.request(server)
           .post('/api/v2/user')
