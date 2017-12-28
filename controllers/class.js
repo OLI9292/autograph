@@ -109,7 +109,7 @@ exports.leaderboards = async (req, res, next) => {
     if (!school) { return res.status(404).send({ error: 'Not found.' }) }
 
     const ids = _.flatten(classes.filter((c) => c.school === _class.school).map((c) => c.students))
-    const fellowStudents = allStudents.filter((s) => ids.contains(s._id))
+    const fellowStudents = allStudents.filter((s) => _.contains(ids, s._id))
 
     const leaderboards = {}
     leaderboards.earth = getLeaderboard(allStudents)
