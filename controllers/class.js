@@ -87,7 +87,13 @@ exports.readStudents = async (req, res, next) => {
 
 const getLeaderboards = students => {
   const allTime = students
-    .map((s) => ({ name: s.fullName(), score: _.reduce(s.words, (acc, w) => acc + w.experience, 0) }))
+    .map((s) => {
+      return {
+        _id: s._id,
+        name: s.fullName(),
+        score: _.reduce(s.words, (acc, w) => acc + w.experience, 0)
+      }
+    })
   const sorted = _.sortBy(allTime, 'score').reverse();
   return allTime
 }
@@ -104,7 +110,7 @@ exports.leaderboards = async (req, res, next) => {
       const leaderboards = getLeaderboards(students)
       return res.status(200).send(leaderboards)
     } else {
-      return res.status(422).send({ error: 'Not found.' })  
+      return res.status(404).send({ error: 'Not found.' })  
     }
   } catch (error) {
     return res.status(422).send({ error: error.message })
