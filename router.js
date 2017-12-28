@@ -67,6 +67,7 @@ module.exports = (app) => {
   apiRoutes.post('/v2/user', UserController.create)
   apiRoutes.get('/v2/auth/user', UserController.read) // ADMIN
   apiRoutes.get('/v2/auth/user/:id', UserController.read) // AUTH
+  apiRoutes.patch('/v2/admin/user/joinSchool', UserController.joinSchool)  
   // TODO: - cleaner implementation
   apiRoutes.patch('/v2/auth/user/stats', UserController.update) // AUTH
   apiRoutes.patch('/v2/auth/user/:id', UserController.update2) // AUTH

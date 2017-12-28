@@ -19,7 +19,11 @@ chai.use(chaiHttp)
 describe('Classes', () => {
   beforeEach((done) => {
     Class.remove({}, (err) => { 
-      done()         
+      School.remove({}, (err) => { 
+        User.remove({}, (err) => { 
+          done()         
+        })     
+      })     
     })     
   })
 
@@ -71,7 +75,10 @@ describe('Classes', () => {
   describe('/GET/:id/leaderboards class', () => {
     it('it should GET leaderboards for the given id', (done) => {
       const school = new School(schoolMock)
+      console.log(schoolMock)
       school.save((err, school) => {
+        console.log(school)
+        console.log('hiiii')
         const _class = new Class(_.extend({}, classMock, { school: school.id }))
         _class.save((err, _class) => {
           chai.request(server)

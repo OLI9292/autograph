@@ -7,8 +7,10 @@ const mongoose = require('mongoose')
 const server = require('../server')
 const should = chai.should()
 
+const School = require('../models/school')
 const User = require('../models/user')
 
+const schoolMock = require('./mocks/school');
 const userMocks = require('./mocks/user');
 const userMock = userMocks[0];
 
@@ -17,7 +19,9 @@ chai.use(chaiHttp)
 describe('Users', () => {
   beforeEach((done) => {
     User.remove({}, (err) => { 
-      done()         
+      School.remove({}, (err) => { 
+        done()         
+      })
     })     
   })
 
@@ -150,6 +154,26 @@ describe('Users', () => {
         })
     })
   });
+
+  describe('/PATCH/joinSchool user', () => {
+    it('it should UPDATE school for multiple users', (done) => {
+      const user = new User(userMock)
+      const school = new School(schoolMock)
+
+      user.save((err, user) => {
+        school.save((err, school) => {
+          chai.request(server)
+            .patch('/api/v2/admin/user/joinSchool')
+            .send({ school: school.id, students: [user.id] })
+            .end((err, res) => {
+                res.should.have.status(200)
+                res.body.should.have.property('success')
+                done()
+            })
+          })
+        })
+    })
+  });  
 
   describe('/PATCH user/stats', () => {
     it('it should UPDATE stats for a user', (done) => {

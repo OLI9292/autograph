@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const _ = require('underscore')
 
 const Class = require('../models/class')
+const School = require('../models/school')
 const User = require('../models/user')
 
 //
@@ -221,6 +222,23 @@ exports.joinClass = async (req, res, next) => {
       await _class.save()
       return res.status(200).send(_class)
     });
+  })
+}
+
+exports.joinSchool = async (req, res, next) => {
+  const [schoolId, students] = [req.body.school, req.body.students]
+  
+  if (!schoolId || !_.isArray(students)) { return res.status(422).send({ error: 'Invalid params.' }) }
+
+  School.findById(schoolId, async (error, school) => {
+    if (error) { return res.status(422).send({ error: error.message }) }
+    if (!school) { return res.status(404).send({ error: 'Not found.' }) }
+
+    User.updateMany({ _id: { $in: students } }, { $set: { 'school': school._id } }, async (error, users) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send({ success: true })
+    })
   })
 }
 
