@@ -85,33 +85,37 @@ exports.readStudents = async (req, res, next) => {
   })
 }
 
-const getLeaderboards = students => {
-  const allTime = students
+const getLeaderboard = students => {
+  return _.sortBy(students
     .map((s) => {
       return {
         _id: s._id,
         name: s.fullName(),
         score: _.reduce(s.words, (acc, w) => acc + w.experience, 0)
       }
-    })
-  const sorted = _.sortBy(allTime, 'score').reverse();
-  return allTime
+    }), 'score')
+    .reverse()
 }
 
 exports.leaderboards = async (req, res, next) => {
   try {
-    let classes = await Class.find()
+    const classes = await Class.find()
+    const allStudents = await User.find()
+    
     const _class = _.find(classes, (c) => c.id === req.params.id)
+    if (!_class || !_class.school) { return res.status(404).send({ error: 'Not found.' }) }
 
-    if (_class && _class.school) {
-      classes = classes.filter((c) => c.school === _class.school)
-      const ids = _.flatten(_.pluck(classes, 'students'))
-      const students = await User.find({ _id: { $in: ids } })
-      const leaderboards = getLeaderboards(students)
-      return res.status(200).send(leaderboards)
-    } else {
-      return res.status(404).send({ error: 'Not found.' })  
-    }
+    const school = await School.findById(_class.school)
+    if (!school) { return res.status(404).send({ error: 'Not found.' }) }
+
+    const ids = _.flatten(classes.filter((c) => c.school === _class.school).map((c) => c.students))
+    const fellowStudents = allStudents.filter((s) => ids.contains(s._id))
+
+    const leaderboards = {}
+    leaderboards.earth = getLeaderboard(allStudents)
+    leaderboards[school.name] = getLeaderboard(fellowStudents)
+
+    return res.status(200).send(leaderboards)
   } catch (error) {
     return res.status(422).send({ error: error.message })
   }

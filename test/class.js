@@ -8,11 +8,12 @@ const server = require('../server')
 const should = chai.should()
 
 const Class = require('../models/class')
+const School = require('../models/school')
 const User = require('../models/user')
 
 const classMock = require('./mocks/class');
+const schoolMock = require('./mocks/school');
 const userMock = require('./mocks/user')[0];
-
 chai.use(chaiHttp)
 
 describe('Classes', () => {
@@ -69,14 +70,19 @@ describe('Classes', () => {
 
   describe('/GET/:id/leaderboards class', () => {
     it('it should GET leaderboards for the given id', (done) => {
-      const _class = new Class(classMock)
-      _class.save((err, _class) => {
-        chai.request(server)
-          .get('/api/v2/auth/class/' + _class.id + '/leaderboards')
-          .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.be.a('array').lengthOf(0)
-            done()
+      const school = new School(schoolMock)
+      school.save((err, school) => {
+        const _class = new Class(_.extend({}, classMock, { school: school.id }))
+        _class.save((err, _class) => {
+          chai.request(server)
+            .get('/api/v2/auth/class/' + _class.id + '/leaderboards')
+            .end((err, res) => {
+                res.should.have.status(200)
+                res.body.should.be.a('object')
+                res.body.should.have.property('earth').eql([])
+                res.body.should.have.property(school.name).eql([])
+              done()
+          })
         })
       })
     })           
