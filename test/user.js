@@ -21,6 +21,24 @@ describe('Users', () => {
     })     
   })
 
+  describe('user.fullname()', () => {
+    it('it should return the user\`s fullname', (done) => {
+      const user = new User(userMock)
+      user.save((err, user) => {
+        user.fullName().should.eql('Don Draper')
+        done()
+      })
+    });
+
+    it('it should return the user\`s first name if they don\'t have a last name', (done) => {
+      const user = new User(_.omit(userMock, 'lastName'))
+      user.save((err, user) => {
+        user.fullName().should.eql('Don')
+        done()
+      })
+    });    
+  });  
+
   describe('/GET users', () => {
     it('it should GET all the users', (done) => {
       chai.request(server)

@@ -88,7 +88,9 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
   })
 }
 
-userSchema.methods.fullName = () => this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName
+userSchema.methods.fullName = function() {
+  return this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName
+}
 
 const User = mongoose.model('User', userSchema)
 
