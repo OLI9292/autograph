@@ -53,6 +53,7 @@ const getLeaderboard = (students, allTime = true) => {
         score: allTime ? s.starCount() : s.weeklyStarCount
       }
     }), 'score')
+    .filter((s) => s.score > 0)
     .reverse()
     .slice(0, 20)
 }
@@ -73,7 +74,7 @@ exports.leaderboards = async (req, res, next) => {
         const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
 
         return school
-          ? res.status(200).send(_.pick(leaderboards, 'earth', school.name))
+          ? res.status(200).send(_.pick(leaderboards, 'Earth', school.name))
           : res.status(404).send({ error: 'Not found.' })        
       } catch (error) {
         return res.status(422).send({ error: error.message })
@@ -87,7 +88,7 @@ exports.leaderboards = async (req, res, next) => {
         const students = await User.find({ school: { $exists: true } }) 
         const leaderboards = {}
         
-        leaderboards.earth = {
+        leaderboards.Earth = {
           allTime: getLeaderboard(students),
           weekly: getLeaderboard(students, false)
         }
@@ -106,7 +107,7 @@ exports.leaderboards = async (req, res, next) => {
         const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
 
         return school
-          ? res.status(200).send(_.pick(leaderboards, 'earth', school.name))
+          ? res.status(200).send(_.pick(leaderboards, 'Earth', school.name))
           : res.status(404).send({ error: 'Not found.' })
       } catch (error) {
         return res.status(422).send({ error: error.message })
