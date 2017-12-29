@@ -94,7 +94,7 @@ exports.leaderboards = async (req, res, next) => {
 
         schools.forEach((school) => {
           const classmates = students.filter((student) => student.school.equals(school._id))
-          leaderboards[s.name] = {
+          leaderboards[school.name] = {
             allTime: getLeaderboard(classmates),
             weekly: getLeaderboard(classmates, false)
           }
