@@ -94,6 +94,10 @@ userSchema.methods.fullName = function() {
   return this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName
 }
 
+userSchema.methods.starCount = function() {
+  return _.reduce(this.words, (acc, w) => acc + w.experience, 0)
+}
+
 const User = mongoose.model('User', userSchema)
 
 module.exports = User

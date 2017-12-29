@@ -43,17 +43,18 @@ exports.read = async (req, res, next) => {
   }
 }
 
-const getLeaderboard = (students, period) => {
-  return students
+
+
+const getLeaderboard = (students, allTime = true) => {
+  return _.sortBy(students
     .map((s) => {
-      return { 
+      return {
         _id: s._id,
         name: s.fullName(),
-        allTimeScore: _.reduce(s.words, (acc, w) => acc + w.experience, 0),
-        weeklyScore: s.weeklyStarCount
+        score: allTime ? s.starCount() : s.weeklyStarCount
       }
-    })
-    .slice(0, 20)
+    }), 'score')
+    .reverse()
 }
 
 exports.leaderboards = async (req, res, next) => {
@@ -65,8 +66,16 @@ exports.leaderboards = async (req, res, next) => {
       const classmates = students.filter((s) => s.school.equals(req.params.id))
       
       const leaderboards = {}
-      leaderboards.earth = getLeaderboard(students)
-      leaderboards[school.name] = getLeaderboard(classmates)
+      
+      leaderboards.earth = {
+        allTime: getLeaderboard(students).slice(0, 20),
+        weekly: getLeaderboard(students, false).slice(0, 20)
+      }
+
+      leaderboards[school.name] = {
+        allTime: getLeaderboard(classmates),
+        weekly: getLeaderboard(classmates, false)
+      }
 
       return res.status(200).send(leaderboards)
     } else {
