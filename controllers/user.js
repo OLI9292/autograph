@@ -122,11 +122,14 @@ const updateFromWeb = async (req, res, next) => {
 
     if (user) {
 
+      const oldExperience = user.words.reduce((acc, w) => acc + w.experience, 0);
+
       stats.forEach((s) => {
         const idx = _.findIndex(user.words, (w) => s.word === w.name)
 
         if (idx >= 0) {
           
+          // Update old words
           const copy = user.words[idx]
           copy.seen += 1
           copy.correct += s.correct ? 1 : 0
@@ -136,6 +139,7 @@ const updateFromWeb = async (req, res, next) => {
 
         } else {
           
+          // Add new words
           user.words.push({
             name: s.word,
             correct: s.correct ? 1 : 0,
@@ -145,6 +149,11 @@ const updateFromWeb = async (req, res, next) => {
         }
       })
 
+      // Update weekly experience
+      const newExperience = user.words.reduce((acc, w) => acc + w.experience, 0);
+      user.weeklyStarCount = user.weeklyStarCount + (newExperience - oldExperience);
+
+      // Update word list completion
       if (req.body.wordList) {
         user.wordListsCompleted = _.uniq(_.union(user.wordListsCompleted || [], [req.body.wordList]));
       }
