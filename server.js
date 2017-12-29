@@ -11,7 +11,6 @@ const router = require('./router')
 const CONFIG = require('./config/main')
 
 mongoose.Promise = global.Promise
-console.log(CONFIG.MONGODB_URI)
 mongoose.connect(CONFIG.MONGODB_URI, { useMongoClient: true, promiseLibrary: global.Promise })
 
 app.use(bodyParser.urlencoded({ extended: false }))
