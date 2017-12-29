@@ -41,6 +41,7 @@ const userSchema = new Schema({
     enum: ['email', 'facebook', 'google'], 
     required: true
   },
+  weeklyStarCount: { type: Number, default: 0 },
   wordListsCompleted: [Schema.Types.ObjectId],  
   words: {
     type: [

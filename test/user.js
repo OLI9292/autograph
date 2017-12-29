@@ -197,6 +197,7 @@ describe('Users', () => {
               res.should.have.status(200)
               res.body.should.have.property('user')
               res.body.user.should.have.property('words')
+              res.body.user.should.have.property('weeklyStarCount').eql(3)
               res.body.user.words.should.be.a('array').lengthOf(3)
               res.body.user.words[0].should.have.property('name').eql(data.stats[0].word)
               res.body.user.words[0].should.have.property('correct').eql(0)

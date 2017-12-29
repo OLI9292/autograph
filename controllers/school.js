@@ -61,10 +61,10 @@ exports.leaderboards = async (req, res, next) => {
 
     if (school) {
       const students = await User.find({ school: { $exists: true } })
-      const classmates = students.filter((s) => s.school === req.params.id)
+      const classmates = students.filter((s) => s.school.equals(req.params.id))
       
       const leaderboards = {}
-      leaderboards.earth = getLeaderboard(students)
+      leaderboards.earth = getLeaderboard(students).slice(0, 20)
       leaderboards[school.name] = getLeaderboard(classmates)
 
       return res.status(200).send(leaderboards)
