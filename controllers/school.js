@@ -66,7 +66,7 @@ const sliceLeaderboardsForUser = (id, leaderboards) => {
       let index = _.findIndex(v, (s) => s._id === id)
       index = Math.max(0, index - 2)
       return index > -1 ? v.slice(index, 20) : v.slice(0, 20)      
-    }
+    })
   })
 }
 
