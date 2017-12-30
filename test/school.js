@@ -84,9 +84,9 @@ describe('Schools', () => {
           .end((err, res) => {
               res.should.have.status(200)
               res.body.should.be.a('object')
-              res.body.should.have.property('earth').be.a('object')
-              res.body.earth.should.have.property('allTime').eql([])
-              res.body.earth.should.have.property('weekly').eql([])
+              res.body.should.have.property('Earth').be.a('object')
+              res.body.Earth.should.have.property('allTime').eql([])
+              res.body.Earth.should.have.property('weekly').eql([])
               res.body.should.have.property(school.name).be.a('object')
               res.body[school.name].should.have.property('allTime').eql([])
               res.body[school.name].should.have.property('weekly').eql([])

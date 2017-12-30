@@ -44,13 +44,14 @@ exports.read = async (req, res, next) => {
   }
 }
 
-const getLeaderboard = (students, allTime = true) => {
+const getLeaderboard = (students, allTime, initialize) => {
   return _.sortBy(students
     .map((s) => {
       return {
         _id: s._id,
-        name: s.fullName(),
-        score: allTime ? s.starCount() : s.weeklyStarCount
+        name: initialize ? s.initials() : s.firstNameLastInitial(),
+        score: allTime ? s.starCount() : s.weeklyStarCount,
+        school: s.schoolName
       }
     }), 'score')
     .filter((s) => s.score > 0)
@@ -85,19 +86,21 @@ exports.leaderboards = async (req, res, next) => {
       try {
 
         const schools = await School.find()
-        const students = await User.find({ school: { $exists: true } }) 
+        const students = await User.find({ school: { $exists: true } })
+        students.forEach((student) => student.schoolName = _.find(schools, (school) => school._d.equals(student.school)))
+        students.forEach((student) => student.schoolName = student.schoolName && student.schoolName.name)
         const leaderboards = {}
         
         leaderboards.Earth = {
-          allTime: getLeaderboard(students),
-          weekly: getLeaderboard(students, false)
+          allTime: getLeaderboard(students, true, true),
+          weekly: getLeaderboard(students, false, true)
         }
 
         schools.forEach((school) => {
           const classmates = students.filter((student) => student.school.equals(school._id))
           leaderboards[school.name] = {
-            allTime: getLeaderboard(classmates),
-            weekly: getLeaderboard(classmates, false)
+            allTime: getLeaderboard(classmates, true, false),
+            weekly: getLeaderboard(classmates, false, false)
           }
         })
 

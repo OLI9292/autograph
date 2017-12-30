@@ -43,6 +43,42 @@ describe('Users', () => {
     });    
   });  
 
+  describe('user.initials()', () => {
+    it('it should return the user\`s initials', (done) => {
+      const user = new User(userMock)
+      user.save((err, user) => {
+        user.initials().should.eql('DD')
+        done()
+      })
+    });
+
+    it('it should return the user\`s first initial if they don\'t have a last name', (done) => {
+      const user = new User(_.omit(userMock, 'lastName'))
+      user.save((err, user) => {
+        user.initials().should.eql('D')
+        done()
+      })
+    });    
+  });
+
+  describe('user.firstNameLastInitial()', () => {
+    it('it should return the user\`s first name and last initial', (done) => {
+      const user = new User(userMock)
+      user.save((err, user) => {
+        user.firstNameLastInitial().should.eql('Don D')
+        done()
+      })
+    });
+
+    it('it should return the user\`s first initial if they don\'t have a last name', (done) => {
+      const user = new User(_.omit(userMock, 'lastName'))
+      user.save((err, user) => {
+        user.firstNameLastInitial().should.eql('Don')
+        done()
+      })
+    });    
+  });    
+
   describe('/GET users', () => {
     it('it should GET all the users', (done) => {
       chai.request(server)
