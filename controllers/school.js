@@ -45,7 +45,7 @@ exports.read = async (req, res, next) => {
 }
 
 const getLeaderboard = (students, allTime, initialize) => {
-  return _.sortBy(students
+  const leaderboard = _.sortBy(students
     .map((s) => {
       return {
         _id: s._id,
@@ -56,11 +56,14 @@ const getLeaderboard = (students, allTime, initialize) => {
     }), 'score')
     .filter((s) => s.score > 0)
     .reverse()
+  leaderboard.forEach((s, i) => { s.position = i })
+  return leaderboard
 }
 
-const sliceLeaderboardForUser(id, leaderboards) => {
+const sliceLeaderboardForUser = (id, leaderboards) => {
   return _.mapObject(leaderboards, (v, k) => {
-    const index = _.findIndex(v, (s) => s._id === id)
+    let index = _.findIndex(v, (s) => s._id === id)
+    index = Math.max(0, index - 2)
     return index > -1 ? v.slice(index, 20) : v.slice(0, 20)
   })
 }
