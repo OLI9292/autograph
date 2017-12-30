@@ -56,7 +56,7 @@ const getLeaderboard = (students, allTime, initialize) => {
     }), 'score')
     .filter((s) => s.score > 0)
     .reverse()
-  leaderboard.forEach((s, i) => { s.position = i })
+  leaderboard.forEach((s, i) => { s.position = i + 1 })
   return leaderboard
 }
 
