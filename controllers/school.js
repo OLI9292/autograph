@@ -63,9 +63,9 @@ const getLeaderboard = (students, allTime, initialize) => {
 const sliceLeaderboardsForUser = (id, leaderboards) => {
   return _.mapObject(leaderboards, (v, k) => {
     return _.mapObject(v, (v, k) => {
-      let index = _.findIndex(v, (s) => s._id === id)
+      let index = _.findIndex(v, (s) => s._id.equals(id))
       index = Math.max(0, index - 2)
-      return index > -1 ? v.slice(index, 20) : v.slice(0, 20)      
+      return v.slice(index, 20)
     })
   })
 }
