@@ -56,7 +56,13 @@ const getLeaderboard = (students, allTime, initialize) => {
     }), 'score')
     .filter((s) => s.score > 0)
     .reverse()
-    .slice(0, 20)
+}
+
+const sliceLeaderboardForUser(id, leaderboards) => {
+  return _.mapObject(leaderboards, (v, k) => {
+    const index = _.findIndex(v, (s) => s._id === id)
+    return index > -1 ? v.slice(index, 20) : v.slice(0, 20)
+  })
 }
 
 exports.leaderboards = async (req, res, next) => {
@@ -71,11 +77,14 @@ exports.leaderboards = async (req, res, next) => {
       try {
         const schools = await School.find()
 
-        const leaderboards = JSON.parse(reply)
+        let leaderboards = JSON.parse(reply)
         const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
 
+        leaderboards = _.pick(leaderboards, 'Earth', school.name)
+        if (req.params.id) { leaderboards = sliceLeaderboardsForUser(req.params.id, leaderboards) }        
+
         return school
-          ? res.status(200).send(_.pick(leaderboards, 'Earth', school.name))
+          ? res.status(200).send(leaderboards)
           : res.status(404).send({ error: 'Not found.' })        
       } catch (error) {
         return res.status(422).send({ error: error.message })
@@ -89,7 +98,8 @@ exports.leaderboards = async (req, res, next) => {
         const students = await User.find({ school: { $exists: true } })
         students.forEach((student) => student.schoolName = _.find(schools, (school) => school._id.equals(student.school)))
         students.forEach((student) => student.schoolName = student.schoolName && student.schoolName.name)
-        const leaderboards = {}
+        
+        let leaderboards = {}
         
         leaderboards.Earth = {
           allTime: getLeaderboard(students, true, true),
@@ -109,8 +119,11 @@ exports.leaderboards = async (req, res, next) => {
 
         const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
 
+        leaderboards = _.pick(leaderboards, 'Earth', school.name)
+        if (req.params.id) { leaderboards = sliceLeaderboardsForUser(req.params.id, leaderboards) }
+
         return school
-          ? res.status(200).send(_.pick(leaderboards, 'Earth', school.name))
+          ? res.status(200).send(leaderboards)
           : res.status(404).send({ error: 'Not found.' })
       } catch (error) {
         return res.status(422).send({ error: error.message })
