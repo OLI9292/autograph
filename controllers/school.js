@@ -86,7 +86,7 @@ exports.leaderboards = async (req, res, next) => {
         const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
 
         leaderboards = _.pick(leaderboards, 'Earth', school.name)
-        if (req.params.id) { leaderboards = sliceLeaderboardsForUser(req.params.id, leaderboards) }        
+        if (req.query.id) { leaderboards = sliceLeaderboardsForUser(req.query.id, leaderboards) }        
 
         return school
           ? res.status(200).send(leaderboards)
@@ -125,7 +125,7 @@ exports.leaderboards = async (req, res, next) => {
         const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
 
         leaderboards = _.pick(leaderboards, 'Earth', school.name)
-        if (req.params.id) { leaderboards = sliceLeaderboardsForUser(req.params.id, leaderboards) }
+        if (req.query.id) { leaderboards = sliceLeaderboardsForUser(req.query.id, leaderboards) }
 
         return school
           ? res.status(200).send(leaderboards)
