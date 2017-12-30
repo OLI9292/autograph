@@ -94,6 +94,20 @@ userSchema.methods.fullName = function() {
   return this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName
 }
 
+userSchema.methods.initials = function() {
+  let initials = this.firstName.charAt(0)
+  if (this.lastName) { initials += this.lastName.charAt(0) }
+  return initials.toUpperCase()
+}
+
+userSchema.methods.firstNameLastInitial = function() {
+  return this.lastName ? `${this.firstName} ${this.lastName.charAt(0).toUpperCase()}` : this.firstName
+}
+
+userSchema.methods.starCount = function() {
+  return _.reduce(this.words, (acc, w) => acc + w.experience, 0)
+}
+
 const User = mongoose.model('User', userSchema)
 
 module.exports = User

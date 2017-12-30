@@ -2,6 +2,7 @@ const _ = require('underscore')
 
 const School = require('../models/school')
 const User = require('../models/user')
+const cache = require('../cache')
 
 //
 // CREATE
@@ -43,37 +44,97 @@ exports.read = async (req, res, next) => {
   }
 }
 
-const getLeaderboard = students => {
-  return _.sortBy(students
+const getLeaderboard = (students, allTime, initialize) => {
+  const leaderboard = _.sortBy(students
     .map((s) => {
       return {
         _id: s._id,
-        name: s.fullName(),
-        score: _.reduce(s.words, (acc, w) => acc + w.experience, 0)
+        name: initialize ? s.initials() : s.firstNameLastInitial(),
+        score: allTime ? s.starCount() : s.weeklyStarCount,
+        school: s.schoolName
       }
     }), 'score')
+    .filter((s) => s.score > 0)
     .reverse()
+  leaderboard.forEach((s, i) => { s.position = i + 1 })
+  return leaderboard
+}
+
+const sliceLeaderboardsForUser = (id, leaderboards) => {
+  return _.mapObject(leaderboards, (v, k) => {
+    return _.mapObject(v, (v, k) => {
+      let index = _.findIndex(v, (s) => s._id === id)
+      index = Math.max(0, index - 2)
+      return v.slice(index, index + 20)
+    })
+  })
 }
 
 exports.leaderboards = async (req, res, next) => {
-  try {
-    const school = await School.findById(req.params.id)
+  
+  cache.get('leaderboards', async (error, reply) => {
+    if (error) {
 
-    if (school) {
-      const students = await User.find({ school: { $exists: true } })
-      const classmates = students.filter((s) => s.school.equals(req.params.id))
-      
-      const leaderboards = {}
-      leaderboards.earth = getLeaderboard(students).slice(0, 20)
-      leaderboards[school.name] = getLeaderboard(classmates)
+      next()
 
-      return res.status(200).send(leaderboards)
+    } else if (reply) {
+
+      try {
+        const schools = await School.find()
+
+        let leaderboards = JSON.parse(reply)
+        const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
+
+        leaderboards = _.pick(leaderboards, 'Earth', school.name)
+        if (req.query.id) { leaderboards = sliceLeaderboardsForUser(req.query.id, leaderboards) }        
+
+        return school
+          ? res.status(200).send(leaderboards)
+          : res.status(404).send({ error: 'Not found.' })        
+      } catch (error) {
+        return res.status(422).send({ error: error.message })
+      }
+
     } else {
-      return res.status(404).send({ error: 'Not found.' })
+
+      try {
+
+        const schools = await School.find()
+        const students = await User.find({ school: { $exists: true } })
+        students.forEach((student) => student.schoolName = _.find(schools, (school) => school._id.equals(student.school)))
+        students.forEach((student) => student.schoolName = student.schoolName && student.schoolName.name)
+        
+        let leaderboards = {}
+        
+        leaderboards.Earth = {
+          allTime: getLeaderboard(students, true, true),
+          weekly: getLeaderboard(students, false, true)
+        }
+
+        schools.forEach((school) => {
+          const classmates = students.filter((student) => student.school.equals(school._id))
+          leaderboards[school.name] = {
+            allTime: getLeaderboard(classmates, true, false),
+            weekly: getLeaderboard(classmates, false, false)
+          }
+        })
+
+        cache.set('leaderboards', JSON.stringify(leaderboards))
+        cache.expire('leaderboards', 60)
+
+        const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
+
+        leaderboards = _.pick(leaderboards, 'Earth', school.name)
+        if (req.query.id) { leaderboards = sliceLeaderboardsForUser(req.query.id, leaderboards) }
+
+        return school
+          ? res.status(200).send(leaderboards)
+          : res.status(404).send({ error: 'Not found.' })
+      } catch (error) {
+        return res.status(422).send({ error: error.message })
+      }
     }
-  } catch (error) {
-    return res.status(422).send({ error: error.message })
-  }
+  })
 }
 
 //
