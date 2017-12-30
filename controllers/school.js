@@ -87,7 +87,7 @@ exports.leaderboards = async (req, res, next) => {
 
         const schools = await School.find()
         const students = await User.find({ school: { $exists: true } })
-        students.forEach((student) => student.schoolName = _.find(schools, (school) => school._d.equals(student.school)))
+        students.forEach((student) => student.schoolName = _.find(schools, (school) => school._id.equals(student.school)))
         students.forEach((student) => student.schoolName = student.schoolName && student.schoolName.name)
         const leaderboards = {}
         
