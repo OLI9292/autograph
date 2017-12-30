@@ -60,10 +60,11 @@ const getLeaderboard = (students, allTime, initialize) => {
   return leaderboard
 }
 
-const sliceLeaderboardsForUser = (id, leaderboards) => {
+const sliceLeaderboardsForUser = (str, leaderboards) => {
   return _.mapObject(leaderboards, (v, k) => {
     return _.mapObject(v, (v, k) => {
-      let index = _.findIndex(v, (s) => s._id === id)
+      // If the str is not a number it is a user id
+      let index = Number.isInteger(str) ? str : _.findIndex(v, (s) => s._id === str);
       index = Math.max(0, index - 2)
       return v.slice(index, index + 20)
     })
@@ -86,7 +87,8 @@ exports.leaderboards = async (req, res, next) => {
         const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
 
         leaderboards = _.pick(leaderboards, 'Earth', school.name)
-        if (req.query.id) { leaderboards = sliceLeaderboardsForUser(req.query.id, leaderboards) }        
+        if (req.query.fromPosition) { leaderboards = sliceLeaderboardsForUser(req.query.fromPosition, leaderboards) }
+        else if (req.query.id) { leaderboards = sliceLeaderboardsForUser(req.query.id, leaderboards) }        
 
         return school
           ? res.status(200).send(leaderboards)
@@ -125,7 +127,8 @@ exports.leaderboards = async (req, res, next) => {
         const school = _.find(schools, (s) =>  s._id.equals(req.params.id))
 
         leaderboards = _.pick(leaderboards, 'Earth', school.name)
-        if (req.query.id) { leaderboards = sliceLeaderboardsForUser(req.query.id, leaderboards) }
+        if (req.query.fromPosition) { leaderboards = sliceLeaderboardsForUser(req.query.fromPosition, leaderboards) }
+        else if (req.query.id) { leaderboards = sliceLeaderboardsForUser(req.query.id, leaderboards) }
 
         return school
           ? res.status(200).send(leaderboards)
