@@ -15,6 +15,7 @@ const ranksFor = async (school) => {
   return _.flatten([true, false].map((isWeekly) => {
     return _.sortBy(students
       .map((student) => ({
+        id: `${student._id}-${school ? school.name : 'Earth'}-${isWeekly ? 'weekly' : 'all'}`,
         _id: student._id,
         name: school ? student.firstNameLastInitial() : student.initials(),
         score: isWeekly ? student.weeklyStarCount : student.starCount(),
