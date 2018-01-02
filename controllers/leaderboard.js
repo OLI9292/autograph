@@ -20,7 +20,7 @@ const ranksFor = async (school) => {
         name: school ? student.firstNameLastInitial() : student.initials(),
         score: isWeekly ? student.weeklyStarCount : student.starCount(),
         schoolName: school ? school.name : 'Earth',
-        school: (school && school._id) || 'Earth,
+        school: (school && school._id) || 'Earth',
         period: isWeekly ? 'weekly' : 'all'
       })), 'score')
       .reverse()
