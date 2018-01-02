@@ -73,7 +73,7 @@ exports.read = async (req, res, next) => {
       
       if (!reply) {
         cache.set('leaderboards', JSON.stringify({ ranks: ranks }))
-        cache.expire('leaderboards', 60)
+        cache.expire('leaderboards', 500)
       }      
 
       if (req.query) { ranks = filterRanks(ranks, req.query) }
