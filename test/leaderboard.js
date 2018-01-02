@@ -72,6 +72,17 @@ describe('Leaderboards', () => {
           res.body.length.should.eql(8)
           done()
         })
-    });          
+    });   
+
+    it('it should filter by start', (done) => {
+      chai.request(server)
+        .get('/api/v2/auth/leaderboard?start=2')
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.be.a('array')
+          res.body.length.should.eql(6)
+          done()
+        })
+    });              
   });
 });

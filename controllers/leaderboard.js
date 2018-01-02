@@ -44,10 +44,11 @@ const filterRanks = (ranks, query) => {
     ranks = _.flatten(filtered)
 
   } else {
+    const start = parseInt(query.start)
 
     if (query.school) { ranks = ranks.filter(r => r.school && r.school.toString() === query.school) }
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
-    if (Number.isInteger(query.start)) { ranks = ranks.slice(start, start + 20) }
+    if (start > 0) { ranks = ranks.slice(start, start + 20) }
 
   }
 
