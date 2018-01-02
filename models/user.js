@@ -5,15 +5,6 @@ const bcrypt = require('bcrypt')
 const SALT_WORK_FACTOR = 10
 
 const userSchema = new Schema({
-  categories: {
-    type: [
-      {
-        name: { type: String, required: true },
-        progress: { type: Number, required: true, default: 0 }
-      }
-    ],
-    default: []
-  },
   classes: {
     type: [
       {
@@ -26,7 +17,7 @@ const userSchema = new Schema({
   isTeacher: { type: Boolean, default: false },
   gender: { type: String, enum: ['male', 'female'] },
   deviceId: String,
-  email: { type: String },
+  email: String,
   facebookId: String,
   mobileIapUnlocked: { type: Boolean, default: false },
   ranking: { type: Number, default: 100 },
@@ -85,7 +76,7 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
     if (err) {
       return cb(err)
     }
-    
+
     cb(null, isMatch)
   })
 }

@@ -7,25 +7,36 @@ const mongoose = require('mongoose')
 const server = require('../server')
 const should = chai.should()
 
+const { cleanDB, seedDB } = require('../scripts/seedDB');
+
 chai.use(chaiHttp)
 
 const User = require('../models/user')
 
-const userMock = require('./mocks/user')[0];
+const userMock = require('./mocks/user').mock;
 
 const loginCredentials = {
-  email: 'oliver@gmail.com',
-  password: 'password123'
+  email: userMock.email,
+  password: userMock.password
 }
 
 describe('Login', () => {
-  beforeEach((done) => {
-    User.remove({}, (err) => { 
-      done()         
-    })     
-  });
+  beforeEach(async () => {
+    await seedDB()
+  })
 
   describe('/POST login', () => {
+    it('it should login a user', (done) => {
+      chai.request(server)
+        .post('/api/v2/login')
+        .send(loginCredentials)
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.be.a('object')
+          done()
+        })
+    });  
+
     ['email', 'password'].forEach(attr => {
       it(`it should not login a user missing ${attr}`, (done) => {
         chai.request(server)
@@ -40,54 +51,27 @@ describe('Login', () => {
       })  
     });
 
-    /*  TODO: - fix this test that is failing on GitHub, because process.env is not set
-
-    it('it should login a user with valid credentials', (done) => {
-      const user = new User(_.extend(userMock, loginCredentials))
-      user.save((err, user) => {      
-        chai.request(server)
-          .post('/api/v2/login')
-          .send(loginCredentials)
-          .end((err, res) => {
-            res.should.have.status(200)
-            res.body.should.have.property('token')
-            res.body.should.have.property('user')
-            res.body.should.have.property('expires')
-            res.body.should.be.a('object')
-            done()
-          })
-        })
-    });
-    
-    */
-
     it('it should not login an invalid user', (done) => {
-      const user = new User(Object.assign(userMock, { email: 'rick@gmail.com', password: loginCredentials.password }))
-      user.save((err, user) => {      
         chai.request(server)
           .post('/api/v2/login')
-          .send(loginCredentials)
+          .send(_.extend({}, loginCredentials, { email: 'nobody@gmail.com' }))
           .end((err, res) => {
             res.should.have.status(422)
             res.body.should.have.property('error')
             res.body.should.be.a('object')
             done()
-          })
         })
     });      
 
     it('it should not login a user with a wrong password', (done) => {
-      const user = new User(Object.assign(userMock, { email: loginCredentials.email, password: 'wrong'  }))
-      user.save((err, user) => {      
-        chai.request(server)
-          .post('/api/v2/login')
-          .send(loginCredentials)
-          .end((err, res) => {
-            res.should.have.status(422)
-            res.body.should.have.property('error')
-            res.body.should.be.a('object')
-            done()
-          })
+      chai.request(server)
+        .post('/api/v2/login')
+        .send(_.extend({}, loginCredentials, { password: 'wrong' }))
+        .end((err, res) => {
+          res.should.have.status(422)
+          res.body.should.have.property('error')
+          res.body.should.be.a('object')
+          done()
         })
     }); 
   });

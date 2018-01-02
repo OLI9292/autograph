@@ -4,7 +4,6 @@ const mongoose = require('mongoose')
 const CONFIG = require('../config/main')
 const User = require('../models/user')
 
-
 const expiresIn = (numDays) => {
   var dateObj = new Date()
   return dateObj.setDate(dateObj.getDate() + numDays)
@@ -12,7 +11,7 @@ const expiresIn = (numDays) => {
 
 const genToken = (user) => {
   const expires = expiresIn(7)
-  const token = jwt.encode({ exp: expires }, process.env.VALIDATION_TOKEN)
+  const token = jwt.encode({ exp: expires }, CONFIG.VALIDATION_TOKEN)
   return { user: user, expires: expires, token: token }
 }
 
@@ -23,8 +22,9 @@ exports.login = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ email: email.toLowerCase() })
-    if (!user) { return res.status(422).send({ error: 'Email not found.' }) }
 
+    if (!user) { return res.status(422).send({ error: 'Email not found.' }) }
+    
     user.comparePassword(password, function(error, isMatch) {
       if (error) { return res.status(422).send({ error: 'Something went wrong.' }) }
 

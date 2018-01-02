@@ -50,7 +50,7 @@ exports.read = async (req, res, next) => {
     })
 
   } else if (req.query.teacher) {
-    
+
     Class.find({ teacher: req.query.teacher }, async (error, classes) => {
       return error
         ? res.status(422).send({ error: error.message })
