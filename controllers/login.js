@@ -11,7 +11,7 @@ const expiresIn = (numDays) => {
 
 const genToken = (user) => {
   const expires = expiresIn(7)
-  const token = jwt.encode({ exp: expires }, process.env.VALIDATION_TOKEN)
+  const token = jwt.encode({ exp: expires }, CONFIG.VALIDATION_TOKEN)
   return { user: user, expires: expires, token: token }
 }
 

@@ -212,8 +212,8 @@ describe('Users', () => {
         id: userMock._id,
         platform: 'web',
         stats: [
-          { word: 'hypnotism', correct: false, difficulty: 8, time: 3 },
-          { word: 'carnivore', correct: true, difficulty: 2, time: 4 },
+          { word: 'hypnotism', correct: false, difficulty: 5, time: 3 },
+          { word: 'carnivore', correct: true, difficulty: 10, time: 4 },
           { word: 'herbivore', correct: true, difficulty: 4, time: 2 }
         ]
       }        
@@ -225,14 +225,8 @@ describe('Users', () => {
             res.should.have.status(200)
             res.body.should.have.property('user')
             res.body.user.should.have.property('words')
-            res.body.user.should.have.property('weeklyStarCount').eql(3)
+            res.body.user.should.have.property('weeklyStarCount').eql(userMock.weeklyStarCount + 2)
             res.body.user.words.should.be.a('array').lengthOf(3)
-            res.body.user.words[0].should.have.property('name').eql(data.stats[0].word)
-            res.body.user.words[0].should.have.property('correct').eql(0)
-            res.body.user.words[0].should.have.property('experience').eql(1)
-            res.body.user.words[0].should.have.property('timeSpent').eql(3)
-            res.body.user.words[1].should.have.property('name').eql(data.stats[1].word)
-            res.body.user.words[1].should.have.property('correct').eql(1)
             res.body.should.be.a('object')
           done()
         })
