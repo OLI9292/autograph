@@ -4,7 +4,6 @@ const mongoose = require('mongoose')
 const CONFIG = require('../config/main')
 const User = require('../models/user')
 
-
 const expiresIn = (numDays) => {
   var dateObj = new Date()
   return dateObj.setDate(dateObj.getDate() + numDays)
@@ -23,8 +22,9 @@ exports.login = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ email: email.toLowerCase() })
-    if (!user) { return res.status(422).send({ error: 'Email not found.' }) }
 
+    if (!user) { return res.status(422).send({ error: 'Email not found.' }) }
+    
     user.comparePassword(password, function(error, isMatch) {
       if (error) { return res.status(422).send({ error: 'Something went wrong.' }) }
 

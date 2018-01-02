@@ -7,49 +7,49 @@ const mongoose = require('mongoose')
 const server = require('../server')
 const should = chai.should()
 
+const { cleanDB, seedDB } = require('../scripts/seedDB');
+
 const School = require('../models/school')
 
-const schoolMock = require('./mocks/school');
+const schoolMock = require('./mocks/school').mock;
 
 chai.use(chaiHttp)
 
 describe('Schools', () => {
-  beforeEach((done) => {
-    School.remove({}, (err) => { 
-      done()         
-    })     
-  })
 
   describe('/GET school', () => {
+    before(async () => await seedDB())
+
     it('it should GET all the schools', (done) => {
       chai.request(server)
         .get('/api/v2/admin/school')
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
-          res.body.length.should.be.eql(0)
+          res.body.length.should.be.eql(1)
           done()
         })
     });
   });
 
   describe('/GET/:id school', () => {
+    before(async () => await seedDB())
+
     it('it should GET a school by the given id', (done) => {
-      const school = new School(schoolMock)
-      school.save((err, lesson) => {
-        chai.request(server)
-          .get('/api/v2/admin/school/' + school.id)
-          .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.have.property('name').eql(schoolMock.name)
-              res.body.should.be.a('object')
-            done()
-        })
+      chai.request(server)
+        .get('/api/v2/admin/school/' + schoolMock._id)
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.have.property('name').eql(schoolMock.name)
+            res.body.should.be.a('object')
+          done()
       })
     })             
   });  
 
   describe('/POST school', () => {
+    beforeEach(async () => await cleanDB())
+
     it('it should POST a valid school', (done) => {
       chai.request(server)
         .post('/api/v2/admin/school')
@@ -72,61 +72,37 @@ describe('Schools', () => {
           done()
         })
     }); 
-  });
-
-  // TODO: - add more test cases
-  describe('/GET/:id/leaderboards school', () => {
-    it('it should GET leaderboards for the given id', (done) => {
-      const school = new School(schoolMock)
-      school.save((err, school) => {
-        chai.request(server)
-          .get('/api/v2/auth/school/' + school.id + '/leaderboards')
-          .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.be.a('object')
-              res.body.should.have.property('Earth').be.a('object')
-              res.body.Earth.should.have.property('allTime').eql([])
-              res.body.Earth.should.have.property('weekly').eql([])
-              res.body.should.have.property(school.name).be.a('object')
-              res.body[school.name].should.have.property('allTime').eql([])
-              res.body[school.name].should.have.property('weekly').eql([])
-            done()
-        })
-      })
-    })           
   });   
 
   describe('/PATCH/:id school', () => {
+    before(async () => await seedDB())
+
     it('it should UPDATE a school given the id', (done) => {
-      const school = new School(schoolMock)
-      school.save((err, school) => {
-        chai.request(server)
-          .patch('/api/v2/admin/school/' + school.id)
-          .send(_.extend(school, { country: 'Algeria' }))
-          .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.be.a('object')
-              res.body.should.have.property('name').eql(schoolMock.name)
-              res.body.should.have.property('country').eql('Algeria')
-              res.body.should.have.property('_id').eql(school.id)
-            done()
-          })
+      chai.request(server)
+        .patch('/api/v2/admin/school/' + schoolMock._id)
+        .send(_.extend(schoolMock, { country: 'Algeria' }))
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.should.have.property('name').eql(schoolMock.name)
+            res.body.should.have.property('country').eql('Algeria')
+            res.body.should.have.property('_id').eql(schoolMock._id)
+          done()
         })
     })
   });  
 
   describe('/DELETE/:id school', () => {
+    before(async () => await seedDB())
+
     it('it should DELETE a school given the id', (done) => {
-      const school = new School(schoolMock)
-      school.save((err, school) => {
-        chai.request(server)
-          .delete('/api/v2/admin/school/' + school.id)
-          .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.be.a('object')
-              res.body.should.have.property('name')
-            done()
-          })
+      chai.request(server)
+        .delete('/api/v2/admin/school/' + schoolMock._id)
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.should.have.property('name')
+          done()
         })
     })
   });

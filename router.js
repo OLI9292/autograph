@@ -1,6 +1,7 @@
 const express = require('express')
 
 const ClassController = require('./controllers/class')
+const LeaderboardController = require('./controllers/leaderboard')
 const LessonController = require('./controllers/lesson')
 const LoginController = require('./controllers/login')
 const SchoolController = require('./controllers/school')
@@ -48,6 +49,9 @@ module.exports = (app) => {
   apiRoutes.patch('/v2/admin/class/:id', ClassController.update) // ADMIN
   apiRoutes.delete('/v2/admin/class/:id', ClassController.delete) // ADMIN
 
+  // LEADERBOARDS ROUTES
+  apiRoutes.get('/v2/auth/leaderboard', LeaderboardController.read) // AUTH
+
   // LESSON ROUTES
   apiRoutes.post('/v2/admin/lesson', LessonController.create)
   apiRoutes.get('/v2/lesson', LessonController.read)
@@ -59,7 +63,6 @@ module.exports = (app) => {
   apiRoutes.post('/v2/admin/school', SchoolController.create)
   apiRoutes.get('/v2/admin/school', SchoolController.read)
   apiRoutes.get('/v2/admin/school/:id', SchoolController.read)
-  apiRoutes.get('/v2/auth/school/:id/leaderboards', SchoolController.leaderboards) // AUTH  
   apiRoutes.patch('/v2/admin/school/:id', SchoolController.update)
   apiRoutes.delete('/v2/admin/school/:id', SchoolController.delete)    
 
