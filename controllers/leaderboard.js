@@ -37,7 +37,7 @@ const filterRanks = (ranks, query) => {
     const filtered = grouped
       .filter(g => _.contains(g.map(r => r._id.toString()), query.user))
       .map((g) => {
-        const index = Math.max(_.findIndex(g, g => g._id.toString() === query.user) - 2, 0)
+        const index = Math.max(_.find(g, g => g._id.toString() === query.user).position - 2, 0)
         return g.slice(index, index + 20)
       })
 
