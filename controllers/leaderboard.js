@@ -37,7 +37,7 @@ const filterRanks = (ranks, query) => {
     const filtered = grouped
       .filter(g => _.contains(g.map(r => r._id.toString()), query.user))
       .map((g) => {
-        const index = Math.max(_.find(g, g => g._id.toString() === query.user).position - 2, 0)
+        const index = Math.max(_.findIndex(g, g => g._id.toString() === query.user) - 2, 0)
         return g.slice(index, index + 20)
       })
 
@@ -47,7 +47,7 @@ const filterRanks = (ranks, query) => {
 
     if (query.school) { ranks = ranks.filter(r => r.school && r.school.toString() === query.school) }
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
-    if (Number.isInteger(query.start)) { ranks.splice(start, 20) }
+    if (Number.isInteger(query.start)) { ranks = ranks.slice(start, start + 20) }
 
   }
 

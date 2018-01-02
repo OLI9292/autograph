@@ -54,7 +54,7 @@ describe('Leaderboards', () => {
 
     it('it should filter by student', (done) => {
       chai.request(server)
-        .get('/api/v2/auth/leaderboard?student_id=' + userMock._id)
+        .get('/api/v2/auth/leaderboard?user=' + userMock._id)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
@@ -65,7 +65,7 @@ describe('Leaderboards', () => {
 
     it('it should filter by student', (done) => {
       chai.request(server)
-        .get('/api/v2/auth/leaderboard?student_id=' + userMocks[1]._id)
+        .get('/api/v2/auth/leaderboard?user=' + userMocks[1]._id)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
