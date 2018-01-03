@@ -14,7 +14,7 @@ const ranksFor = async (school) => {
   const isAggregated = _.isArray(school)
   const groupId = isAggregated ? 'Earth' : school._id
   const groupName = (student, school) => {
-    return isAggregated ? _.property('name')(_.find(schools, s => s._id.equals(student.school))) : school._id
+    return isAggregated ? _.property('name')(_.find(schools, s => s._id.equals(student.school))) : school.name
   }
   const students = isAggregated ? (await User.find()) : (await User.find({ school: school._id }))
 
