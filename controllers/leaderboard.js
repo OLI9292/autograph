@@ -49,7 +49,11 @@ const filterRanks = (ranks, query) => {
   } else {
     const start = parseInt(query.start)
 
-    if (query.school) { ranks = ranks.filter(r => r.schoolId.toString() === query.school) }
+    if (query.school) { 
+      ranks = query.school === 'Earth'
+        ? ranks.filter(r => r.group === 'Earth')
+        : ranks.filter(r => r.schoolId.toString() === query.school) 
+    }
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
     if (start > 0)    { ranks = ranks.slice(start, start + 20) }
   }
