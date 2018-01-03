@@ -25,7 +25,7 @@ const ranksFor = async (school) => {
         _id: student._id,
         name: isAggregated ? student.initials() : student.firstNameLastInitial(),
         score: isWeekly ? student.weeklyStarCount : student.starCount(),
-        groupName: groupName,
+        groupName: groupName(student, school),
         groupId: groupId,
         period: isWeekly ? 'weekly' : 'all'
       })), 'score')
