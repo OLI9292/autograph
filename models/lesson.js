@@ -1,3 +1,4 @@
+const db = require('../db')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
@@ -16,6 +17,6 @@ const lessonSchema = new Schema({
   }
 })
 
-const Lesson = mongoose.model('Lesson', lessonSchema)
+const Lesson = db.model('Lesson', lessonSchema)
 
 module.exports = Lesson

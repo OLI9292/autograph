@@ -1,3 +1,4 @@
+const db = require('../db')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
@@ -11,6 +12,6 @@ const schoolSchema = new Schema({
   zipCode: String
 })
 
-const School = mongoose.model('School', schoolSchema)
+const School = db.model('School', schoolSchema)
 
 module.exports = School

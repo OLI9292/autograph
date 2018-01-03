@@ -1,3 +1,4 @@
+require('../db')
 const _ = require('underscore')
 const mongoose = require('mongoose')
 
