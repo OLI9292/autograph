@@ -13,13 +13,17 @@ const userMock = require('./mocks/user').mock;
 const userMocks = require('./mocks/user').mocks;
 const schoolMock = require('./mocks/school').mock;
 
+const leaderboard = require('../scripts/leaderboard')
+
 chai.use(chaiHttp)
 
 describe('Leaderboards', () => {
+  before(async () => {
+    await seedDB()
+    await leaderboard.cache()
+  })
 
   describe('/GET leaderboard', () => {
-    beforeEach(async () => await seedDB())
-
     it('it should GET all the ranks', (done) => {
       chai.request(server)
         .get('/api/v2/auth/leaderboard')
