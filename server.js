@@ -1,17 +1,13 @@
 require('dotenv').config()
+require('./db')
 
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const logger = require('morgan')
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-const router = require('./router')
 
 const CONFIG = require('./config/main')
-
-mongoose.Promise = global.Promise
-mongoose.connect(CONFIG.MONGODB_URI, { useMongoClient: true, promiseLibrary: global.Promise })
+const router = require('./router')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
