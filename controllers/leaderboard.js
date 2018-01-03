@@ -4,7 +4,7 @@ const cache = require('../cache')
 const School = require('../models/school')
 const User = require('../models/user')
 
-const allRanks = async () => {
+exports.allRanks = async () => {
   const schools = await School.find()
   return Promise.all(_.flatten([schools.map(ranksFor), ranksFor()]))
 }
@@ -31,25 +31,18 @@ const ranksFor = async (school) => {
 
 const filterRanks = (ranks, query) => {
   if (query.user) {
-
     const grouped = _.values(_.groupBy(ranks, (r) => `${r.school}-${r.period}`))
-
-    const filtered = grouped
+    ranks = _.flatten(grouped
       .filter(g => _.contains(g.map(r => r._id.toString()), query.user))
       .map((g) => {
         const index = Math.max(_.findIndex(g, g => g._id.toString() === query.user) - 2, 0)
         return g.slice(index, index + 20)
-      })
-
-    ranks = _.flatten(filtered)
-
+      }))
   } else {
     const start = parseInt(query.start)
-
     if (query.school) { ranks = ranks.filter(r => r.school && r.school.toString() === query.school) }
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
-    if (start > 0) { ranks = ranks.slice(start, start + 20) }
-
+    if (start > 0)    { ranks = ranks.slice(start, start + 20) }
   }
 
   return ranks
@@ -69,16 +62,12 @@ const filterRanks = (ranks, query) => {
 exports.read = async (req, res, next) => {  
   cache.get('leaderboards', async (error, reply) => {
     if (error) { next() } 
-    else {
-      let ranks = reply ? JSON.parse(reply).ranks : _.flatten(await allRanks())
-      
-      if (!reply) {
-        cache.set('leaderboards', JSON.stringify({ ranks: ranks }))
-        cache.expire('leaderboards', 500)
-      }      
-
+    else if (reply) {
+      const ranks = JSON.parse(reply).ranks
       if (req.query) { ranks = filterRanks(ranks, req.query) }
       return res.status(200).send(ranks)      
+    } else {
+      return res.status(404).send({ error: 'Not found.' })
     }
   })
 }
