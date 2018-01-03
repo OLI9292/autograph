@@ -38,7 +38,7 @@ const ranksFor = async (school) => {
 
 const filterRanks = (ranks, query) => {
   if (query.user) {
-    const grouped = _.values(_.groupBy(ranks, r => r.group))
+    const grouped = _.values(_.groupBy(ranks, r => `${r.group}-${r.period}`))
 
     ranks = _.flatten(grouped
       .filter(g => _.contains(g.map(r => r._id.toString()), query.user))
