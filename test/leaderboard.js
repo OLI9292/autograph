@@ -39,7 +39,7 @@ describe('Leaderboards', () => {
         .get('/api/v2/auth/leaderboard?school=' + schoolMock._id)
         .end((err, res) => {
           res.should.have.status(200)
-          _.unique(_.pluck(res.body, 'school')).should.be.eql([schoolMock._id])
+          _.unique(_.pluck(res.body, 'group')).should.be.eql([schoolMock._id])
           res.body.should.be.a('array')
           done()
         })

@@ -19,8 +19,8 @@ const ranksFor = async (school) => {
         _id: student._id,
         name: school ? student.firstNameLastInitial() : student.initials(),
         score: isWeekly ? student.weeklyStarCount : student.starCount(),
-        schoolName: school ? school.name : 'Earth',
-        school: (school && school._id) || 'Earth',
+        schoolName: school && school.name,
+        group: (school && school._id) || 'Earth',
         period: isWeekly ? 'weekly' : 'all'
       })), 'score')
       .reverse()
@@ -31,7 +31,7 @@ const ranksFor = async (school) => {
 
 const filterRanks = (ranks, query) => {
   if (query.user) {
-    const grouped = _.values(_.groupBy(ranks, (r) => `${r.school}-${r.period}`))
+    const grouped = _.values(_.groupBy(ranks, (r) => `${r.group}-${r.period}`))
     ranks = _.flatten(grouped
       .filter(g => _.contains(g.map(r => r._id.toString()), query.user))
       .map((g) => {
@@ -40,7 +40,7 @@ const filterRanks = (ranks, query) => {
       }))
   } else {
     const start = parseInt(query.start)
-    if (query.school) { ranks = ranks.filter(r => r.school && r.school.toString() === query.school) }
+    if (query.school) { ranks = ranks.filter(r => r.group && r.group.toString() === query.school) }
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
     if (start > 0)    { ranks = ranks.slice(start, start + 20) }
   }
