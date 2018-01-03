@@ -13,13 +13,17 @@ const userMock = require('./mocks/user').mock;
 const userMocks = require('./mocks/user').mocks;
 const schoolMock = require('./mocks/school').mock;
 
+const leaderboard = require('../scripts/leaderboard')
+
 chai.use(chaiHttp)
 
 describe('Leaderboards', () => {
+  before(async () => {
+    await seedDB()
+    await leaderboard.cache()
+  })
 
   describe('/GET leaderboard', () => {
-    beforeEach(async () => await seedDB())
-
     it('it should GET all the ranks', (done) => {
       chai.request(server)
         .get('/api/v2/auth/leaderboard')
@@ -54,7 +58,7 @@ describe('Leaderboards', () => {
 
     it('it should filter by student', (done) => {
       chai.request(server)
-        .get('/api/v2/auth/leaderboard?student_id=' + userMock._id)
+        .get('/api/v2/auth/leaderboard?user=' + userMock._id)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
@@ -65,13 +69,24 @@ describe('Leaderboards', () => {
 
     it('it should filter by student', (done) => {
       chai.request(server)
-        .get('/api/v2/auth/leaderboard?student_id=' + userMocks[1]._id)
+        .get('/api/v2/auth/leaderboard?user=' + userMocks[1]._id)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
           res.body.length.should.eql(8)
           done()
         })
-    });          
+    });   
+
+    it('it should filter by start', (done) => {
+      chai.request(server)
+        .get('/api/v2/auth/leaderboard?start=2')
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.be.a('array')
+          res.body.length.should.eql(6)
+          done()
+        })
+    });              
   });
 });
