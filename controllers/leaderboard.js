@@ -10,10 +10,10 @@ exports.allRanks = async () => {
 }
 
 const ranksFor = async (school) => {
-  
+  if (!school) { return [] }
+
   const isAggregated = _.isArray(school)
-  const groupId = isAggregated ? 'Earth' : school._id
-  const groupName = (student, school) => {
+  const schoolName = (student, school) => {
     return isAggregated ? _.property('name')(_.find(school, s => s._id.equals(student.school))) : school.name
   }
   const students = isAggregated ? (await User.find()) : (await User.find({ school: school._id }))
@@ -21,12 +21,13 @@ const ranksFor = async (school) => {
   return _.flatten([true, false].map((isWeekly) => {
     return _.sortBy(students
       .map((student) => ({
-        id: `${student._id}-${groupId}-${isWeekly ? 'weekly' : 'all'}`,
+        id: `${student._id}-${isAggregated ? 'Earth' : school._id}-${isWeekly ? 'weekly' : 'all'}`,
         _id: student._id,
         name: isAggregated ? student.initials() : student.firstNameLastInitial(),
         score: isWeekly ? student.weeklyStarCount : student.starCount(),
-        groupName: groupName(student, school),
-        groupId: groupId,
+        schoolName: schoolName(student, school),
+        schoolId: !isAggregated &&  student.school,
+        group: isAggregated ? 'Earth' : school.name,
         period: isWeekly ? 'weekly' : 'all'
       })), 'score')
       .reverse()
@@ -37,7 +38,8 @@ const ranksFor = async (school) => {
 
 const filterRanks = (ranks, query) => {
   if (query.user) {
-    const grouped = _.values(_.groupBy(ranks, (r) => `${r.groupId}-${r.period}`))
+    const grouped = _.values(_.groupBy(ranks, r => r.group))
+
     ranks = _.flatten(grouped
       .filter(g => _.contains(g.map(r => r._id.toString()), query.user))
       .map((g) => {
@@ -47,7 +49,7 @@ const filterRanks = (ranks, query) => {
   } else {
     const start = parseInt(query.start)
 
-    if (query.school) { ranks = ranks.filter(r => r.groupId && r.groupId.toString() === query.school) }
+    if (query.school) { ranks = ranks.filter(r => r.schoolId.toString() === query.school) }
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
     if (start > 0)    { ranks = ranks.slice(start, start + 20) }
   }
