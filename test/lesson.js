@@ -16,9 +16,10 @@ const lessonMock = require('./mocks/lesson').mock;
 chai.use(chaiHttp)
 
 describe('Lessons', () => {
-
   describe('/GET lesson', () => {
-    before(async () => await seedDB())
+    before(async () => {
+      await seedDB()
+    })
 
     it('it should GET all the lessons', (done) => {
       chai.request(server)

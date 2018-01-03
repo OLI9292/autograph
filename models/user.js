@@ -1,3 +1,4 @@
+const db = require('../db')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
@@ -99,6 +100,6 @@ userSchema.methods.starCount = function() {
   return _.reduce(this.words, (acc, w) => acc + w.experience, 0)
 }
 
-const User = mongoose.model('User', userSchema)
+const User = db.model('User', userSchema)
 
 module.exports = User

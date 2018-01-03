@@ -1,7 +1,6 @@
 const _ = require('underscore')
 const mongoose = require('mongoose')
 
-require('../db')
 const cache = require('../cache')
 const LeaderboardController = require('../controllers/leaderboard')
 
@@ -15,6 +14,7 @@ module.exports.cache = async () => {
   await cache.set('leaderboards', stringified)
   
   // Close connections
+  mongoose.connection.close()
   cache.unref()
 
   return
