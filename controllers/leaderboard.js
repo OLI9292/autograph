@@ -6,21 +6,24 @@ const User = require('../models/user')
 
 exports.allRanks = async () => {
   const schools = await School.find()
-  return await Promise.all(_.flatten([schools.map(ranksFor), ranksFor()]))
+  return await Promise.all(_.flatten([schools.map(ranksFor), ranksFor(schools)]))
 }
 
 const ranksFor = async (school) => {
-  const students = school ? (await User.find({ school: school._id })) : (await User.find())
+  
+  const isAggregated = _.isArray(school)
+  const groupId = isAggregated ? 'Earth' : school._id
+  const students = isAggregated ? (await User.find()) : (await User.find({ school: school._id }))
 
   return _.flatten([true, false].map((isWeekly) => {
     return _.sortBy(students
       .map((student) => ({
-        id: `${student._id}-${school ? school.name : 'Earth'}-${isWeekly ? 'weekly' : 'all'}`,
+        id: `${student._id}-${groupId}-${isWeekly ? 'weekly' : 'all'}`,
         _id: student._id,
-        name: school ? student.firstNameLastInitial() : student.initials(),
+        name: isAggregated ? student.initials() : student.firstNameLastInitial(),
         score: isWeekly ? student.weeklyStarCount : student.starCount(),
-        schoolName: (school && school.name) || 'Earth',
-        group: (school && school._id) || 'Earth',
+        groupName: isAggregated ? _.property('name')(_.find(school, s => s._id.equals(student.school))) : 'Earth',
+        groupId: groupId,
         period: isWeekly ? 'weekly' : 'all'
       })), 'score')
       .reverse()
@@ -31,7 +34,7 @@ const ranksFor = async (school) => {
 
 const filterRanks = (ranks, query) => {
   if (query.user) {
-    const grouped = _.values(_.groupBy(ranks, (r) => `${r.group}-${r.period}`))
+    const grouped = _.values(_.groupBy(ranks, (r) => `${r.groupId}-${r.period}`))
     ranks = _.flatten(grouped
       .filter(g => _.contains(g.map(r => r._id.toString()), query.user))
       .map((g) => {
@@ -40,7 +43,8 @@ const filterRanks = (ranks, query) => {
       }))
   } else {
     const start = parseInt(query.start)
-    if (query.school) { ranks = ranks.filter(r => r.group && r.group.toString() === query.school) }
+
+    if (query.school) { ranks = ranks.filter(r => r.groupId && r.groupId.toString() === query.school) }
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
     if (start > 0)    { ranks = ranks.slice(start, start + 20) }
   }
