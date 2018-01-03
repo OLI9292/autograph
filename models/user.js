@@ -100,6 +100,11 @@ userSchema.methods.starCount = function() {
   return _.reduce(this.words, (acc, w) => acc + w.experience, 0)
 }
 
+userSchema.methods.schoolName = function(schools) {
+  const school = _.find(schools, s => s._id.equals(this.school))
+  return school ? school.name : '';
+}
+
 const User = db.model('User', userSchema)
 
 module.exports = User
