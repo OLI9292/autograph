@@ -13,9 +13,6 @@ const ranksFor = async (school) => {
   if (!school) { return [] }
 
   const isAggregated = _.isArray(school)
-  const schoolName = (student, school) => {
-    return isAggregated ? _.property('name')(_.find(school, s => s._id.equals(student.school))) : school.name
-  }
   const students = isAggregated ? (await User.find()) : (await User.find({ school: school._id }))
 
   return _.flatten([true, false].map((isWeekly) => {
@@ -25,7 +22,7 @@ const ranksFor = async (school) => {
         _id: student._id,
         name: isAggregated ? student.initials() : student.firstNameLastInitial(),
         score: isWeekly ? student.weeklyStarCount : student.starCount(),
-        schoolName: schoolName(student, school),
+        schoolName: isAggregated ? student.schoolName(school) : school.name,
         schoolId: !isAggregated &&  student.school,
         group: isAggregated ? 'Earth' : school.name,
         period: isWeekly ? 'weekly' : 'all'
