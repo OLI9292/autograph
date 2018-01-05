@@ -33,4 +33,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
+      - run: sudo apt install postgresql-client
+      - run: sudo psql -h localhost -p 5432 -c "create database wordcraft"
+
       - run: yarn test
