@@ -15,7 +15,7 @@ chai.use(chaiHttp)
 describe('Questions', () => {
   
   describe('/GET question', () => {
-    beforeEach(async () => await db.seed())
+    before(async () => await db.seed())
 
     it('it should GET all the questions', (done) => {
       chai.request(server)
@@ -26,8 +26,12 @@ describe('Questions', () => {
           done()
         })
     });
+  });
 
-    it('it should GET all the questions', (done) => {
+  describe('/GET question/:userId', () => {
+    before(async () => await db.seed())
+    
+    it('it should GET all the questions for the user', (done) => {
       chai.request(server)
         .get(`/api/v2/auth/question/${questionMock.user_id}`)
         .end((err, res) => {

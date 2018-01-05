@@ -8,6 +8,7 @@ jobs:
     docker:
       - image: circleci/node:7.10
       - image: mongo:3.2.4
+      - image: postgres:9.5.5
       - image: redis:4.0.1-alpine
     working_directory: ~/repo
 
