@@ -10,7 +10,7 @@ const should = chai.should()
 const { seedDB } = require('../scripts/seedDB');
 
 const userMock = require('./mocks/user').mock;
-const userMocks = require('./mocks/user').mocks;
+const userData = require('./mocks/user');
 const schoolMock = require('./mocks/school').mock;
 
 const leaderboard = require('../scripts/leaderboard')
@@ -69,14 +69,25 @@ describe('Leaderboards', () => {
 
     it('it should filter by student', (done) => {
       chai.request(server)
-        .get('/api/v2/auth/leaderboard?user=' + userMocks[1]._id)
+        .get('/api/v2/auth/leaderboard?user=' + userData.mocks[1]._id)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
           res.body.length.should.eql(8)
           done()
         })
-    });   
+    });
+
+    it('it should filter by teacher', (done) => {
+      chai.request(server)
+        .get('/api/v2/auth/leaderboard?teacher=' + userData.teacherMock._id)
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.be.a('array')
+          res.body.length.should.eql(8)
+          done()
+        })
+    });       
 
     it('it should filter by start', (done) => {
       chai.request(server)

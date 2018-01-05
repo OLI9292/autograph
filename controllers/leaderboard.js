@@ -13,10 +13,11 @@ const ranksFor = async (school) => {
   if (!school) { return [] }
 
   const isAggregated = _.isArray(school)
-  const students = isAggregated ? (await User.find()) : (await User.find({ school: school._id }))
+  const users = isAggregated ? (await User.find()) : (await User.find({ school: school._id }))
 
   return _.flatten([true, false].map((isWeekly) => {
-    return _.sortBy(students
+    return _.sortBy(users
+      .filter(u => !u.isTeacher)
       .map((student) => ({
         id: `${student._id}-${isAggregated ? 'Earth' : school._id}-${isWeekly ? 'weekly' : 'all'}`,
         _id: student._id,
@@ -35,6 +36,7 @@ const ranksFor = async (school) => {
 
 const filterRanks = (ranks, query) => {
   if (query.user) {
+    
     const grouped = _.values(_.groupBy(ranks, r => `${r.group}-${r.period}`))
 
     ranks = _.flatten(grouped
@@ -43,7 +45,9 @@ const filterRanks = (ranks, query) => {
         const index = Math.max(_.findIndex(g, g => g._id.toString() === query.user) - 2, 0)
         return g.slice(index, index + 20)
       }))
-  } else {
+
+  } else {  
+    
     const start = parseInt(query.start)
 
     if (query.school) { 
@@ -51,8 +55,11 @@ const filterRanks = (ranks, query) => {
         ? ranks.filter(r => r.group === 'Earth')
         : ranks.filter(r => r.schoolId.toString() === query.school) 
     }
+
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
+
     if (start > 0)    { ranks = ranks.slice(start, start + 20) }
+
   }
 
   return ranks
