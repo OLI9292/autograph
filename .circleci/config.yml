@@ -8,7 +8,14 @@ jobs:
     docker:
       - image: circleci/node:7.10
       - image: mongo:3.2.4
+      - image: postgres:9.5.5
       - image: redis:4.0.1-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: wordcraft
+          POSTGRES_HOST: 127.0.0.1
+          POSTGRES_PORT: 5432
+          POSTGRES_PASSWORD: ""      
     working_directory: ~/repo
 
     steps:
@@ -25,5 +32,8 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: sudo apt update && sudo apt install postgresql-client
+      - run: sudo psql -U postgres -h localhost -p 5432 -c "create database wordcraft"
 
       - run: yarn test
