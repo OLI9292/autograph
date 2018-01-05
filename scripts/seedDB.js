@@ -1,4 +1,4 @@
-require('../db')
+require('../databases/accounts/index')
 const _ = require('underscore')
 const mongoose = require('mongoose')
 

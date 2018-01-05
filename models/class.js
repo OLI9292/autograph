@@ -1,4 +1,4 @@
-const db = require('../db')
+const db = require('../databases/accounts/index')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')

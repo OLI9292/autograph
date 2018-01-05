@@ -4,7 +4,6 @@ const mongoose = require('mongoose')
 const cache = require('../cache')
 const LeaderboardController = require('../controllers/leaderboard')
 
-
 module.exports.cache = async () => {
 
   // Cache ranks
