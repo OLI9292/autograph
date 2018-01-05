@@ -8,9 +8,3 @@ module.exports = {
   'QUESTION_DB_HOST': process.env.QUESTION_DB_HOST || '5432',
   'QUESTION_DB_NAME': process.env.QUESTION_DB_NAME || 'wordcraft'
 }
-
-// const QUESTION_DB_USERNAME = 'admin'
-// const QUESTION_DB_PASSWORD = 'EAF2itc6yvtGTz'
-// const QUESTION_DB_SERVER = '174.138.74.241'
-// const QUESTION_DB_HOST = '5432'
-// const QUESTION_DB_NAME = 'wordcraft'
