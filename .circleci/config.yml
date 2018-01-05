@@ -33,8 +33,4 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: sudo apt update && sudo apt install postgresql-client
-      - run: echo "create role postgres with login;" | psql -U postgres
-      - run: echo "create database wordcraft;" | psql -U postgres
-
       - run: yarn test
