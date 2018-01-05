@@ -31,9 +31,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run:
-        command: |
-          echo "create role postgres with login;" | psql -U postgres
-          echo "create database wordcraft;" | psql -U postgres
+      - run: echo "create role postgres with login;" | psql -U postgres
+      - run: echo "create database wordcraft;" | psql -U postgres
 
       - run: yarn test
