@@ -195,7 +195,7 @@ describe('Users', () => {
     it('it should UPDATE school for multiple users', (done) => {
       chai.request(server)
         .patch('/api/v2/admin/user/joinSchool')
-        .send({ school: schoolMock._id, students: _.pluck(userMocks, '_id') })
+        .send({ school: schoolMock._id, users: _.pluck(userMocks, '_id') })
         .end((err, res) => {
             res.should.have.status(200)
             res.body.should.have.property('success')

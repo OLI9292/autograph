@@ -11,30 +11,33 @@ exports.allRanks = async () => {
 
 const ranksFor = async (school) => {
   if (!school) { return [] }
-
   const isAggregated = _.isArray(school)
-  const students = isAggregated ? (await User.find()) : (await User.find({ school: school._id }))
+  const students = await User.find(isAggregated ? { isTeacher: false } : { isTeacher: false, school: school._id });
 
   return _.flatten([true, false].map((isWeekly) => {
-    return _.sortBy(students
-      .map((student) => ({
-        id: `${student._id}-${isAggregated ? 'Earth' : school._id}-${isWeekly ? 'weekly' : 'all'}`,
-        _id: student._id,
-        name: isAggregated ? student.initials() : student.firstNameLastInitial(),
-        score: isWeekly ? student.weeklyStarCount : student.starCount(),
-        schoolName: isAggregated ? student.schoolName(school) : school.name,
-        schoolId: !isAggregated &&  student.school,
-        group: isAggregated ? 'Earth' : school.name,
-        period: isWeekly ? 'weekly' : 'all'
-      })), 'score')
-      .reverse()
-      .filter((student) => student.score > 0)
-      .map((student, idx) => _.extend({}, student, { position: idx + 1 }))
+    const ranks = students
+      .map(u => rankFor(u, school, isAggregated, isWeekly))
+      .filter((student) => student.score > 0);
+    
+    const sorted = _.sortBy(ranks, 'score').reverse();
+    return sorted.map((s, idx) => _.extend({}, s, { position: idx + 1, isLast: idx + 1 === sorted.length }))
   }))
 }
 
+const rankFor = (student, school, isAggregated, isWeekly) => ({
+  id: `${student._id}-${isAggregated ? 'Earth' : school._id}-${isWeekly ? 'weekly' : 'all'}`,
+  _id: student._id,
+  name: isAggregated ? student.initials() : student.firstNameLastInitial(),
+  score: isWeekly ? student.weeklyStarCount : student.starCount(),
+  schoolName: isAggregated ? student.schoolName(school) : school.name,
+  schoolId: !isAggregated &&  student.school,
+  group: isAggregated ? 'Earth' : school.name,
+  period: isWeekly ? 'weekly' : 'all'
+})
+
 const filterRanks = (ranks, query) => {
   if (query.user) {
+    
     const grouped = _.values(_.groupBy(ranks, r => `${r.group}-${r.period}`))
 
     ranks = _.flatten(grouped
@@ -43,7 +46,9 @@ const filterRanks = (ranks, query) => {
         const index = Math.max(_.findIndex(g, g => g._id.toString() === query.user) - 2, 0)
         return g.slice(index, index + 20)
       }))
-  } else {
+
+  } else {  
+    
     const start = parseInt(query.start)
 
     if (query.school) { 
@@ -51,8 +56,11 @@ const filterRanks = (ranks, query) => {
         ? ranks.filter(r => r.group === 'Earth')
         : ranks.filter(r => r.schoolId.toString() === query.school) 
     }
+
     if (query.period) { ranks = ranks.filter(r => r.period === query.period) }
+
     if (start > 0)    { ranks = ranks.slice(start, start + 20) }
+
   }
 
   return ranks

@@ -235,15 +235,15 @@ exports.joinClass = async (req, res, next) => {
 }
 
 exports.joinSchool = async (req, res, next) => {
-  const [schoolId, students] = [req.body.school, req.body.students]
+  const [schoolId, users] = [req.body.school, req.body.users]
   
-  if (!schoolId || !_.isArray(students)) { return res.status(422).send({ error: 'Invalid params.' }) }
+  if (!schoolId || !_.isArray(users)) { return res.status(422).send({ error: 'Invalid params.' }) }
 
   School.findById(schoolId, async (error, school) => {
     if (error) { return res.status(422).send({ error: error.message }) }
     if (!school) { return res.status(404).send({ error: 'Not found.' }) }
 
-    User.updateMany({ _id: { $in: students } }, { $set: { 'school': school._id } }, async (error, users) => {
+    User.updateMany({ _id: { $in: users } }, { $set: { 'school': school._id } }, async (error, users) => {
       return error
         ? res.status(422).send({ error: error.message })
         : res.status(200).send({ success: true })

@@ -12,6 +12,7 @@ const primaryMock = {
   firstName: 'Willow',
   lastName: 'Glenn',
   signUpMethod: 'email',
+  isTeacher: false,
   email: 'willow@gmail.com',
   password: 'super-secret-password',
   weeklyStarCount: 6,
@@ -29,6 +30,7 @@ const secondaryMocks = [
     firstName: 'Alejandro',
     lastName: 'Baptista',
     signUpMethod: 'email',
+    isTeacher: false,
     email: 'alejandro@gmail.com',
     weeklyStarCount: 12,
     words: [
@@ -43,6 +45,7 @@ const secondaryMocks = [
     firstName: 'Akiva',
     lastName: 'S',
     signUpMethod: 'email',
+    isTeacher: true,
     email: 'akiva@gmail.com',
     school: schoolData.ID_1,
     classes: [{ id: classData.ID_1, role: 'teacher' }]    
