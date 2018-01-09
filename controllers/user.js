@@ -251,6 +251,14 @@ exports.joinSchool = async (req, res, next) => {
   })
 }
 
+exports.resetStarCounts = async (req, res, next) => {
+  User.updateMany({}, { $set: { 'weeklyStarCount': 0 } }, async (error, users) => {
+    return error
+      ? res.status(422).send({ error: error.message })
+      : res.status(200).send({ success: true })
+  })
+}
+
 //
 // DELETE
 //
