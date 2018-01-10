@@ -12,6 +12,7 @@ const seed = async () => {
 
 const clean = async () => {
   await teardown()
+  console.log(sql.createQuestionsTable)
   await query(sql.createQuestionsTable)
   return
 }
