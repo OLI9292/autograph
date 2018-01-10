@@ -181,7 +181,7 @@ const updateFromMobile = async (req, res, next) => {
       if (err) {
         return res.status(422).send({ error: `Error retrieving user -> ${err.message}` })
       } else if (user) {
-        if (wordExperience.length >= user.words) {
+        if (wordExperience.length >= user.words.length) {
           user.words = wordExperience
         }
         try {
