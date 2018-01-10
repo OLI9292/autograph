@@ -12,14 +12,12 @@ const seed = async () => {
 
 const clean = async () => {
   await teardown()
-  await query(sql.createQuestionType)
   await query(sql.createQuestionsTable)
   return
 }
 
 const teardown = async () => {
   await query('DROP TABLE IF EXISTS questions;')
-  await query('DROP TYPE IF EXISTS questionType;')
   return
 }
 

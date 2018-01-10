@@ -4,10 +4,6 @@ const _ = require('underscore')
 // CONSTANTS
 // 
 
-const TYPES = [
-  'spell'
-]
-
 const FIELD_DATA = [
   { name: 'id', datatype: 'serial', options: ['primary key'] },
   { name: 'answered_at', datatype: 'timestamp', options: ['not null'] },
@@ -16,7 +12,7 @@ const FIELD_DATA = [
   { name: 'hints_used', datatype: 'int', options: ['not null', 'check(hints_used >= 0)'] },
   { name: 'incorrect_guesses', datatype: 'int', options: ['not null', 'check(incorrect_guesses >= 0)'] },
   { name: 'time_spent', datatype: 'float', options: ['not null', 'check(time_spent > 0)'] },
-  { name: 'type', datatype: 'questionType', options: ['not null'] },
+  { name: 'type', datatype: 'varchar(60)', options: ['not null'] },
   { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] },
   { name: 'word', datatype: 'varchar(40)', options: [] },
   { name: 'answers', datatype: 'json', options: ['not null'] },
@@ -49,5 +45,3 @@ exports.saveQuestion = data => {
 //
 
 exports.createQuestionsTable = `CREATE TABLE questions (${FIELDS.join(', ')});`;
-
-exports.createQuestionType = `CREATE TYPE questionType AS ENUM (${TYPES.map(t => `'${t}'`).join(', ')})`;
