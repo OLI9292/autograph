@@ -25,7 +25,6 @@ exports.read = async (req, res, next) => {
     const result = await query(...sql.getQuestions(req.params.userId))
     return res.status(200).send(result.rows);
   } catch (error) {
-    console.log(error.message)
     return res.status(422).send({ error: error.message });  
   }
 }

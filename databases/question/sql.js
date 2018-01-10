@@ -17,7 +17,10 @@ const FIELD_DATA = [
   { name: 'incorrect_guesses', datatype: 'int', options: ['not null', 'check(incorrect_guesses >= 0)'] },
   { name: 'time_spent', datatype: 'float', options: ['not null', 'check(time_spent > 0)'] },
   { name: 'type', datatype: 'questionType', options: ['not null'] },
-  { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] }
+  { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] },
+  { name: 'word', datatype: 'varchar(40)', options: [] },
+  { name: 'answers', datatype: 'json', options: ['not null'] },
+  { name: 'choices', datatype: 'json', options: ['not null'] }
 ];
 
 const FIELD_NAMES = _.pluck(FIELD_DATA.slice(1), 'name');
