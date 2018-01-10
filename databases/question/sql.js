@@ -4,10 +4,6 @@ const _ = require('underscore')
 // CONSTANTS
 // 
 
-const TYPES = [
-  'spell'
-]
-
 const FIELD_DATA = [
   { name: 'id', datatype: 'serial', options: ['primary key'] },
   { name: 'answered_at', datatype: 'timestamp', options: ['not null'] },
@@ -16,11 +12,14 @@ const FIELD_DATA = [
   { name: 'hints_used', datatype: 'int', options: ['not null', 'check(hints_used >= 0)'] },
   { name: 'incorrect_guesses', datatype: 'int', options: ['not null', 'check(incorrect_guesses >= 0)'] },
   { name: 'time_spent', datatype: 'float', options: ['not null', 'check(time_spent > 0)'] },
-  { name: 'type', datatype: 'questionType', options: ['not null'] },
-  { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] }
+  { name: 'type', datatype: 'varchar(60)', options: ['not null'] },
+  { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] },
+  { name: 'word', datatype: 'varchar(40)', options: [] },
+  { name: 'answers', datatype: 'json', options: [] },
+  { name: 'choices', datatype: 'json', options: [] }
 ];
 
-const FIELD_NAMES = _.pluck(FIELD_DATA.slice(1), 'name');
+const FIELD_NAMES = _.pluck(FIELD_DATA.slice(1), 'name').sort((a, b) => a.localeCompare(b));
 
 const FIELDS = FIELD_DATA.map(f => `${f.name} ${f.datatype} ${f.options.join(' ')}`);
 
@@ -37,8 +36,9 @@ exports.getQuestions = ((userId) => {
 });
 
 exports.saveQuestion = data => {
+  const keys = data.length ? _.keys(data[0]) : _.keys(data);
   const values = data.length ? data.map(d => _.values(d)) : _.values(data);
-  return [`INSERT INTO questions(${FIELD_NAMES.join(', ')}) ${valueText(FIELD_NAMES.length)};`, values]
+  return [`INSERT INTO questions(${keys.join(', ')}) ${valueText(keys.length)};`, values]
 }
 
 //
@@ -46,5 +46,3 @@ exports.saveQuestion = data => {
 //
 
 exports.createQuestionsTable = `CREATE TABLE questions (${FIELDS.join(', ')});`;
-
-exports.createQuestionType = `CREATE TYPE questionType AS ENUM (${TYPES.map(t => `'${t}'`).join(', ')})`;
