@@ -160,7 +160,7 @@ const updateFromWeb = async (req, res, next) => {
 
       try {
         await user.save()
-        return res.status(200).send({ user: user })      
+        return res.status(200).send(user)
       } catch (error) {
         return res.status(422).send({ error: error.message })
       }
