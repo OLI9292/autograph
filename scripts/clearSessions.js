@@ -3,8 +3,8 @@ const moment = require('moment');
 const numeral = require('numeral');
 
 const cache = require('../cache');
-const query = require('./databases/question/query');
-const sql = require('./databases/question/sql');
+const query = require('../databases/question/query');
+const sql = require('../databases/question/sql');
 
 exports.run = () => {
   cache.smembers('known_sessions', (error, keys) => {
