@@ -4,6 +4,7 @@ const ClassController = require('./controllers/class')
 const LeaderboardController = require('./controllers/leaderboard')
 const LessonController = require('./controllers/lesson')
 const LoginController = require('./controllers/login')
+const SessionsController = require('./controllers/session')
 const SchoolController = require('./controllers/school')
 const QuestionsController = require('./controllers/question')
 const UserController = require('./controllers/user')
@@ -24,6 +25,10 @@ module.exports = (app) => {
   apiRoutes.get('/v2/auth/question', QuestionsController.read)
   apiRoutes.get('/v2/auth/question/:userId', QuestionsController.read)
   apiRoutes.post('/v2/auth/question', QuestionsController.create)
+
+  // SESSION ROUTES
+  apiRoutes.get('/v2/auth/session', SessionsController.read)
+  apiRoutes.get('/v2/auth/session/:userId', SessionsController.read)
 
   // CLASS ROUTES
   apiRoutes.post('/v2/admin/class', ClassController.create) // ADMIN
