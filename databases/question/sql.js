@@ -23,9 +23,9 @@ const QUESTION_FIELD_NAMES = _.pluck(QUESTION_FIELD_DATA.slice(1), 'name').sort(
 const QUESTION_FIELDS = QUESTION_FIELD_DATA.map(f => `${f.name} ${f.datatype} ${f.options.join(' ')}`);
 
 const SESSION_FIELD_DATA = [
-  { name: 'id', datatype: 'varchar(60)', options: ['primary key'] },
-  { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] },
-  { name: 'session_id', datatype: 'varchar(40)', options: ['not null'] },
+  { name: 'id', datatype: 'varchar(120)', options: ['primary key'] },
+  { name: 'user_id', datatype: 'varchar(60)', options: ['not null'] },
+  { name: 'session_id', datatype: 'varchar(60)', options: ['not null'] },
   { name: 'ip', datatype: 'varchar(60)', options: ['not null'] },
   { name: 'date', datatype: 'varchar(30)', options: ['not null'] },
   { name: 'start', datatype: 'varchar(30)', options: ['not null'] },
