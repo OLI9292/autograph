@@ -24,9 +24,9 @@ app.use((req, res, next) => {
 })
 
 // Don't validate requests during testing
-if (process.env.NODE_ENV === 'production') {
+//if (process.env.NODE_ENV === 'production') {
   app.all('/api/v2/*', [require('./middlewares/validateRequest')])  
-}
+//}
 
 app.listen(CONFIG.PORT, () => console.log(`App listening on port ${CONFIG.PORT}`))
 

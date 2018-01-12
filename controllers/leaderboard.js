@@ -80,7 +80,8 @@ const filterRanks = (ranks, query) => {
  */
 
 exports.read = async (req, res, next) => {  
-  recordEvent(req.body.userId, req.body.sessionId, req.ip, req.path);
+  console.log(req.userId, 1, req.ip, req.path)
+  recordEvent(req.userId, 1, req.ip, req.path);
 
   cache.get('leaderboards', async (error, reply) => {
     if (error) {

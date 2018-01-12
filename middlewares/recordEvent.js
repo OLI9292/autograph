@@ -1,24 +1,21 @@
 const moment = require('moment');
 const redis = require('redis');
-
-//const client = redis.createClient();
+const cache = require('../cache')
 
 module.exports = (userKey, sessionKey, ip, path) => {  
+  const userSessionKey = userKey + ':' + sessionKey;
+  const timeoutKey = userSessionKey + ':timeout';
+  const payload = { ip: ip, path: path, at: moment().format() };
 
-  const userSessionKey = userKey + ":" + sessionKey;
-  const timeoutKey = userSessionKey + ":timeout";
+  console.log('\n')
+  console.log(userSessionKey)
+  console.log(timeoutKey)
+  console.log(payload)
 
-  const payload = {
-    ip: ip,
-    path: path,
-    at: moment().format(),
-  };
-
-  // const multi = client.multi();
-
-/*  multi.sadd('known_sessions', userSessionKey);
+  const multi = cache.multi();
+  multi.sadd('known_sessions', userSessionKey);
   multi.rpush(userSessionKey, JSON.stringify(payload)); 
   multi.set(timeoutKey, 'timeout');
-  multi.expire(timeoutKey, 1800);
-  multi.exec();*/
+  multi.expire(timeoutKey, 30);
+  multi.exec();  
 };
