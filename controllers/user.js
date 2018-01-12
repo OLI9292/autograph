@@ -6,6 +6,8 @@ const Class = require('../models/class')
 const School = require('../models/school')
 const User = require('../models/user')
 
+const recordEvent = require('../middlewares/recordEvent');
+
 //
 // CREATE
 //
@@ -56,6 +58,7 @@ const userIdQuery = (query) => {
 
 exports.read = async (req, res, next) => {
   if (req.params.id) {
+    recordEvent(req.userId, req.sessionId, req.ip, req.path);
 
     User.findById(req.params.id, async (error, user) => {
       return error
@@ -106,6 +109,7 @@ exports.update2 = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   if (req.body.platform === 'web') {
+    recordEvent(req.userId, req.sessionId, req.ip, req.path)
     return await updateFromWeb(req, res, next)
   } else {
     return await updateFromMobile(req, res, next)
@@ -160,7 +164,7 @@ const updateFromWeb = async (req, res, next) => {
 
       try {
         await user.save()
-        return res.status(200).send({ user: user })      
+        return res.status(200).send(user)
       } catch (error) {
         return res.status(422).send({ error: error.message })
       }

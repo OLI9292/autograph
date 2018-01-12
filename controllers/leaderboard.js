@@ -4,6 +4,8 @@ const cache = require('../cache')
 const School = require('../models/school')
 const User = require('../models/user')
 
+const recordEvent = require('../middlewares/recordEvent');
+
 exports.allRanks = async () => {
   const schools = await School.find()
   return await Promise.all(_.flatten([schools.map(ranksFor), ranksFor(schools)]))
@@ -78,6 +80,8 @@ const filterRanks = (ranks, query) => {
  */
 
 exports.read = async (req, res, next) => {  
+  recordEvent(req.userId, req.sessionId, req.ip, req.path)
+
   cache.get('leaderboards', async (error, reply) => {
     if (error) {
       next()

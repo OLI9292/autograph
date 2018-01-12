@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const CONFIG = require('../config/main')
 const User = require('../models/user')
 
+const helpers = require('../lib/helpers')
+
 const expiresIn = (numDays) => {
   var dateObj = new Date()
   return dateObj.setDate(dateObj.getDate() + numDays)
@@ -12,7 +14,7 @@ const expiresIn = (numDays) => {
 const genToken = (user) => {
   const expires = expiresIn(7)
   const token = jwt.encode({ exp: expires }, CONFIG.VALIDATION_TOKEN)
-  return { user: user, expires: expires, token: token }
+  return { user: user, expires: expires, token: token, sessionId: helpers.guid() }
 }
 
 exports.login = async (req, res, next) => {

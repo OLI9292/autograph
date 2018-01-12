@@ -19,21 +19,26 @@ const requiresAdmin = (url) => url.indexOf('admin') >= 0
 
 module.exports = async (req, res, next) => {
 
-  if (!requiresAdmin(req.url)) {
-    next()
-    return
-  }
-
   const token = (req.body && req.body.access_token)
     || (req.query && req.query.access_token)
-    || req.headers['x-access-token']
+    || req.headers['access-token']
 
   const key = (req.body && req.body.x_key)
     || (req.query && req.query.x_key)
-    || req.headers['x-key']
+    || req.headers['key']
+
+  const sessionId = (req.body && req.body.x_session)
+    || (req.query && req.query.x_session)
+    || req.headers['session']
+
+  if (!requiresAdmin(req.url)) {
+    req.sessionId = sessionId
+    req.userId = key
+    next()
+    return
+  }        
     
   if (token || key) {
-
     try {
       const decoded = jwt.decode(token, CONFIG.VALIDATION_TOKEN)
       if (decoded.exp <= Date.now()) { return res.status(400).send('Token expired.') }
@@ -42,6 +47,8 @@ module.exports = async (req, res, next) => {
 
       if (user) {
         if (isAdmin(user) && requiresAdmin(req.url))  {
+          req.sessionId = sessionId
+          req.userId = key
           next()
         } else {
           return res.status(403).send({ error: 'Not authorized.' })

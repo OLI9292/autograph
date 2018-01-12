@@ -4,7 +4,7 @@ const _ = require('underscore')
 // CONSTANTS
 // 
 
-const FIELD_DATA = [
+const QUESTION_FIELD_DATA = [
   { name: 'id', datatype: 'serial', options: ['primary key'] },
   { name: 'answered_at', datatype: 'timestamp', options: ['not null'] },
   { name: 'correct', datatype: 'boolean', options: ['not null'] },
@@ -19,9 +19,23 @@ const FIELD_DATA = [
   { name: 'choices', datatype: 'json', options: [] }
 ];
 
-const FIELD_NAMES = _.pluck(FIELD_DATA.slice(1), 'name').sort((a, b) => a.localeCompare(b));
+const QUESTION_FIELD_NAMES = _.pluck(QUESTION_FIELD_DATA.slice(1), 'name').sort((a, b) => a.localeCompare(b));
+const QUESTION_FIELDS = QUESTION_FIELD_DATA.map(f => `${f.name} ${f.datatype} ${f.options.join(' ')}`);
 
-const FIELDS = FIELD_DATA.map(f => `${f.name} ${f.datatype} ${f.options.join(' ')}`);
+const SESSION_FIELD_DATA = [
+  { name: 'id', datatype: 'varchar(60)', options: ['primary key'] },
+  { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] },
+  { name: 'session_id', datatype: 'varchar(40)', options: ['not null'] },
+  { name: 'ip', datatype: 'varchar(60)', options: ['not null'] },
+  { name: 'date', datatype: 'varchar(30)', options: ['not null'] },
+  { name: 'start', datatype: 'varchar(30)', options: ['not null'] },
+  { name: 'timezone_offset', datatype: 'varchar(30)', options: ['not null'] },
+  { name: 'duration',  datatype: 'varchar(30)', options: [] },
+  { name: 'paths', datatype: 'json', options: ['not null'] }
+];
+
+const SESSION_FIELD_NAMES = _.pluck(SESSION_FIELD_DATA, 'name').sort((a, b) => a.localeCompare(b));
+const SESSION_FIELDS = SESSION_FIELD_DATA.map(f => `${f.name} ${f.datatype} ${f.options.join(' ')}`);
 
 //
 // QUERIES
@@ -35,14 +49,28 @@ exports.getQuestions = ((userId) => {
     : ['SELECT * FROM questions', []];
 });
 
+exports.getSessions = ((userId) => {
+  return userId
+    ? ['SELECT * FROM sessions WHERE user_id = $1', [userId]]
+    : ['SELECT * FROM sessions', []];
+});
+
 exports.saveQuestion = data => {
   const keys = data.length ? _.keys(data[0]) : _.keys(data);
   const values = data.length ? data.map(d => _.values(d)) : _.values(data);
-  return [`INSERT INTO questions(${keys.join(', ')}) ${valueText(keys.length)};`, values]
+  return [`INSERT INTO questions(${keys.join(', ')}) ${valueText(keys.length)};`, values];
+}
+
+exports.saveSession = data => {
+  const [keys, values] = [_.keys(data), _.values(data)];
+  console.log('Saving session: ' + data.id);
+  return [`INSERT INTO sessions(${keys.join(', ')}) ${valueText(keys.length)};`, values];
 }
 
 //
 // SETUP
 //
 
-exports.createQuestionsTable = `CREATE TABLE questions (${FIELDS.join(', ')});`;
+exports.createQuestionsTable = `CREATE TABLE questions (${QUESTION_FIELDS.join(', ')});`;
+
+exports.createSessionsTable = `CREATE TABLE sessions (${SESSION_FIELDS.join(', ')});`;
