@@ -28,7 +28,7 @@ exports.run = () => {
           session.duration = numeral(delta.asSeconds()).format('00:00:00');
           session.paths = JSON.stringify(_.pluck(parsed, 'path'));
 
-          await query(...sql.saveSession(session));
+          query(...sql.saveSession(session));
         });
 
         cache.del(key);
