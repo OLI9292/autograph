@@ -69,5 +69,8 @@ module.exports = (app) => {
   apiRoutes.patch('/v2/auth/user/joinClass', UserController.joinClass)
   apiRoutes.delete('/v2/admin/user/:id', UserController.delete) // ADMIN
 
+  // JOBS
+  apiRoutes.post('/v2/admin/clearSessions', require('./scripts/clearSessions').run) // ADMIN
+
   app.use('/api', apiRoutes)
 }
