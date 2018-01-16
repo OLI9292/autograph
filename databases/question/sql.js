@@ -14,6 +14,7 @@ const QUESTION_FIELD_DATA = [
   { name: 'time_spent', datatype: 'float', options: ['not null', 'check(time_spent > 0)'] },
   { name: 'type', datatype: 'varchar(60)', options: ['not null'] },
   { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] },
+  { name: 'session_id', datatype: 'varchar(60)', options: [] },
   { name: 'word', datatype: 'varchar(40)', options: [] },
   { name: 'answers', datatype: 'json', options: [] },
   { name: 'choices', datatype: 'json', options: [] }
