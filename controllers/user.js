@@ -42,7 +42,7 @@ const createUser = async (data) => {
     await user.save()
     return user
   } catch (error) {
-    return { error: 'Something went wrong.' }
+    return { error: error.message }
   }
 }
 
