@@ -27,6 +27,7 @@ const userSchema = new Schema({
   optedIntoEmail: Boolean,
   password: String,
   roundsCompleted: { type: Number, required: true, default: 0 },
+  role: String,
   school: Schema.Types.ObjectId,
   signUpMethod: {
     type: String, 
