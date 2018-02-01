@@ -1,7 +1,7 @@
 const _ = require('underscore')
 
 const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, printf, colorize } = format;
+const { combine, prettyPrint, timestamp, printf, colorize } = format;
 
 const logger = createLogger({})
 
