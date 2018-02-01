@@ -226,7 +226,7 @@ describe('Users', () => {
             res.body.should.be.a('object')
             res.body.should.have.property('words')
             res.body.should.have.property('weeklyStarCount').eql(userMock.weeklyStarCount + 2)
-            res.body.words.should.be.a('array').lengthOf(3)
+            res.body.words.should.be.a('array')
             res.body.should.be.a('object')
           done()
         })

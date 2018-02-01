@@ -47,6 +47,14 @@ const userSchema = new Schema({
       }
     ],
     default: []
+  },
+  levels: {
+    type: [
+      {
+        slug: { type: String, required: true },
+        progress: { type: String, required: true }
+      }
+    ]
   }
 })
 

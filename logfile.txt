@@ -1,0 +1,2521 @@
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:22 +0000] "GET /api/v2/auth/class HTTP/1.1" 200 157
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 155
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/class?teacher=5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 157
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "POST /api/v2/admin/class HTTP/1.1" 201 155
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "PATCH /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "DELETE /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/leaderboard HTTP/1.1" 200 1761
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/leaderboard?school=5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 972
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/leaderboard?period=weekly HTTP/1.1" 200 892
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 1761
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc7 HTTP/1.1" 200 1761
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/leaderboard?teacher=5a4aea2c8293e0305e30ebc9 HTTP/1.1" 200 1761
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/auth/leaderboard?start=2 HTTP/1.1" 200 1270
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/lesson HTTP/1.1" 200 283
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "GET /api/v2/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 201 281
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 68
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "PATCH /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 303
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:23 +0000] "DELETE /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "GET /api/v2/level HTTP/1.1" 200 203
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "GET /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "POST /api/v2/level HTTP/1.1" 201 201
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "PATCH /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 16
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "DELETE /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "GET /api/v2/auth/question HTTP/1.1" 200 874
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "GET /api/v2/auth/question/super-cool-user-id HTTP/1.1" 200 585
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "POST /api/v2/auth/question HTTP/1.1" 201 -
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "POST /api/v2/login HTTP/1.1" 200 882
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "POST /api/v2/login HTTP/1.1" 422 38
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "POST /api/v2/login HTTP/1.1" 422 38
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "POST /api/v2/login HTTP/1.1" 422 28
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:24 +0000] "POST /api/v2/login HTTP/1.1" 422 31
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:25 +0000] "GET /api/v2/admin/school HTTP/1.1" 200 143
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:25 +0000] "GET /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 141
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:25 +0000] "POST /api/v2/admin/school HTTP/1.1" 201 141
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:25 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 110
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:25 +0000] "PATCH /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:25 +0000] "DELETE /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:25 +0000] "GET /api/v2/auth/session HTTP/1.1" 200 685
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:25 +0000] "GET /api/v2/auth/session/user123 HTTP/1.1" 200 464
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "GET /api/v2/auth/user HTTP/1.1" 200 1688
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "GET /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "GET /api/v2/auth/user?email=willow@gmail.com HTTP/1.1" 200 702
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "POST /api/v2/user HTTP/1.1" 201 678
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "POST /api/v2/user HTTP/1.1" 422 76
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "POST /api/v2/user HTTP/1.1" 422 82
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "POST /api/v2/user HTTP/1.1" 201 1688
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "PATCH /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 450
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "PATCH /api/v2/admin/user/joinSchool HTTP/1.1" 200 16
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "PATCH /api/v2/auth/user/stats HTTP/1.1" 200 782
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "DELETE /api/v2/admin/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:26 +0000] "GET /api/v2/words HTTP/1.1" 200 572
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:27 +0000] "POST /api/v2/admin/words HTTP/1.1" 201 570
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:27 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 68
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:27 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 76
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:27 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 72
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:27 +0000] "DELETE /api/v2/admin/words/5a4aea2c8293e0305e30ebd2 HTTP/1.1" 200 570
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:27 +0000] "GET /api/v2/word-lists HTTP/1.1" 200 2
+ {}
+info: ::ffff:127.0.0.1 - - [30/Jan/2018:21:12:27 +0000] "GET /api/v2/word-lists/5a70dfbbcb4b2e2db32bb2a4 HTTP/1.1" 422 22
+ {}
+error: uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9) {"error":{"name":"AssertionError","message":"expected { Object (domain, _events, ...) } to have status code 200 but got 422","showDiff":true,"actual":422,"expected":200,"stack":"AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)"},"stack":"AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)","exception":true,"date":"Tue Jan 30 2018 16:12:27 GMT-0500 (EST)","process":{"pid":11699,"uid":501,"gid":20,"cwd":"/Users/oliver/Developer/autograph","execPath":"/Users/oliver/.nvm/versions/node/v8.6.0/bin/node","version":"v8.6.0","argv":["/Users/oliver/.nvm/versions/node/v8.6.0/bin/node","/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha","--timeout","10000","--exit"],"memoryUsage":{"rss":101142528,"heapTotal":71921664,"heapUsed":51603088,"external":18024704}},"os":{"loadavg":[2.08740234375,1.982421875,2.005859375],"uptime":1737458},"trace":[{"column":33,"file":"/Users/oliver/Developer/autograph/test/wordList.js","function":"chai.request.get.send.end","line":45,"method":"end","native":false},{"column":3,"file":"/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js","function":"Test.Request.callback","line":631,"method":"callback","native":false},{"column":18,"file":"/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js","function":null,"line":795,"method":null,"native":false},{"column":7,"file":"/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js","function":null,"line":16,"method":null,"native":false},{"column":20,"file":"events.js","function":"emitNone","line":110,"method":null,"native":false},{"column":7,"file":"events.js","function":"IncomingMessage.emit","line":207,"method":"emit","native":false},{"column":12,"file":"_stream_readable.js","function":"endReadableNT","line":1059,"method":null,"native":false},{"column":11,"file":"internal/process/next_tick.js","function":"_combinedTickCallback","line":138,"method":null,"native":false},{"column":9,"file":"internal/process/next_tick.js","function":"process._tickCallback","line":180,"method":"_tickCallback","native":false}]}
+{ error: 
+   { AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+     message: 'expected { Object (domain, _events, ...) } to have status code 200 but got 422',
+     showDiff: true,
+     actual: 422,
+     expected: 200 },
+  level: 'error',
+  message: 'uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422\nAssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  stack: 'AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  exception: true,
+  date: 'Tue Jan 30 2018 16:18:01 GMT-0500 (EST)',
+  process: 
+   { pid: 13205,
+     uid: 501,
+     gid: 20,
+     cwd: '/Users/oliver/Developer/autograph',
+     execPath: '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+     version: 'v8.6.0',
+     argv: 
+      [ '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+        '/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha',
+        '--timeout',
+        '10000',
+        '--exit' ],
+     memoryUsage: 
+      { rss: 101167104,
+        heapTotal: 72970240,
+        heapUsed: 37108328,
+        external: 17953187 } },
+  os: 
+   { loadavg: [ 1.919921875, 2.0361328125, 2.01416015625 ],
+     uptime: 1737792 },
+  trace: 
+   [ { column: 33,
+       file: '/Users/oliver/Developer/autograph/test/wordList.js',
+       function: 'chai.request.get.send.end',
+       line: 45,
+       method: 'end',
+       native: false },
+     { column: 3,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: 'Test.Request.callback',
+       line: 631,
+       method: 'callback',
+       native: false },
+     { column: 18,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: null,
+       line: 795,
+       method: null,
+       native: false },
+     { column: 7,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js',
+       function: null,
+       line: 16,
+       method: null,
+       native: false },
+     { column: 20,
+       file: 'events.js',
+       function: 'emitNone',
+       line: 110,
+       method: null,
+       native: false },
+     { column: 7,
+       file: 'events.js',
+       function: 'IncomingMessage.emit',
+       line: 207,
+       method: 'emit',
+       native: false },
+     { column: 12,
+       file: '_stream_readable.js',
+       function: 'endReadableNT',
+       line: 1059,
+       method: null,
+       native: false },
+     { column: 11,
+       file: 'internal/process/next_tick.js',
+       function: '_combinedTickCallback',
+       line: 138,
+       method: null,
+       native: false },
+     { column: 9,
+       file: 'internal/process/next_tick.js',
+       function: 'process._tickCallback',
+       line: 180,
+       method: '_tickCallback',
+       native: false } ],
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:18:01.082Z',
+  [Symbol(level)]: 'error' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:18:23.211Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:18:25.747Z',
+  [Symbol(level)]: 'info' }
+{ error: 
+   { AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+     message: 'expected { Object (domain, _events, ...) } to have status code 200 but got 422',
+     showDiff: true,
+     actual: 422,
+     expected: 200 },
+  level: 'error',
+  message: 'uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422\nAssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  stack: 'AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  exception: true,
+  date: 'Tue Jan 30 2018 16:18:30 GMT-0500 (EST)',
+  process: 
+   { pid: 13489,
+     uid: 501,
+     gid: 20,
+     cwd: '/Users/oliver/Developer/autograph',
+     execPath: '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+     version: 'v8.6.0',
+     argv: 
+      [ '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+        '/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha',
+        '--timeout',
+        '10000',
+        '--exit' ],
+     memoryUsage: 
+      { rss: 101273600,
+        heapTotal: 72445952,
+        heapUsed: 36490288,
+        external: 17960923 } },
+  os: 
+   { loadavg: [ 1.91015625, 2.0166015625, 2.005859375 ],
+     uptime: 1737821 },
+  trace: 
+   [ { column: 33,
+       file: '/Users/oliver/Developer/autograph/test/wordList.js',
+       function: 'chai.request.get.send.end',
+       line: 45,
+       method: 'end',
+       native: false },
+     { column: 3,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: 'Test.Request.callback',
+       line: 631,
+       method: 'callback',
+       native: false },
+     { column: 18,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: null,
+       line: 795,
+       method: null,
+       native: false },
+     { column: 7,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js',
+       function: null,
+       line: 16,
+       method: null,
+       native: false },
+     { column: 20,
+       file: 'events.js',
+       function: 'emitNone',
+       line: 110,
+       method: null,
+       native: false },
+     { column: 7,
+       file: 'events.js',
+       function: 'IncomingMessage.emit',
+       line: 207,
+       method: 'emit',
+       native: false },
+     { column: 12,
+       file: '_stream_readable.js',
+       function: 'endReadableNT',
+       line: 1059,
+       method: null,
+       native: false },
+     { column: 11,
+       file: 'internal/process/next_tick.js',
+       function: '_combinedTickCallback',
+       line: 138,
+       method: null,
+       native: false },
+     { column: 9,
+       file: 'internal/process/next_tick.js',
+       function: 'process._tickCallback',
+       line: 180,
+       method: '_tickCallback',
+       native: false } ],
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:18:30.585Z',
+  [Symbol(level)]: 'error' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:18:45.181Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:18:46.372Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:18:47.079Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:20:58.964Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:21:01.331Z',
+  [Symbol(level)]: 'info' }
+{ error: 
+   { AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+     message: 'expected { Object (domain, _events, ...) } to have status code 200 but got 422',
+     showDiff: true,
+     actual: 422,
+     expected: 200 },
+  level: 'error',
+  message: 'uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422\nAssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  stack: 'AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  exception: true,
+  date: 'Tue Jan 30 2018 16:21:06 GMT-0500 (EST)',
+  process: 
+   { pid: 14238,
+     uid: 501,
+     gid: 20,
+     cwd: '/Users/oliver/Developer/autograph',
+     execPath: '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+     version: 'v8.6.0',
+     argv: 
+      [ '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+        '/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha',
+        '--timeout',
+        '10000',
+        '--exit' ],
+     memoryUsage: 
+      { rss: 100044800,
+        heapTotal: 71921664,
+        heapUsed: 49689664,
+        external: 18016379 } },
+  os: 
+   { loadavg: [ 2.1923828125, 2.087890625, 2.029296875 ],
+     uptime: 1737977 },
+  trace: 
+   [ { column: 33,
+       file: '/Users/oliver/Developer/autograph/test/wordList.js',
+       function: 'chai.request.get.send.end',
+       line: 45,
+       method: 'end',
+       native: false },
+     { column: 3,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: 'Test.Request.callback',
+       line: 631,
+       method: 'callback',
+       native: false },
+     { column: 18,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: null,
+       line: 795,
+       method: null,
+       native: false },
+     { column: 7,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js',
+       function: null,
+       line: 16,
+       method: null,
+       native: false },
+     { column: 20,
+       file: 'events.js',
+       function: 'emitNone',
+       line: 110,
+       method: null,
+       native: false },
+     { column: 7,
+       file: 'events.js',
+       function: 'IncomingMessage.emit',
+       line: 207,
+       method: 'emit',
+       native: false },
+     { column: 12,
+       file: '_stream_readable.js',
+       function: 'endReadableNT',
+       line: 1059,
+       method: null,
+       native: false },
+     { column: 11,
+       file: 'internal/process/next_tick.js',
+       function: '_combinedTickCallback',
+       line: 138,
+       method: null,
+       native: false },
+     { column: 9,
+       file: 'internal/process/next_tick.js',
+       function: 'process._tickCallback',
+       line: 180,
+       method: '_tickCallback',
+       native: false } ],
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:21:06.117Z',
+  [Symbol(level)]: 'error' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:21:11.608Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:21:31.610Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'Redis connected',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:21:31.766Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:21:40.099Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:22:04.689Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:22:24.658Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:22:43.246Z',
+  [Symbol(level)]: 'info' }
+{ level: 'info',
+  message: 'What time is the testing at?',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:23:13.309Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:41 +0000] "GET /api/v2/auth/class HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:41.599Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:41 +0000] "GET /api/v2/auth/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:41.711Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:41 +0000] "GET /api/v2/auth/class?teacher=5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:41.810Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:41 +0000] "POST /api/v2/admin/class HTTP/1.1" 201 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:41.834Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:41 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:41.839Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:41 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:41.845Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:41 +0000] "PATCH /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:41.957Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "DELETE /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.049Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/auth/leaderboard HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.165Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/auth/leaderboard?school=5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 972 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.169Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/auth/leaderboard?period=weekly HTTP/1.1" 200 892 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.172Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.175Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc7 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.177Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/auth/leaderboard?teacher=5a4aea2c8293e0305e30ebc9 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.180Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/auth/leaderboard?start=2 HTTP/1.1" 200 1270 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.182Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/lesson HTTP/1.1" 200 283 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.293Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.394Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 201 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.401Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.407Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "PATCH /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 303 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.517Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "DELETE /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.625Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/level HTTP/1.1" 200 203 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.734Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.840Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "POST /api/v2/level HTTP/1.1" 201 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.849Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "PATCH /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.960Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "DELETE /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.964Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:42 +0000] "GET /api/v2/auth/question HTTP/1.1" 200 874 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:42.996Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "GET /api/v2/auth/question/super-cool-user-id HTTP/1.1" 200 585 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.023Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "POST /api/v2/auth/question HTTP/1.1" 201 - "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.039Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "POST /api/v2/login HTTP/1.1" 200 882 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.237Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.342Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.455Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "POST /api/v2/login HTTP/1.1" 422 28 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.564Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "POST /api/v2/login HTTP/1.1" 422 31 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.752Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "GET /api/v2/admin/school HTTP/1.1" 200 143 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.850Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "GET /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.952Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "POST /api/v2/admin/school HTTP/1.1" 201 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.959Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:43 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 110 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:43.964Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:44 +0000] "PATCH /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:44.066Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:44 +0000] "DELETE /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:44.163Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:44 +0000] "GET /api/v2/auth/session HTTP/1.1" 200 685 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:44.181Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:44 +0000] "GET /api/v2/auth/session/user123 HTTP/1.1" 200 464 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:44.198Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:44 +0000] "GET /api/v2/auth/user HTTP/1.1" 200 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:44.830Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:44 +0000] "GET /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:44.932Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "GET /api/v2/auth/user?email=willow@gmail.com HTTP/1.1" 200 702 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.033Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "POST /api/v2/user HTTP/1.1" 201 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.128Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "POST /api/v2/user HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.135Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "POST /api/v2/user HTTP/1.1" 422 82 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.140Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "POST /api/v2/user HTTP/1.1" 201 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.232Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "PATCH /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 450 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.330Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "PATCH /api/v2/admin/user/joinSchool HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.436Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "PATCH /api/v2/auth/user/stats HTTP/1.1" 200 782 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.545Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "DELETE /api/v2/admin/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.646Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "GET /api/v2/words HTTP/1.1" 200 572 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.750Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "POST /api/v2/admin/words HTTP/1.1" 201 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.856Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.869Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.873Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:45 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 72 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:45.877Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:46 +0000] "DELETE /api/v2/admin/words/5a4aea2c8293e0305e30ebd2 HTTP/1.1" 200 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:46.068Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:46 +0000] "GET /api/v2/word-lists HTTP/1.1" 200 2 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:46.072Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:24:46 +0000] "GET /api/v2/word-lists/5a70e29e64dd5a3b3cc2a5bb HTTP/1.1" 422 22 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:46.076Z',
+  [Symbol(level)]: 'info' }
+{ error: 
+   { AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+     message: 'expected { Object (domain, _events, ...) } to have status code 200 but got 422',
+     showDiff: true,
+     actual: 422,
+     expected: 200 },
+  level: 'error',
+  message: 'uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422\nAssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  stack: 'AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  exception: true,
+  date: 'Tue Jan 30 2018 16:24:46 GMT-0500 (EST)',
+  process: 
+   { pid: 15164,
+     uid: 501,
+     gid: 20,
+     cwd: '/Users/oliver/Developer/autograph',
+     execPath: '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+     version: 'v8.6.0',
+     argv: 
+      [ '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+        '/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha',
+        '--timeout',
+        '10000',
+        '--exit' ],
+     memoryUsage: 
+      { rss: 100765696,
+        heapTotal: 72445952,
+        heapUsed: 36754064,
+        external: 17960947 } },
+  os: 
+   { loadavg: [ 2.33837890625, 2.29296875, 2.1328125 ],
+     uptime: 1738197 },
+  trace: 
+   [ { column: 33,
+       file: '/Users/oliver/Developer/autograph/test/wordList.js',
+       function: 'chai.request.get.send.end',
+       line: 45,
+       method: 'end',
+       native: false },
+     { column: 3,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: 'Test.Request.callback',
+       line: 631,
+       method: 'callback',
+       native: false },
+     { column: 18,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: null,
+       line: 795,
+       method: null,
+       native: false },
+     { column: 7,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js',
+       function: null,
+       line: 16,
+       method: null,
+       native: false },
+     { column: 20,
+       file: 'events.js',
+       function: 'emitNone',
+       line: 110,
+       method: null,
+       native: false },
+     { column: 7,
+       file: 'events.js',
+       function: 'IncomingMessage.emit',
+       line: 207,
+       method: 'emit',
+       native: false },
+     { column: 12,
+       file: '_stream_readable.js',
+       function: 'endReadableNT',
+       line: 1059,
+       method: null,
+       native: false },
+     { column: 11,
+       file: 'internal/process/next_tick.js',
+       function: '_combinedTickCallback',
+       line: 138,
+       method: null,
+       native: false },
+     { column: 9,
+       file: 'internal/process/next_tick.js',
+       function: 'process._tickCallback',
+       line: 180,
+       method: '_tickCallback',
+       native: false } ],
+  label: 'right meow!',
+  timestamp: '2018-01-30T21:24:46.090Z',
+  [Symbol(level)]: 'error' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:17 +0000] "GET /api/v2/auth/class HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:17.681Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:17 +0000] "GET /api/v2/auth/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:17.788Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:17 +0000] "GET /api/v2/auth/class?teacher=5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:17.892Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:17 +0000] "POST /api/v2/admin/class HTTP/1.1" 201 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:17.916Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:17 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:17.921Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:17 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:17.927Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "PATCH /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.036Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "DELETE /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.140Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/auth/leaderboard HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.247Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/auth/leaderboard?school=5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 972 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.252Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/auth/leaderboard?period=weekly HTTP/1.1" 200 892 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.255Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.258Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc7 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.261Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/auth/leaderboard?teacher=5a4aea2c8293e0305e30ebc9 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.263Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/auth/leaderboard?start=2 HTTP/1.1" 200 1270 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.266Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/lesson HTTP/1.1" 200 283 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.375Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.477Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 201 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.484Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.491Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "PATCH /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 303 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.607Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "DELETE /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.716Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/level HTTP/1.1" 200 203 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.828Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "GET /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.931Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:18 +0000] "POST /api/v2/level HTTP/1.1" 201 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:18.938Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "PATCH /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.037Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "DELETE /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.042Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "GET /api/v2/auth/question HTTP/1.1" 200 874 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.077Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "GET /api/v2/auth/question/super-cool-user-id HTTP/1.1" 200 585 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.095Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "POST /api/v2/auth/question HTTP/1.1" 201 - "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.107Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "POST /api/v2/login HTTP/1.1" 200 882 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.297Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.401Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.498Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "POST /api/v2/login HTTP/1.1" 422 28 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.611Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "POST /api/v2/login HTTP/1.1" 422 31 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.799Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:19 +0000] "GET /api/v2/admin/school HTTP/1.1" 200 143 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:19.900Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "GET /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.004Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "POST /api/v2/admin/school HTTP/1.1" 201 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.009Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 110 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.014Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "PATCH /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.119Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "DELETE /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.222Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "GET /api/v2/auth/session HTTP/1.1" 200 685 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.240Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "GET /api/v2/auth/session/user123 HTTP/1.1" 200 464 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.256Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "GET /api/v2/auth/user HTTP/1.1" 200 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.881Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:20 +0000] "GET /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:20.988Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "GET /api/v2/auth/user?email=willow@gmail.com HTTP/1.1" 200 702 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.094Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "POST /api/v2/user HTTP/1.1" 201 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.192Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "POST /api/v2/user HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.198Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "POST /api/v2/user HTTP/1.1" 422 82 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.205Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "POST /api/v2/user HTTP/1.1" 201 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.301Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "PATCH /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 450 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.412Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "PATCH /api/v2/admin/user/joinSchool HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.516Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "PATCH /api/v2/auth/user/stats HTTP/1.1" 200 782 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.626Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "DELETE /api/v2/admin/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.727Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "GET /api/v2/words HTTP/1.1" 200 572 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.822Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "POST /api/v2/admin/words HTTP/1.1" 201 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.936Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.949Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.954Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:21 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 72 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:21.961Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:22 +0000] "DELETE /api/v2/admin/words/5a4aea2c8293e0305e30ebd2 HTTP/1.1" 200 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:22.163Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:22 +0000] "GET /api/v2/word-lists HTTP/1.1" 200 2 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:22.167Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:25:22 +0000] "GET /api/v2/word-lists/5a70e2c219f9ea3c4a576c09 HTTP/1.1" 422 22 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:25:22.172Z',
+  [Symbol(level)]: 'info' }
+{ error: 
+   { AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+     message: 'expected { Object (domain, _events, ...) } to have status code 200 but got 422',
+     showDiff: true,
+     actual: 422,
+     expected: 200 },
+  level: 'error',
+  message: 'uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422\nAssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  stack: 'AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  exception: true,
+  date: 'Tue Jan 30 2018 16:25:22 GMT-0500 (EST)',
+  process: 
+   { pid: 15434,
+     uid: 501,
+     gid: 20,
+     cwd: '/Users/oliver/Developer/autograph',
+     execPath: '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+     version: 'v8.6.0',
+     argv: 
+      [ '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+        '/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha',
+        '--timeout',
+        '10000',
+        '--exit' ],
+     memoryUsage: 
+      { rss: 100868096,
+        heapTotal: 72970240,
+        heapUsed: 37135128,
+        external: 17961343 } },
+  os: 
+   { loadavg: [ 2.3037109375, 2.2900390625, 2.1376953125 ],
+     uptime: 1738233 },
+  trace: 
+   [ { column: 33,
+       file: '/Users/oliver/Developer/autograph/test/wordList.js',
+       function: 'chai.request.get.send.end',
+       line: 45,
+       method: 'end',
+       native: false },
+     { column: 3,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: 'Test.Request.callback',
+       line: 631,
+       method: 'callback',
+       native: false },
+     { column: 18,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: null,
+       line: 795,
+       method: null,
+       native: false },
+     { column: 7,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js',
+       function: null,
+       line: 16,
+       method: null,
+       native: false },
+     { column: 20,
+       file: 'events.js',
+       function: 'emitNone',
+       line: 110,
+       method: null,
+       native: false },
+     { column: 7,
+       file: 'events.js',
+       function: 'IncomingMessage.emit',
+       line: 207,
+       method: 'emit',
+       native: false },
+     { column: 12,
+       file: '_stream_readable.js',
+       function: 'endReadableNT',
+       line: 1059,
+       method: null,
+       native: false },
+     { column: 11,
+       file: 'internal/process/next_tick.js',
+       function: '_combinedTickCallback',
+       line: 138,
+       method: null,
+       native: false },
+     { column: 9,
+       file: 'internal/process/next_tick.js',
+       function: 'process._tickCallback',
+       line: 180,
+       method: '_tickCallback',
+       native: false } ],
+  timestamp: '2018-01-30T21:25:22.187Z',
+  [Symbol(level)]: 'error' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:46 +0000] "GET /api/v2/auth/class HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:46.461Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:46 +0000] "GET /api/v2/auth/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:46.574Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:46 +0000] "GET /api/v2/auth/class?teacher=5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:46.677Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:46 +0000] "POST /api/v2/admin/class HTTP/1.1" 201 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:46.701Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:46 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:46.708Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:46 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:46.713Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:46 +0000] "PATCH /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:46.820Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:46 +0000] "DELETE /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:46.914Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/leaderboard HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.021Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/leaderboard?school=5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 972 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.025Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/leaderboard?period=weekly HTTP/1.1" 200 892 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.028Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.031Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc7 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.034Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/leaderboard?teacher=5a4aea2c8293e0305e30ebc9 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.036Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/leaderboard?start=2 HTTP/1.1" 200 1270 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.038Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/lesson HTTP/1.1" 200 283 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.141Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.237Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 201 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.243Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.249Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "PATCH /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 303 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.354Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "DELETE /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.459Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/level HTTP/1.1" 200 203 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.557Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.658Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "POST /api/v2/level HTTP/1.1" 201 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.667Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "PATCH /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.773Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "DELETE /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.776Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/question HTTP/1.1" 200 874 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.809Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "GET /api/v2/auth/question/super-cool-user-id HTTP/1.1" 200 585 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.826Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:47 +0000] "POST /api/v2/auth/question HTTP/1.1" 201 - "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:47.839Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "POST /api/v2/login HTTP/1.1" 200 882 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.027Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.134Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.232Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "POST /api/v2/login HTTP/1.1" 422 28 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.326Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "POST /api/v2/login HTTP/1.1" 422 31 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.512Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "GET /api/v2/admin/school HTTP/1.1" 200 143 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.611Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "GET /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.710Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "POST /api/v2/admin/school HTTP/1.1" 201 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.715Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 110 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.720Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "PATCH /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.818Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "DELETE /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.914Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "GET /api/v2/auth/session HTTP/1.1" 200 685 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.935Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:48 +0000] "GET /api/v2/auth/session/user123 HTTP/1.1" 200 464 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:48.952Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:49 +0000] "GET /api/v2/auth/user HTTP/1.1" 200 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:49.597Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:49 +0000] "GET /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:49.689Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:49 +0000] "GET /api/v2/auth/user?email=willow@gmail.com HTTP/1.1" 200 702 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:49.791Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:49 +0000] "POST /api/v2/user HTTP/1.1" 201 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:49.886Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:49 +0000] "POST /api/v2/user HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:49.893Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:49 +0000] "POST /api/v2/user HTTP/1.1" 422 82 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:49.898Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:49 +0000] "POST /api/v2/user HTTP/1.1" 201 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:49.995Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "PATCH /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 450 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.087Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "PATCH /api/v2/admin/user/joinSchool HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.186Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "PATCH /api/v2/auth/user/stats HTTP/1.1" 200 782 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.281Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "DELETE /api/v2/admin/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.372Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "GET /api/v2/words HTTP/1.1" 200 572 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.466Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "POST /api/v2/admin/words HTTP/1.1" 201 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.568Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.580Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.584Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 72 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.589Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "DELETE /api/v2/admin/words/5a4aea2c8293e0305e30ebd2 HTTP/1.1" 200 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.782Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "GET /api/v2/word-lists HTTP/1.1" 200 2 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.785Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:50 +0000] "GET /api/v2/word-lists/5a70e3922b4d733f70345d28 HTTP/1.1" 422 22 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:50.790Z',
+  [Symbol(level)]: 'info' }
+{ error: 
+   { AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+     message: 'expected { Object (domain, _events, ...) } to have status code 200 but got 422',
+     showDiff: true,
+     actual: 422,
+     expected: 200 },
+  level: 'error',
+  message: 'uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422\nAssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  stack: 'AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  exception: true,
+  date: 'Tue Jan 30 2018 16:28:50 GMT-0500 (EST)',
+  process: 
+   { pid: 16240,
+     uid: 501,
+     gid: 20,
+     cwd: '/Users/oliver/Developer/autograph',
+     execPath: '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+     version: 'v8.6.0',
+     argv: 
+      [ '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+        '/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha',
+        '--timeout',
+        '10000',
+        '--exit' ],
+     memoryUsage: 
+      { rss: 99770368,
+        heapTotal: 72970240,
+        heapUsed: 36930016,
+        external: 17961127 } },
+  os: 
+   { loadavg: [ 2.203125, 2.21337890625, 2.126953125 ],
+     uptime: 1738441 },
+  trace: 
+   [ { column: 33,
+       file: '/Users/oliver/Developer/autograph/test/wordList.js',
+       function: 'chai.request.get.send.end',
+       line: 45,
+       method: 'end',
+       native: false },
+     { column: 3,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: 'Test.Request.callback',
+       line: 631,
+       method: 'callback',
+       native: false },
+     { column: 18,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: null,
+       line: 795,
+       method: null,
+       native: false },
+     { column: 7,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js',
+       function: null,
+       line: 16,
+       method: null,
+       native: false },
+     { column: 20,
+       file: 'events.js',
+       function: 'emitNone',
+       line: 110,
+       method: null,
+       native: false },
+     { column: 7,
+       file: 'events.js',
+       function: 'IncomingMessage.emit',
+       line: 207,
+       method: 'emit',
+       native: false },
+     { column: 12,
+       file: '_stream_readable.js',
+       function: 'endReadableNT',
+       line: 1059,
+       method: null,
+       native: false },
+     { column: 11,
+       file: 'internal/process/next_tick.js',
+       function: '_combinedTickCallback',
+       line: 138,
+       method: null,
+       native: false },
+     { column: 9,
+       file: 'internal/process/next_tick.js',
+       function: 'process._tickCallback',
+       line: 180,
+       method: '_tickCallback',
+       native: false } ],
+  timestamp: '2018-01-30T21:28:50.805Z',
+  [Symbol(level)]: 'error' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:57 +0000] "GET /api/v2/auth/class HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:57.894Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.011Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/class?teacher=5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.111Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "POST /api/v2/admin/class HTTP/1.1" 201 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.134Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.140Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.145Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "PATCH /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.255Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "DELETE /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.357Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/leaderboard HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.459Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/leaderboard?school=5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 972 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.463Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/leaderboard?period=weekly HTTP/1.1" 200 892 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.466Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.469Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc7 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.471Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/leaderboard?teacher=5a4aea2c8293e0305e30ebc9 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.474Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/auth/leaderboard?start=2 HTTP/1.1" 200 1270 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.479Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/lesson HTTP/1.1" 200 283 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.580Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "GET /api/v2/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.684Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 201 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.690Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.696Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "PATCH /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 303 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.795Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:58 +0000] "DELETE /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:58.904Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "GET /api/v2/level HTTP/1.1" 200 203 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.015Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "GET /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.113Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "POST /api/v2/level HTTP/1.1" 201 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.119Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "PATCH /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.214Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "DELETE /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.217Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "GET /api/v2/auth/question HTTP/1.1" 200 874 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.251Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "GET /api/v2/auth/question/super-cool-user-id HTTP/1.1" 200 585 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.266Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "POST /api/v2/auth/question HTTP/1.1" 201 - "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.277Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "POST /api/v2/login HTTP/1.1" 200 882 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.466Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.571Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.670Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "POST /api/v2/login HTTP/1.1" 422 28 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.768Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:28:59 +0000] "POST /api/v2/login HTTP/1.1" 422 31 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:28:59.960Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:00 +0000] "GET /api/v2/admin/school HTTP/1.1" 200 143 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:00.056Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:00 +0000] "GET /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:00.154Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:00 +0000] "POST /api/v2/admin/school HTTP/1.1" 201 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:00.159Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:00 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 110 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:00.165Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:00 +0000] "PATCH /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:00.270Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:00 +0000] "DELETE /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:00.370Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:00 +0000] "GET /api/v2/auth/session HTTP/1.1" 200 685 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:00.390Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:00 +0000] "GET /api/v2/auth/session/user123 HTTP/1.1" 200 464 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:00.413Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "GET /api/v2/auth/user HTTP/1.1" 200 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.026Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "GET /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.133Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "GET /api/v2/auth/user?email=willow@gmail.com HTTP/1.1" 200 702 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.242Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "POST /api/v2/user HTTP/1.1" 201 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.333Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "POST /api/v2/user HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.339Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "POST /api/v2/user HTTP/1.1" 422 82 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.345Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "POST /api/v2/user HTTP/1.1" 201 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.445Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "PATCH /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 450 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.539Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "PATCH /api/v2/admin/user/joinSchool HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.638Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "PATCH /api/v2/auth/user/stats HTTP/1.1" 200 782 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.746Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "DELETE /api/v2/admin/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.845Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:01 +0000] "GET /api/v2/words HTTP/1.1" 200 572 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:01.945Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:02 +0000] "POST /api/v2/admin/words HTTP/1.1" 201 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:02.047Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:02 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:02.061Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:02 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:02.065Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:02 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 72 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:02.070Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:02 +0000] "DELETE /api/v2/admin/words/5a4aea2c8293e0305e30ebd2 HTTP/1.1" 200 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:02.271Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:02 +0000] "GET /api/v2/word-lists HTTP/1.1" 200 2 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:02.275Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:29:02 +0000] "GET /api/v2/word-lists/5a70e39e359a993f7dee4a7d HTTP/1.1" 422 22 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:29:02.281Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:31 +0000] "GET /api/v2/auth/class HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:31.459Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:31 +0000] "GET /api/v2/auth/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:31.566Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:31 +0000] "GET /api/v2/auth/class?teacher=5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:31.667Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:31 +0000] "POST /api/v2/admin/class HTTP/1.1" 201 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:31.689Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:31 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:31.695Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:31 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:31.702Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:31 +0000] "PATCH /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:31.816Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:31 +0000] "DELETE /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:31.907Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/leaderboard HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.017Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/leaderboard?school=5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 972 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.020Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/leaderboard?period=weekly HTTP/1.1" 200 892 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.022Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.025Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc7 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.028Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/leaderboard?teacher=5a4aea2c8293e0305e30ebc9 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.032Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/leaderboard?start=2 HTTP/1.1" 200 1270 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.034Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/lesson HTTP/1.1" 200 283 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.137Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.231Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 201 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.238Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.244Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "PATCH /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 303 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.342Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "DELETE /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.440Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/level HTTP/1.1" 200 203 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.541Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.650Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "POST /api/v2/level HTTP/1.1" 201 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.657Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "PATCH /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.759Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "DELETE /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.762Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/question HTTP/1.1" 200 874 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.812Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "GET /api/v2/auth/question/super-cool-user-id HTTP/1.1" 200 585 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.828Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:32 +0000] "POST /api/v2/auth/question HTTP/1.1" 201 - "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:32.839Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "POST /api/v2/login HTTP/1.1" 200 882 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.022Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.123Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.228Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "POST /api/v2/login HTTP/1.1" 422 28 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.326Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "POST /api/v2/login HTTP/1.1" 422 31 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.508Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "GET /api/v2/admin/school HTTP/1.1" 200 143 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.603Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "GET /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.705Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "POST /api/v2/admin/school HTTP/1.1" 201 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.710Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 110 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.717Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "PATCH /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.826Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "DELETE /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.919Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "GET /api/v2/auth/session HTTP/1.1" 200 685 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.937Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:33 +0000] "GET /api/v2/auth/session/user123 HTTP/1.1" 200 464 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:33.953Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:34 +0000] "GET /api/v2/auth/user HTTP/1.1" 200 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:34.580Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:34 +0000] "GET /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:34.679Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:34 +0000] "GET /api/v2/auth/user?email=willow@gmail.com HTTP/1.1" 200 702 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:34.784Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:34 +0000] "POST /api/v2/user HTTP/1.1" 201 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:34.879Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:34 +0000] "POST /api/v2/user HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:34.886Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:34 +0000] "POST /api/v2/user HTTP/1.1" 422 82 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:34.892Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:34 +0000] "POST /api/v2/user HTTP/1.1" 201 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:34.991Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "PATCH /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 450 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.100Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "PATCH /api/v2/admin/user/joinSchool HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.199Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "PATCH /api/v2/auth/user/stats HTTP/1.1" 200 782 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.301Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "DELETE /api/v2/admin/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.402Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "GET /api/v2/words HTTP/1.1" 200 572 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.502Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "POST /api/v2/admin/words HTTP/1.1" 201 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.615Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.630Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.635Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 72 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.639Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "DELETE /api/v2/admin/words/5a4aea2c8293e0305e30ebd2 HTTP/1.1" 200 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.828Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "GET /api/v2/word-lists HTTP/1.1" 200 2 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.832Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:35 +0000] "GET /api/v2/word-lists/5a70e4ebff80c745c8c1bb4d HTTP/1.1" 422 22 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:35.837Z',
+  [Symbol(level)]: 'info' }
+{ error: 
+   { AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+     message: 'expected { Object (domain, _events, ...) } to have status code 200 but got 422',
+     showDiff: true,
+     actual: 422,
+     expected: 200 },
+  level: 'error',
+  message: 'uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422\nAssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  stack: 'AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  exception: true,
+  date: 'Tue Jan 30 2018 16:34:35 GMT-0500 (EST)',
+  process: 
+   { pid: 17864,
+     uid: 501,
+     gid: 20,
+     cwd: '/Users/oliver/Developer/autograph',
+     execPath: '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+     version: 'v8.6.0',
+     argv: 
+      [ '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+        '/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha',
+        '--timeout',
+        '10000',
+        '--exit' ],
+     memoryUsage: 
+      { rss: 101175296,
+        heapTotal: 72445952,
+        heapUsed: 37001816,
+        external: 17961343 } },
+  os: 
+   { loadavg: [ 1.5712890625, 1.84716796875, 1.98095703125 ],
+     uptime: 1738786 },
+  trace: 
+   [ { column: 33,
+       file: '/Users/oliver/Developer/autograph/test/wordList.js',
+       function: 'chai.request.get.send.end',
+       line: 45,
+       method: 'end',
+       native: false },
+     { column: 3,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: 'Test.Request.callback',
+       line: 631,
+       method: 'callback',
+       native: false },
+     { column: 18,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: null,
+       line: 795,
+       method: null,
+       native: false },
+     { column: 7,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js',
+       function: null,
+       line: 16,
+       method: null,
+       native: false },
+     { column: 20,
+       file: 'events.js',
+       function: 'emitNone',
+       line: 110,
+       method: null,
+       native: false },
+     { column: 7,
+       file: 'events.js',
+       function: 'IncomingMessage.emit',
+       line: 207,
+       method: 'emit',
+       native: false },
+     { column: 12,
+       file: '_stream_readable.js',
+       function: 'endReadableNT',
+       line: 1059,
+       method: null,
+       native: false },
+     { column: 11,
+       file: 'internal/process/next_tick.js',
+       function: '_combinedTickCallback',
+       line: 138,
+       method: null,
+       native: false },
+     { column: 9,
+       file: 'internal/process/next_tick.js',
+       function: 'process._tickCallback',
+       line: 180,
+       method: '_tickCallback',
+       native: false } ],
+  timestamp: '2018-01-30T21:34:35.850Z',
+  [Symbol(level)]: 'error' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/class HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.130Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.242Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/class?teacher=5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 157 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.340Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "POST /api/v2/admin/class HTTP/1.1" 201 155 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.363Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.369Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "POST /api/v2/admin/class HTTP/1.1" 422 30 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.374Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "PATCH /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.486Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "DELETE /api/v2/admin/class/5a4aea2c8293e0305e30ebc5 HTTP/1.1" 200 148 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.582Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/leaderboard HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.687Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/leaderboard?school=5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 972 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.690Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/leaderboard?period=weekly HTTP/1.1" 200 892 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.693Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.696Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/leaderboard?user=5a4aea2c8293e0305e30ebc7 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.698Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/leaderboard?teacher=5a4aea2c8293e0305e30ebc9 HTTP/1.1" 200 1761 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.701Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/auth/leaderboard?start=2 HTTP/1.1" 200 1270 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.703Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/lesson HTTP/1.1" 200 283 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.804Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "GET /api/v2/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.897Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 201 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.903Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:56 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:56.909Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "PATCH /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 303 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.010Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "DELETE /api/v2/admin/lesson/5a4aea2c8293e0305e30ebc3 HTTP/1.1" 200 281 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.104Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "GET /api/v2/level HTTP/1.1" 200 203 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.208Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "GET /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.307Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "POST /api/v2/level HTTP/1.1" 201 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.313Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "PATCH /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.416Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "DELETE /api/v2/level/5a4aea2c8293e0305e30ebd1 HTTP/1.1" 200 201 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.420Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "GET /api/v2/auth/question HTTP/1.1" 200 874 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.454Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "GET /api/v2/auth/question/super-cool-user-id HTTP/1.1" 200 585 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.470Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "POST /api/v2/auth/question HTTP/1.1" 201 - "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.482Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "POST /api/v2/login HTTP/1.1" 200 882 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.669Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.776Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "POST /api/v2/login HTTP/1.1" 422 38 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.876Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:57 +0000] "POST /api/v2/login HTTP/1.1" 422 28 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:57.975Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "POST /api/v2/login HTTP/1.1" 422 31 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.151Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "GET /api/v2/admin/school HTTP/1.1" 200 143 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.249Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "GET /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.353Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "POST /api/v2/admin/school HTTP/1.1" 201 141 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.358Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "POST /api/v2/admin/lesson HTTP/1.1" 422 110 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.363Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "PATCH /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.457Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "DELETE /api/v2/admin/school/5a4aea2c8293e0305e30ebc4 HTTP/1.1" 200 145 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.560Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "GET /api/v2/auth/session HTTP/1.1" 200 685 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.580Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:58 +0000] "GET /api/v2/auth/session/user123 HTTP/1.1" 200 464 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:58.599Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "GET /api/v2/auth/user HTTP/1.1" 200 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.218Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "GET /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.317Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "GET /api/v2/auth/user?email=willow@gmail.com HTTP/1.1" 200 702 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.417Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "POST /api/v2/user HTTP/1.1" 201 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.506Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "POST /api/v2/user HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.513Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "POST /api/v2/user HTTP/1.1" 422 82 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.520Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "POST /api/v2/user HTTP/1.1" 201 1688 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.606Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "PATCH /api/v2/auth/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 450 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.709Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "PATCH /api/v2/admin/user/joinSchool HTTP/1.1" 200 16 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.807Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:34:59 +0000] "PATCH /api/v2/auth/user/stats HTTP/1.1" 200 782 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:34:59.904Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "DELETE /api/v2/admin/user/5a4aea2c8293e0305e30ebc6 HTTP/1.1" 200 678 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.007Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "GET /api/v2/words HTTP/1.1" 200 572 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.106Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "POST /api/v2/admin/words HTTP/1.1" 201 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.210Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 68 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.221Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 76 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.226Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "POST /api/v2/admin/words HTTP/1.1" 422 72 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.231Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "DELETE /api/v2/admin/words/5a4aea2c8293e0305e30ebd2 HTTP/1.1" 200 570 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.418Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "GET /api/v2/word-lists HTTP/1.1" 200 2 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.422Z',
+  [Symbol(level)]: 'info' }
+{ message: '::ffff:127.0.0.1 - - [30/Jan/2018:21:35:00 +0000] "GET /api/v2/word-lists/5a70e504479f1345d228ac4b HTTP/1.1" 422 22 "-" "node-superagent/2.3.0"\n',
+  level: 'info',
+  timestamp: '2018-01-30T21:35:00.428Z',
+  [Symbol(level)]: 'info' }
+{ error: 
+   { AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422
+    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)
+    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)
+    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18
+    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)
+    at emitNone (events.js:110:20)
+    at IncomingMessage.emit (events.js:207:7)
+    at endReadableNT (_stream_readable.js:1059:12)
+    at _combinedTickCallback (internal/process/next_tick.js:138:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+     message: 'expected { Object (domain, _events, ...) } to have status code 200 but got 422',
+     showDiff: true,
+     actual: 422,
+     expected: 200 },
+  level: 'error',
+  message: 'uncaughtException: expected { Object (domain, _events, ...) } to have status code 200 but got 422\nAssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  stack: 'AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 422\n    at chai.request.get.send.end (/Users/oliver/Developer/autograph/test/wordList.js:45:33)\n    at Test.Request.callback (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:631:3)\n    at /Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js:795:18\n    at IncomingMessage.<anonymous> (/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js:16:7)\n    at emitNone (events.js:110:20)\n    at IncomingMessage.emit (events.js:207:7)\n    at endReadableNT (_stream_readable.js:1059:12)\n    at _combinedTickCallback (internal/process/next_tick.js:138:11)\n    at process._tickCallback (internal/process/next_tick.js:180:9)',
+  exception: true,
+  date: 'Tue Jan 30 2018 16:35:00 GMT-0500 (EST)',
+  process: 
+   { pid: 17874,
+     uid: 501,
+     gid: 20,
+     cwd: '/Users/oliver/Developer/autograph',
+     execPath: '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+     version: 'v8.6.0',
+     argv: 
+      [ '/Users/oliver/.nvm/versions/node/v8.6.0/bin/node',
+        '/Users/oliver/Developer/autograph/node_modules/mocha/bin/_mocha',
+        '--timeout',
+        '10000',
+        '--exit' ],
+     memoryUsage: 
+      { rss: 101019648,
+        heapTotal: 72445952,
+        heapUsed: 36725160,
+        external: 17961115 } },
+  os: 
+   { loadavg: [ 2.17919921875, 1.95703125, 2.01611328125 ],
+     uptime: 1738811 },
+  trace: 
+   [ { column: 33,
+       file: '/Users/oliver/Developer/autograph/test/wordList.js',
+       function: 'chai.request.get.send.end',
+       line: 45,
+       method: 'end',
+       native: false },
+     { column: 3,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: 'Test.Request.callback',
+       line: 631,
+       method: 'callback',
+       native: false },
+     { column: 18,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/index.js',
+       function: null,
+       line: 795,
+       method: null,
+       native: false },
+     { column: 7,
+       file: '/Users/oliver/Developer/autograph/node_modules/superagent/lib/node/parsers/json.js',
+       function: null,
+       line: 16,
+       method: null,
+       native: false },
+     { column: 20,
+       file: 'events.js',
+       function: 'emitNone',
+       line: 110,
+       method: null,
+       native: false },
+     { column: 7,
+       file: 'events.js',
+       function: 'IncomingMessage.emit',
+       line: 207,
+       method: 'emit',
+       native: false },
+     { column: 12,
+       file: '_stream_readable.js',
+       function: 'endReadableNT',
+       line: 1059,
+       method: null,
+       native: false },
+     { column: 11,
+       file: 'internal/process/next_tick.js',
+       function: '_combinedTickCallback',
+       line: 138,
+       method: null,
+       native: false },
+     { column: 9,
+       file: 'internal/process/next_tick.js',
+       function: 'process._tickCallback',
+       line: 180,
+       method: '_tickCallback',
+       native: false } ],
+  timestamp: '2018-01-30T21:35:00.441Z',
+  [Symbol(level)]: 'error' }

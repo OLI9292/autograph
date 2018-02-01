@@ -18,7 +18,9 @@ const primaryMock = {
   weeklyStarCount: 6,
   words: [
     { name: 'carnivore', correct: 0, seen: 0, timeSpent: 0, experience: 8 },
-    { name: 'herbivore', correct: 0, seen: 0, timeSpent: 0, experience: 8 }
+    { name: 'herbivore', correct: 0, seen: 0, timeSpent: 0, experience: 8 },
+    { name: 'terrestrial', correct: 0, seen: 0, timeSpent: 0, experience: 8 },
+    { name: 'terrace', correct: 0, seen: 0, timeSpent: 0, experience: 8 }
   ],
   school: schoolData.ID_1,
   classes: [{ id: classData.ID_1, role: 'student' }],

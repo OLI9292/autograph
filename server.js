@@ -3,17 +3,22 @@ require('./databases/accounts/index')
 
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 const bodyParser = require('body-parser')
-const logger = require('morgan')
+require('./config/logger')
 
 const CONFIG = require('./config/main')
 const router = require('./router')
 
-app.use(bodyParser.urlencoded({ extended: false }))
+mongoose.Promise = global.Promise
+mongoose.connect(CONFIG.MONGODB_URI, { promiseLibrary: global.Promise })
 
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
+app.use(bodyParser.json({ limit: '50mb' }));
 
-app.use(logger('dev'))
+app.use(morgan('combined', { stream: OLOG.stream }))
 
 app.use((req, res, next) => {  
   res.header('Access-Control-Allow-Origin', '*')
@@ -26,9 +31,8 @@ app.use((req, res, next) => {
 // Don't validate requests during testing
 if (process.env.NODE_ENV === 'production') {
   app.all('/api/v2/*', [require('./middlewares/validateRequest')])  
+  app.listen(CONFIG.PORT, () => logger.log({ level: 'info', message: `App listening on port ${CONFIG.PORT}` }))
 }
-
-app.listen(CONFIG.PORT, () => console.log(`App listening on port ${CONFIG.PORT}`))
 
 router(app)
 

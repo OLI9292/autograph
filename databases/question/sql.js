@@ -64,7 +64,7 @@ exports.saveQuestion = data => {
 
 exports.saveSession = data => {
   const [keys, values] = [_.keys(data), _.values(data)];
-  console.log('Saving session: ' + data.id);
+  OLOG.log({ level: 'info', message: 'Saving session: ' + data.id });
   return [`INSERT INTO sessions(${keys.join(', ')}) ${valueText(keys.length)};`, values];
 }
 
