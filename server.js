@@ -7,7 +7,6 @@ const morgan = require('morgan')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const bodyParser = require('body-parser')
-require('./config/logger')
 
 const CONFIG = require('./config/main')
 const router = require('./router')
@@ -31,7 +30,7 @@ app.use((req, res, next) => {
 // Don't validate requests during testing
 if (process.env.NODE_ENV === 'production') {
   app.all('/api/v2/*', [require('./middlewares/validateRequest')])  
-  app.listen(CONFIG.PORT, () => logger.log({ level: 'info', message: `App listening on port ${CONFIG.PORT}` }))
+  app.listen(CONFIG.PORT, () => OLOG.log({ level: 'info', message: `App listening on port ${CONFIG.PORT}` }))
 }
 
 router(app)
