@@ -40,8 +40,10 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
-        expect(promise).to.eventually.have.property('answers').match(/carn|vor/),
-        expect(promise).to.eventually.have.property('choices').of.length(6).and.satisfy(c => _.contains(c, 'carn') || _.contains(c, 'vor')),
+        expect(promise).to.eventually.have.property('answer')
+          .of.length(word.components.length)
+          .and.satisfy(a => _.filter(a, x => x.missing).length === 1),
+        expect(promise).to.eventually.have.property('choices').of.length(6).and.satisfy(c => _.contains(c, 'carn') || _.contains(c, 'vor'))
       ])
     })
   })
@@ -52,7 +54,9 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
-        expect(promise).to.eventually.have.property('answers').deep.equal(['carn','vor']),
+        expect(promise).to.eventually.have.property('answer')
+          .of.length(word.components.length)
+          .and.satisfy(a => _.filter(a, x => x.missing).length === _.filter(word.components, c => c.componentType === 'root').length),
         expect(promise).to.eventually.have.property('choices').of.length(6).and.include('carn').and.include('vor')
       ])
     })

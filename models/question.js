@@ -25,11 +25,13 @@ const defToRoots = async (params, cutToOneRoot = false) => {
   } = params
 
   const prompt = word.fullDefinition()
-  let answers = _.pluck(_.filter(word.components, c => c.componentType === 'root'), 'value')
-  if (cutToOneRoot) { answers = [_.sample(answers)] }
-  const choices = answers.concat(redHerrings(roots, answers, 'roots'))
+  let rootIndices = _.without(_.map(word.components, (c, i) => c.componentType === 'root' && i), false);
+  if (cutToOneRoot) { rootIndices = [_.sample(rootIndices)]; }
+  const answer = _.map(word.components, (c, i) => ({ value: c.value, missing: _.contains(rootIndices, i) }))
+  const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value');
+  const choices = answerValues.concat(redHerrings(roots, answerValues, 'roots'))
 
-  return { prompt: prompt, answers: answers, choices: choices }
+  return { prompt: prompt, answer: answer, choices: choices }
 }
 
 const defToChars = async (params, cutToOneRoot = false) => {
