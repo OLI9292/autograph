@@ -40,6 +40,7 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
+        expect(promise).to.eventually.have.property('easyPrompt').deep.equal(word.definition),
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
           .and.satisfy(a => _.filter(a, x => x.missing).length === 1),
@@ -56,7 +57,7 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
-        expect(promise).to.eventually.have.property('highlight').of.length(2).to.have.all.members(['eats ', 'meat']),
+        expect(promise).to.eventually.have.property('easyPrompt').deep.equal(word.definition),
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
           .and.satisfy(a => _.filter(a, x => x.missing).length === _.filter(word.components, c => c.componentType === 'root').length),
@@ -86,7 +87,6 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
-        expect(promise).to.eventually.have.property('highlight').of.length(0),
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
           .and.satisfy(a => _.filter(a, x => x.missing).length === _.filter(word.components, c => c.componentType === 'root').length),
@@ -103,7 +103,7 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
-        expect(promise).to.eventually.have.property('hintPrompt').eq('an animal that eats meat (CARN)'),
+        expect(promise).to.eventually.have.property('easyPrompt').eq('an animal that eats meat (CARN)'),
         expect(promise).to.eventually.have.property('answers').deep.equal(['carnivore']),
         expect(promise).to.eventually.have.property('choices').of.length(6).and.include('carnivore')
       ])

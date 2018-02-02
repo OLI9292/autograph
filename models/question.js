@@ -41,7 +41,7 @@ const defToRoots = async (params, cutToOneRoot = false, highlightRootDefs = true
   } = params
 
   const prompt = word.fullDefinition()
-  const highlight = highlightRootDefs ? _.pluck(_.filter(word.definition, d => d.isRoot), 'value') : [];
+
   let rootIndices = _.without(_.map(word.components, (c, i) => c.componentType === 'root' && i), false);
   if (cutToOneRoot) { rootIndices = [_.sample(rootIndices)]; }
   const answer = _.map(word.components, (c, i) => ({ value: c.value, missing: _.contains(rootIndices, i) }))
@@ -50,7 +50,7 @@ const defToRoots = async (params, cutToOneRoot = false, highlightRootDefs = true
   const redHerrings = _.sample(_.reject(roots, r => _.contains(answerValues, r.value)), CHOICES_COUNT - answerValues.length)
   const choices = _.map(answerValues.concat(_.pluck(redHerrings, 'value')), v => addHintToRoot(v, roots))
 
-  return { prompt: prompt, highlight: highlight, answer: answer, choices: choices }
+  return { prompt: prompt, easyPrompt: word.definition, answer: answer, choices: choices }
 }
 
 const defToChars = async (params, cutToOneRoot = false) => {
@@ -107,11 +107,11 @@ const defToWord = params => {
   } = params
 
   const prompt = word.fullDefinition()
-  const hintPrompt = word.easyDefinition();
+  const easyPrompt = word.easyDefinition();
   const answers = [word.value];
   const choices = answers.concat(redHerrings(words, answers, 'roots'))
 
-  return { prompt: prompt, hintPrompt: hintPrompt, answers: answers, choices: choices }
+  return { prompt: prompt, easyPrompt: easyPrompt, answers: answers, choices: choices }
 }
 
 // Level 6
