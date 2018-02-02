@@ -108,10 +108,10 @@ const defToWord = params => {
 
   const prompt = word.fullDefinition()
   const easyPrompt = word.easyDefinition();
-  const answers = [word.value];
-  const choices = answers.concat(redHerrings(words, answers, 'roots'))
+  const answer = { value: word.value, missing: true };
+  const choices = _.map(redHerrings(words, [word.value], 'roots').concat(word.value), c => ({ value: c }))
 
-  return { prompt: prompt, easyPrompt: easyPrompt, answers: answers, choices: choices }
+  return { prompt: prompt, easyPrompt: easyPrompt, answer: [answer], choices: choices }
 }
 
 // Level 6

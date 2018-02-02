@@ -60,7 +60,7 @@ wordSchema.methods.hideRootInDef = function(roots) {
   const definition = this.fullDefinition()
     .replace(hiddenRootInDef.value, Array(hiddenRootInDef.value.trim().length).fill('_').join('') + ' ')
     .trim();
-  return { definition: definition, answer: { value: hiddenRootInDef.value, hint: _root.value } };
+  return { definition: definition, answer: { value: hiddenRoot.definition, hint: _root.value } };
 }
 
 const Word = mongoose.model('Word', wordSchema)

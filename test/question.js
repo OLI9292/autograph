@@ -105,8 +105,8 @@ describe('Question', () => {
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
         expect(promise).to.eventually.have.property('easyPrompt').eq('an animal that eats meat (CARN)'),
-        expect(promise).to.eventually.have.property('answers').deep.equal(['carnivore']),
-        expect(promise).to.eventually.have.property('choices').of.length(6).and.include('carnivore')
+        expect(promise).to.eventually.have.property('answer').deep.equal([{ value: 'carnivore', missing: true }]),
+        expect(promise).to.eventually.have.property('choices').of.length(6)
       ])
     })
   })   
