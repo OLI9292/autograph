@@ -110,7 +110,7 @@ const defToWord = params => {
   const easyPrompt = word.easyDefinition();
   const answer = { value: word.value, missing: true };
   const choices = _.map(redHerrings(words, [word.value], 'roots').concat(word.value), c => ({ value: c }))
-
+  console.log({ prompt: prompt, easyPrompt: easyPrompt, answer: [answer], choices: choices })
   return { prompt: prompt, easyPrompt: easyPrompt, answer: [answer], choices: choices }
 }
 

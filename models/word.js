@@ -45,10 +45,12 @@ wordSchema.methods.fullDefinition = function() {
 
 wordSchema.methods.easyDefinition = function() {
   const rootDefs = _.pluck(_.filter(this.definition, d => d.isRoot), 'value');
-  return _.map(this.fullDefinition().split(' '), word => {
+  return _.flatten(_.map(this.fullDefinition().split(' '), word => {
     const _root = _.find(this.components, c => c.definition === word);
-    return _root ? `${word} (${_root.value.toUpperCase()})` : word;
-  }).join(' ');
+    return _root
+      ? [{ value: word, isRoot: false }, { value: ` (${_root.value.toUpperCase()})`, isRoot: true }]
+      : { value: word, isRoot: false };
+  }));
 }
 
 wordSchema.methods.hideRootInDef = function(roots) {
