@@ -73,7 +73,7 @@ describe('Question', () => {
       const level = 3;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
-        expect(promise).to.eventually.have.property('prompt').eq('carnivore is an animal that eats _'),
+        expect(promise).to.eventually.have.property('prompt').eq('carnivore is an animal that eats ____'),
         expect(promise).to.eventually.have.property('answers').deep.equal(['meat']),
         expect(promise).to.eventually.have.property('choices').of.length(6)
           .and.satisfy(c => _.filter(c, a => _.isEqual(a, { value: 'meat', hint: 'carn' })).length === 1)

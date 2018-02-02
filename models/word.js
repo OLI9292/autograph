@@ -52,18 +52,15 @@ wordSchema.methods.easyDefinition = function() {
 }
 
 wordSchema.methods.hideRootInDef = function(roots) {
-  const rootDefinitions = _.flatten(_.pluck(roots, 'definitions'));
-  const missingRootDefinition = _.find(this.definition, p => _.contains(rootDefinitions, p.value.trim()));
-
-  if (missingRootDefinition) {
-    const missingRoot = _.find(roots, r => _.contains(r.definitions, missingRootDefinition.value));  
-    if (missingRoot) {
-      const definition = this.fullDefinition().replace(missingRootDefinition.value, '_');
-      return { definition: definition, answer: missingRoot };      
-    }
-  }
-
-  return
+  // Gets definition value
+  const hiddenRootInDef = _.sample(_.filter(this.definition, d => d.isRoot));
+  const hiddenRoot = _.find(this.components, c => c.componentType === 'root' && hiddenRootInDef.value.includes(c.definition))
+  const _root = _.find(roots, r => r.value === hiddenRoot.value);
+  
+  const definition = this.fullDefinition()
+    .replace(hiddenRootInDef.value, Array(hiddenRootInDef.value.trim().length).fill('_').join('') + ' ')
+    .trim();
+  return { definition: definition, answer: _root };
 }
 
 const Word = mongoose.model('Word', wordSchema)

@@ -91,7 +91,7 @@ const defCompletion = params => {
     const redHerrings = _.sample(_.reject(roots, r => r.value === result.answer.value), 5)
     const choices = _.map(redHerrings.concat(result.answer), c => ({ value: c.definitions[0], hint: c.value }))
 
-    return { prompt: prompt, answers: answers, choices: choices }
+    return { prompt: prompt, easyPrompt: word.definition, answers: answers, choices: choices }
   }
 }
 
