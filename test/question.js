@@ -43,7 +43,9 @@ describe('Question', () => {
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
           .and.satisfy(a => _.filter(a, x => x.missing).length === 1),
-        expect(promise).to.eventually.have.property('choices').of.length(6).and.satisfy(c => _.contains(c, 'carn') || _.contains(c, 'vor'))
+        expect(promise).to.eventually.have.property('choices').of.length(6)
+          .and.satisfy(c => _.contains(_.pluck(c, 'value'), 'carn') || _.contains(_.pluck(c, 'value'), 'vor'))
+          .and.satisfy(c => _.contains(_.pluck(c, 'hint'), 'meat') || _.contains(_.pluck(c, 'hint'), 'eat'))
       ])
     })
   })
@@ -54,10 +56,13 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
+        expect(promise).to.eventually.have.property('highlight').of.length(2).to.have.all.members(['eats ', 'meat']),
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
           .and.satisfy(a => _.filter(a, x => x.missing).length === _.filter(word.components, c => c.componentType === 'root').length),
-        expect(promise).to.eventually.have.property('choices').of.length(6).and.include('carn').and.include('vor')
+        expect(promise).to.eventually.have.property('choices').of.length(6)
+          .and.satisfy(c => _.contains(_.pluck(c, 'value'), 'carn') && _.contains(_.pluck(c, 'value'), 'vor'))
+          .and.satisfy(c => _.contains(_.pluck(c, 'hint'), 'meat') && _.contains(_.pluck(c, 'hint'), 'eat'))
       ])
     })
   })  
@@ -69,10 +74,28 @@ describe('Question', () => {
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('carnivore is an animal that eats _'),
         expect(promise).to.eventually.have.property('answers').deep.equal(['meat']),
-        expect(promise).to.eventually.have.property('choices').of.length(6).and.include('meat')
+        expect(promise).to.eventually.have.property('choices').of.length(6)
+          .and.satisfy(c => _.filter(c, a => _.isEqual(a, { value: 'meat', hint: 'carn' })).length === 1)
       ])
     })
   }) 
+
+  describe('question defToAllRootsNoHighlight', () => {
+    it('it should return a definition to root button question with as many answers as roots and no highlight', function () {
+      const level = 4;
+      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      return Promise.all([
+        expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
+        expect(promise).to.eventually.have.property('highlight').of.length(0),
+        expect(promise).to.eventually.have.property('answer')
+          .of.length(word.components.length)
+          .and.satisfy(a => _.filter(a, x => x.missing).length === _.filter(word.components, c => c.componentType === 'root').length),
+        expect(promise).to.eventually.have.property('choices').of.length(6)
+          .and.satisfy(c => _.contains(_.pluck(c, 'value'), 'carn') && _.contains(_.pluck(c, 'value'), 'vor'))
+          .and.satisfy(c => _.contains(_.pluck(c, 'hint'), 'meat') && _.contains(_.pluck(c, 'hint'), 'eat'))
+      ])
+    })
+  })   
 
   describe('question wordToDef', () => {
     it('it should return a definition to a word question', function () {
@@ -80,6 +103,7 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
+        expect(promise).to.eventually.have.property('hintPrompt').eq('an animal that eats meat (CARN)'),
         expect(promise).to.eventually.have.property('answers').deep.equal(['carnivore']),
         expect(promise).to.eventually.have.property('choices').of.length(6).and.include('carnivore')
       ])

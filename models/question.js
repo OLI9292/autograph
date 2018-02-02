@@ -19,19 +19,38 @@ const redHerrings = (all, reject, type) => {
   }
 }
 
-const defToRoots = async (params, cutToOneRoot = false) => {
+const addHintToRoot = (value, roots) => {
+  const rootDoc = _.find(roots, r => r.value === value)
+  return {
+    value: value,
+    hint: rootDoc && rootDoc.definitions[0]
+  }
+}
+
+const addHintToRootDef = (value, roots) => {
+  const rootDoc = _.find(roots, r => _.contains(r.definitions, value))
+  return {
+    value: value,
+    hint: rootDoc && rootDoc.value
+  }
+}
+
+const defToRoots = async (params, cutToOneRoot = false, highlightRootDefs = true) => {
   const {
     roots, word, words
   } = params
 
   const prompt = word.fullDefinition()
+  const highlight = highlightRootDefs ? _.pluck(_.filter(word.definition, d => d.isRoot), 'value') : [];
   let rootIndices = _.without(_.map(word.components, (c, i) => c.componentType === 'root' && i), false);
   if (cutToOneRoot) { rootIndices = [_.sample(rootIndices)]; }
   const answer = _.map(word.components, (c, i) => ({ value: c.value, missing: _.contains(rootIndices, i) }))
-  const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value');
-  const choices = answerValues.concat(redHerrings(roots, answerValues, 'roots'))
 
-  return { prompt: prompt, answer: answer, choices: choices }
+  const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value')
+  const redHerrings = _.sample(_.reject(roots, r => _.contains(answerValues, r.value)), CHOICES_COUNT - answerValues.length)
+  const choices = _.map(answerValues.concat(_.pluck(redHerrings, 'value')), v => addHintToRoot(v, roots))
+
+  return { prompt: prompt, highlight: highlight, answer: answer, choices: choices }
 }
 
 const defToChars = async (params, cutToOneRoot = false) => {
@@ -69,7 +88,8 @@ const defCompletion = params => {
   if (result) {
     const prompt = `${word.value} is ${result.definition}`
     const answers = [result.answer.definitions[0]]
-    const choices = answers.concat(redHerrings(roots, _.pluck(answers, 'value'), 'roots'))
+    const redHerrings = _.sample(_.reject(roots, r => r.value === result.answer.value), 5)
+    const choices = _.map(redHerrings.concat(result.answer), c => ({ value: c.definitions[0], hint: c.value }))
 
     return { prompt: prompt, answers: answers, choices: choices }
   }
@@ -77,8 +97,7 @@ const defCompletion = params => {
 
 // Level 4
 
-// TODO: - no highlight roots
-// const defToAllRoots = params => defToRoots(word)
+const defToAllRootsNoHighlight = params => defToRoots(params, false, false)
 
 // Level 5
 
@@ -88,10 +107,11 @@ const defToWord = params => {
   } = params
 
   const prompt = word.fullDefinition()
+  const hintPrompt = word.easyDefinition();
   const answers = [word.value];
   const choices = answers.concat(redHerrings(words, answers, 'roots'))
 
-  return { prompt: prompt, answers: answers, choices: choices }
+  return { prompt: prompt, hintPrompt: hintPrompt, answers: answers, choices: choices }
 }
 
 // Level 6
@@ -124,7 +144,7 @@ const TYPES = {
   '1': [defToOneRoot],
   '2': [defToAllRoots],
   '3': [defCompletion],
-  '4': [defToAllRoots],
+  '4': [defToAllRootsNoHighlight],
   '5': [defToWord],
   '6': [defToCharsOneRoot],
   '7': [wordToDef],

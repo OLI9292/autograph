@@ -43,6 +43,14 @@ wordSchema.methods.fullDefinition = function() {
   return _.pluck(this.definition, 'value').join('')
 }
 
+wordSchema.methods.easyDefinition = function() {
+  const rootDefs = _.pluck(_.filter(this.definition, d => d.isRoot), 'value');
+  return _.map(this.fullDefinition().split(' '), word => {
+    const _root = _.find(this.components, c => c.definition === word);
+    return _root ? `${word} (${_root.value.toUpperCase()})` : word;
+  }).join(' ');
+}
+
 wordSchema.methods.hideRootInDef = function(roots) {
   const rootDefinitions = _.flatten(_.pluck(roots, 'definitions'));
   const missingRootDefinition = _.find(this.definition, p => _.contains(rootDefinitions, p.value.trim()));
