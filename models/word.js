@@ -51,13 +51,13 @@ wordSchema.methods.rootComponents = function(justOne = false) {
 wordSchema.methods.prompts = function() {
   const rootDefs = _.pluck(_.filter(this.definition, d => d.isRoot), 'value');
 
-  const withDefs = _.map(this.definition, d => {
+  const withDefs = _.flatten(_.map(this.definition, d => {
     const _root = d.isRoot && _.find(this.components, c => c.definition === d.value)
     const rootValue = _root && _root.value.toUpperCase()
     return d.isRoot
       ? [{ value: d.value, highlight: true }, { value: ` (${rootValue})`, highlight: true }]
       : { value: d.value, highlight: false };
-  });  
+  }));  
 
   const withoutDefs = _.map(this.definition, d => {
     return { value: d.value, highlight: d.isRoot };
