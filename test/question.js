@@ -39,8 +39,6 @@ describe('Question', () => {
       const level = 1;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
-        expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
-        expect(promise).to.eventually.have.property('easyPrompt').deep.equal(word.definition),
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
           .and.satisfy(a => _.filter(a, x => x.missing).length === 1),
@@ -56,8 +54,6 @@ describe('Question', () => {
       const level = 2;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
-        expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
-        expect(promise).to.eventually.have.property('easyPrompt').deep.equal(word.definition),
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
           .and.satisfy(a => _.filter(a, x => x.missing).length === _.filter(word.components, c => c.componentType === 'root').length),
@@ -73,8 +69,6 @@ describe('Question', () => {
       const level = 3;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
-        expect(promise).to.eventually.have.property('prompt')
-          .to.match(/carnivore is an animal that eats ____|carnivore is an animal that ____ meat/),
         expect(promise).to.eventually.have.property('answer')
           .and.satisfy(a => a[0].value === 'meat' || a[0].value === 'eat'),
         expect(promise).to.eventually.have.property('choices').of.length(6)
@@ -87,7 +81,6 @@ describe('Question', () => {
       const level = 4;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
-        expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
           .and.satisfy(a => _.filter(a, x => x.missing).length === _.filter(word.components, c => c.componentType === 'root').length),
@@ -103,13 +96,11 @@ describe('Question', () => {
       const level = 5;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
-        expect(promise).to.eventually.have.property('prompt').eq('an animal that eats meat'),
-        expect(promise).to.eventually.have.property('easyPrompt').eq('an animal that eats meat (CARN)'),
         expect(promise).to.eventually.have.property('answer').deep.equal([{ value: 'carnivore', missing: true }]),
         expect(promise).to.eventually.have.property('choices').of.length(6)
       ])
     })
-  })   
+  })
 
   describe('question defToCharacters', () => {
     it('it should return a definition to character (for 1 root) button question', function () {
@@ -117,11 +108,11 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('carnivore'),
-        expect(promise).to.eventually.have.property('answers').to.satisfy(a => a.join('').match(/carn|vor/)),
-        expect(promise).to.eventually.have.property('choices').of.length(6)
+        expect(promise).to.eventually.have.property('answer').to.satisfy(a => _.pluck(a, 'value').join('') === 'carnivore'),
+        expect(promise).to.eventually.have.property('choices').of.length(12)
       ])
     })
-  })  
+  }) 
 
   describe('question wordToDef', () => {
     it('it should return a word to a definition question', function () {
@@ -129,22 +120,33 @@ describe('Question', () => {
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('carnivore'),
-        expect(promise).to.eventually.have.property('answers').deep.equal(['an animal that eats meat']),
-        expect(promise).to.eventually.have.property('choices').of.length(6).and.include('an animal that eats meat')
+        expect(promise).to.eventually.have.property('answer').deep.equal([{ value: 'an animal that eats meat', missing: true }]),
+        expect(promise).to.eventually.have.property('choices').of.length(6)
       ])
     })
   })  
 
-  describe('question defToCharacters', () => {
+  /* describe('question defToCharacters', () => {
     it('it should return a definition to character (for all roots) button question', function () {
       const level = 8;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('carnivore'),
-        expect(promise).to.eventually.have.property('answers').to.satisfy(a => a.join('') === 'carnvo')
+        expect(promise).to.eventually.have.property('answer').to.satisfy(a => _.pluck(a, 'value').join('') === 'carnivore'),
+        expect(promise).to.eventually.have.property('choices').of.length(12)
       ])
     })
   })
+
+  describe('question defToCharacters', () => {
+    it('it should return a definition to character (for all roots) button question', function () {
+      const level = 9;
+      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      return Promise.all([
+        expect(promise).to.eventually.have.property('prompt').eq('carnivore')
+      ])
+    })
+  })  
 
   describe('/GET questions', () => {
     it('it should GET questions for the user and level', (done) => {
@@ -181,5 +183,5 @@ describe('Question', () => {
           done()
         })
     });
-  })
+  })*/
 })

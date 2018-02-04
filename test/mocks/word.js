@@ -31,7 +31,8 @@ const secondaryMocks = [
     components: [
       { componentType: 'root', definition: 'meat', value: 'carn' },
       { componentType: null, value: 'i' },
-      { componentType: 'root', definition: 'eat', value: 'vor' }
+      { componentType: 'root', definition: 'eat', value: 'vor' },
+      { componentType: null, value: 'e' }
     ],
     roots: [rootData.carn_ID, rootData.vor_ID]
   },
