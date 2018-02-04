@@ -25,7 +25,8 @@ const secondaryMocks = [
     obscurity: 5,
     definition: [
       { value: 'an animal that ', isRoot: false },
-      { value: 'eats ', isRoot: true },
+      { value: 'eat', isRoot: true },
+      { value: 's ', isRoot: false },
       { value: 'meat', isRoot: true }
     ],
     components: [

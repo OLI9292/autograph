@@ -51,17 +51,17 @@ wordSchema.methods.rootComponents = function(justOne = false) {
 wordSchema.methods.prompts = function() {
   const rootDefs = _.pluck(_.filter(this.definition, d => d.isRoot), 'value');
 
-  const withDefs = _.flatten(_.map(this.fullDefinition().split(' '), word => {
-    const _root = _.find(this.components, c => c.definition === word);
-    return _root
-      ? [{ value: word, highlight: true }, { value: ` (${_root.value.toUpperCase()})`, highlight: true }]
-      : { value: word, isRoot: false };
-  }));
+  const withDefs = _.map(this.definition, d => {
+    const _root = d.isRoot && _.find(this.components, c => c.definition === d.value)
+    const rootValue = _root && _root.value.toUpperCase()
+    return d.isRoot
+      ? [{ value: d.value, highlight: true }, { value: ` (${rootValue})`, highlight: true }]
+      : { value: d.value, highlight: false };
+  });  
 
-  const withoutDefs = _.flatten(_.map(this.fullDefinition().split(' '), word => {
-    const _root = _.find(this.components, c => c.definition === word);
-    return { value: word, highlight: !_.isUndefined(_root) };
-  }));  
+  const withoutDefs = _.map(this.definition, d => {
+    return { value: d.value, highlight: d.isRoot };
+  });  
 
   return { normal: withoutDefs, easy: withDefs };
 }
