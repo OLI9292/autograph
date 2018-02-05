@@ -57,11 +57,11 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
   const rootComponents = cutToOneRoot ? word.rootComponents(true) : word.rootComponents()
 
   const answer = _.flatten(_.map(word.components, c => {
-    const isMissing = _.some(rootComponents, r => _.isEqual(r, c))
-    return _.map(c.value.split(''), char => ({ value: char, isMissing: isMissing }))
+    const missing = _.some(rootComponents, r => _.isEqual(r, c))
+    return _.map(c.value.split(''), char => ({ value: char, missing: missing }))
   }))
   
-  const answerValues = _.pluck(_.filter(answer, a => a.isMissing), 'value')
+  const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value')
   const redHerrings = _.sample(_.shuffle(_.filter(ALPHABET, char => !_.contains(answerValues, char))), SPELL_CHOICES_COUNT - answerValues.length)
   const choices = _.map(answerValues.concat(redHerrings), c => ({ value: c }))
 
