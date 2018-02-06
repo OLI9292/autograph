@@ -49,7 +49,7 @@ const defToRoots = async (roots, words, word, cutToOneRoot = false) => {
   const redHerrings = _.sample(_.reject(roots, r => _.contains(answerValues, r.value)), CHOICES_COUNT - answerValues.length)
   const choices = _.map(answerValues.concat(_.pluck(redHerrings, 'value')), v => addHintToRoot(v, roots))
 
-  return { prompt: prompt, answer: answer, choices: choices }
+  return { prompt: prompt, answer: answer, choices: choices, word: word.value }
 }
 
 const defToChars = async (roots, words, word, cutToOneRoot = false) => {
@@ -65,7 +65,7 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
   const redHerrings = _.sample(_.shuffle(_.filter(ALPHABET, char => !_.contains(answerValues, char))), SPELL_CHOICES_COUNT - answerValues.length)
   const choices = _.map(answerValues.concat(redHerrings), c => ({ value: c }))
 
-  return { prompt: prompt, answer: answer, choices: choices }
+  return { prompt: prompt, answer: answer, choices: choices, word: word.value }
 }
 
 
@@ -86,7 +86,7 @@ const defCompletion = (roots, words, word) => {
   const redHerrings = _.sample(_.reject(roots, r => r.value === params.answer.hint), 5)
   const choices = _.map(redHerrings, c => ({ value: c.definitions[0], hint: c.value })).concat(params.answer)
 
-  return { prompt: params.prompt, answer: [{ value: params.answer.value, missing: true }], choices: choices }
+  return { prompt: params.prompt, answer: [{ value: params.answer.value, missing: true }], choices: choices, word: word.value }
 }
 
 // Level 5
@@ -97,7 +97,7 @@ const defToWord = (roots, words, word) => {
   const answer = { value: word.value, missing: true };
   const choices = _.map(redHerrings(words, [word.value], 'roots').concat(word.value), c => ({ value: c }))
 
-  return { prompt: prompt, answer: [answer], choices: choices }
+  return { prompt: prompt, answer: [answer], choices: choices, word: word.value }
 }
 
 // Level 6
@@ -112,7 +112,7 @@ const wordToDef = (roots, words, word) => {
   const redHerrings = _.map(_.sample(_.reject(words, w => w.value === word.value), CHOICES_COUNT - 1), w => ({ value: w.fullDefinition() }))
   const choices = [_.pick(answer, 'value')].concat(redHerrings)
 
-  return { prompt: prompt, answer: [answer], choices: choices }
+  return { prompt: prompt, answer: [answer], choices: choices, word: word.value }
 }
 
 // Level 8
@@ -134,7 +134,7 @@ const wordDefToRootDef = (roots, words, word) => {
   const redHerrings = _.map(_.sample(_.reject(roots, r => r.value === _root.value), CHOICES_COUNT - 1), r => _.pick(r, 'value'))
   const choices = [_.pick(answer, 'value')].concat(redHerrings)
 
-  return { prompt: prompt, answer: [answer], choices: choices } 
+  return { prompt: prompt, answer: [answer], choices: choices , word: word.value} 
 }
 
 const TYPES = {
