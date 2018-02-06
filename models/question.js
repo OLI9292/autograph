@@ -65,17 +65,22 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
   const redHerrings = _.sample(_.shuffle(_.filter(ALPHABET, char => !_.contains(answerValues, char))), SPELL_CHOICES_COUNT - answerValues.length)
   const choices = _.map(answerValues.concat(redHerrings), c => ({ value: c }))
 
-  return { prompt: prompt, answer: answer, choices: choices, word: word.value }
+  return {
+    prompt: prompt,
+    answer: answer,
+    choices: choices,
+    word: word.value
+  }
 }
 
 
 // Level 1
 
-const defToOneRoot = (roots, words, word) => defToRoots(roots, words, word, true)
+const defToOneRoot = (...args) => defToRoots(...args, true)
 
 // Level 2
 
-const defToAllRoots = (roots, words, word) => defToRoots(roots, words, word)
+const defToAllRoots = (...args) => defToRoots(...args)
 
 // Level 3
 
@@ -86,8 +91,17 @@ const defCompletion = (roots, words, word) => {
   const redHerrings = _.sample(_.reject(roots, r => r.value === params.answer.hint), 5)
   const choices = _.map(redHerrings, c => ({ value: c.definitions[0], hint: c.value })).concat(params.answer)
 
-  return { prompt: params.prompt, answer: [{ value: params.answer.value, missing: true }], choices: choices, word: word.value }
+  return {
+    prompt: params.prompt,
+    answer: [{ value: params.answer.value, missing: true }],
+    choices: choices,
+    word: word.value
+  }
 }
+
+// Level 4 (no default highlight on client)
+
+const defToAllRootsNoHighlight = defToAllRoots
 
 // Level 5
 
@@ -95,14 +109,20 @@ const defToWord = (roots, words, word) => {
   const prompt = word.prompts()
 
   const answer = { value: word.value, missing: true };
+  // todo: - remove redHerrings method
   const choices = _.map(redHerrings(words, [word.value], 'roots').concat(word.value), c => ({ value: c }))
 
-  return { prompt: prompt, answer: [answer], choices: choices, word: word.value }
+  return {
+    prompt: prompt,
+    answer: [answer],
+    choices: choices,
+    word: word.value
+  }
 }
 
 // Level 6
 
-const defToCharsOneRoot = (roots, words, word) => defToChars(roots, words, word, true)
+const defToCharsOneRoot = (...args) => defToChars(...args, true)
 
 // Level 7
 
@@ -112,12 +132,17 @@ const wordToDef = (roots, words, word) => {
   const redHerrings = _.map(_.sample(_.reject(words, w => w.value === word.value), CHOICES_COUNT - 1), w => ({ value: w.fullDefinition() }))
   const choices = [_.pick(answer, 'value')].concat(redHerrings)
 
-  return { prompt: prompt, answer: [answer], choices: choices, word: word.value }
+  return {
+    prompt: prompt,
+    answer: [answer],
+    choices: choices,
+    word: word.value
+  }
 }
 
 // Level 8
 
-const defToCharsAllRoots = (roots, words, word) => defToChars(roots, words, word)
+const defToCharsAllRoots = (...args) => defToChars(...args)
 
 // Level 9
 
@@ -134,14 +159,19 @@ const wordDefToRootDef = (roots, words, word) => {
   const redHerrings = _.map(_.sample(_.reject(roots, r => r.value === _root.value), CHOICES_COUNT - 1), r => _.pick(r, 'value'))
   const choices = [_.pick(answer, 'value')].concat(redHerrings)
 
-  return { prompt: prompt, answer: [answer], choices: choices , word: word.value} 
+  return {
+    prompt: prompt,
+    answer: [answer],
+    choices: choices ,
+    word: word.value
+  } 
 }
 
 const TYPES = {
   '1': [defToOneRoot],
   '2': [defToAllRoots],
   '3': [defCompletion],
-  '4': [defToAllRoots], // no default highlight on client
+  '4': [defToAllRootsNoHighlight],
   '5': [defToWord],
   '6': [defToCharsOneRoot],
   '7': [wordToDef],
@@ -150,8 +180,14 @@ const TYPES = {
   '10': [defToRoots]
 }
 
+const type = level => Object.values(TYPES)[level][0].name
+
 module.exports = async (data, words, roots) => { 
-  return _.isArray(data)
-    ? Promise.all(_.map(data, elem => _.sample(TYPES[elem.level])(roots, words, elem.word)))
-    : (await _.sample(TYPES[data.level])(roots, words, data.word))
+  if (_.isArray(data)) {
+    const questions = await Promise.all(_.map(data, elem => _.sample(TYPES[elem.level])(roots, words, elem.word)))
+    return _.map(questions, (q, i) => _.extend({}, q, { type: type(data[i].level), word: data[i].word.value }))
+  } else {
+    const question = await _.sample(TYPES[data.level])(roots, words, data.word)
+    return _.extend({}, question, { type: type(data.level), word: data.word.value })
+  }
 }
