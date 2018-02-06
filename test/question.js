@@ -126,7 +126,7 @@ describe('Question', () => {
     })
   })  
 
-  /* describe('question defToCharacters', () => {
+  describe('question defToCharacters', () => {
     it('it should return a definition to character (for all roots) button question', function () {
       const level = 8;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
@@ -151,7 +151,7 @@ describe('Question', () => {
   describe('/GET questions', () => {
     it('it should GET questions for the user and level', (done) => {
       chai.request(server)
-        .get(`/api/v2/question?train_level_id=${levelMock._id}&user_id=${userMock._id}`)
+        .get(`/api/v2/question?type=train&id=${levelMock._id}&user_id=${userMock._id}`)
         .end((err, res) => {
           res.should.have.status(200)
           done()
@@ -164,7 +164,7 @@ describe('Question', () => {
       const SPEED_ROUND = 3;
       const EXPECTED_COUNT = _.filter(wordMocks, m => m.obscurity === SPEED_ROUND).length;
       chai.request(server)
-        .get(`/api/v2/question?speed_level=${SPEED_ROUND}`)
+        .get(`/api/v2/question?type=speed&id=${SPEED_ROUND}`)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array').of.length(EXPECTED_COUNT)
@@ -176,12 +176,12 @@ describe('Question', () => {
       const SPEED_ROUND = 5;
       const EXPECTED_COUNT = _.filter(wordMocks, m => m.obscurity === SPEED_ROUND).length;
       chai.request(server)
-        .get(`/api/v2/question?speed_level=${SPEED_ROUND}`)
+        .get(`/api/v2/question?type=speed&id=${SPEED_ROUND}`)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array').of.length(EXPECTED_COUNT)
           done()
         })
     });
-  })*/
+  })
 })

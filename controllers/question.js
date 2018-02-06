@@ -69,9 +69,9 @@ const singlePlayer = async (user, level, allWords, allRoots) => {
 }
 
 const questions = {
-  forTrainLevel: async (userId, levelId) => {
-    const user = await userDoc(userId)
+  forTrainLevel: async (levelId, userId) => {
     const level = await levelDoc(levelId)
+    const user = await userDoc(userId)
     const words = await wordDocs()
     const roots = await rootDocs()
 
@@ -79,7 +79,8 @@ const questions = {
     return singlePlayer(user, level, words, roots)
   },
 
-  forSpeedLevel: async (obscurity) => {
+  forSpeedLevel: async obscurity => {
+    if (!_.contains(_.range(1,11), obscurity)) { return { error: 'Invalid obscurity.'} }
     const words = await wordDocs()
     const roots = await rootDocs()
     
@@ -91,19 +92,20 @@ const questions = {
 }
 
 exports.read = async (req, res, next) => {
-  const userId = req.query.user_id
-  const trainLevelId = req.query.train_level_id
-  const speedLevel = parseInt(req.query.speed_level, 10)
+  let result
 
-  if (userId && trainLevelId) {
-    const result = await questions.forTrainLevel(userId, trainLevelId)
+  switch(req.query.type) {
+  case 'train':
+    result = await questions.forTrainLevel(req.query.id, req.query.user_id)
+    break
+  case 'speed':
+    result = await questions.forSpeedLevel(parseInt(req.query.id, 10))
+    break
+  default:
+    result = { error: 'Invalid type.' }
+  }
 
-    return result.error
+  return result.error
       ? res.status(422).send({ error: result.error })
       : res.status(200).send(result)
-  } else if (_.contains(_.range(1, 11), speedLevel))  {
-    const result = await questions.forSpeedLevel(speedLevel)
-    
-    return res.status(200).send(_.shuffle(result))
-  }
 }
