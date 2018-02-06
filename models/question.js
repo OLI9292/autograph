@@ -101,7 +101,7 @@ const defCompletion = (roots, words, word) => {
 
 // Level 4 (no default highlight on client)
 
-const defToAllRootsNoHighlight = defToAllRoots
+const defToAllRootsNoHighlight = (...args) => defToAllRoots(...args)
 
 // Level 5
 
