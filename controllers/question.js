@@ -9,6 +9,8 @@ const Level = require('../models/level')
 const Root = require('../models/root')
 const User = require('../models/user')
 
+const demos = require('../lib/demoLevels')
+
 const levelDoc = async levelId => {
   return Level.findById(levelId, async (error, level) => {
     if (error) { return { error: error.message } }
@@ -69,6 +71,18 @@ const singlePlayer = async (user, level, allWords, allRoots) => {
 }
 
 const questions = {
+  forDemoLevel: async level => {
+    const words = await wordDocs()
+    const roots = await rootDocs()
+
+    const data = _.filter(_.map(demos[level] || [], q => ({
+      word: _.find(words, w => w.value === q.word),
+      level: q.level
+    }), d => d.word))
+
+    return await Questions(data, words, roots)
+  },
+
   forTrainLevel: async (levelId, userId) => {
     const level = await levelDoc(levelId)
     const user = await userDoc(userId)
@@ -85,9 +99,9 @@ const questions = {
     const roots = await rootDocs()
     
     const wordsForObscurity = _.filter(words, w => w.obscurity == obscurity)
-    const questionData = _.map(wordsForObscurity, w => ({ word: w, level: obscurity }))
+    const data = _.map(wordsForObscurity, w => ({ word: w, level: obscurity }))
 
-    return await Questions(questionData, words, roots)
+    return await Questions(data, words, roots)
   }
 }
 
@@ -95,6 +109,9 @@ exports.read = async (req, res, next) => {
   let result
 
   switch(req.query.type) {
+  case 'demo':
+    result = await questions.forDemoLevel(parseInt(req.query.id, 10))
+    break    
   case 'train':
     result = await questions.forTrainLevel(req.query.id, req.query.user_id)
     break
