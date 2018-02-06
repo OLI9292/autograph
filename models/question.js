@@ -180,7 +180,7 @@ const TYPES = {
   '10': [defToRoots]
 }
 
-const type = level => Object.values(TYPES)[level][0].name
+const type = level => TYPES[level][0].name
 
 module.exports = async (data, words, roots) => { 
   if (_.isArray(data)) {
