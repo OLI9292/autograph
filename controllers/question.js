@@ -78,7 +78,7 @@ const questions = {
     const data = _.filter(_.map(demos[level] || [], q => ({
       word: _.find(words, w => w.value === q.word),
       level: q.level
-    }), d => d.word))
+    })), d => d.word)
 
     return await Questions(data, words, roots)
   },

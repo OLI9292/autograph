@@ -127,9 +127,9 @@ const defToCharsOneRoot = (...args) => defToChars(...args, true)
 // Level 7
 
 const wordToDef = (roots, words, word) => {
-  const prompt = word.value;
+  const prompt = { normal: [{ value: word.value, highlight: false }] };
   const answer = { value: word.fullDefinition(), missing: true }
-  const redHerrings = _.map(_.sample(_.reject(words, w => w.value === word.value), CHOICES_COUNT - 1), w => ({ value: w.fullDefinition() }))
+  const redHerrings = _.map(_.sample(_.reject(words, w => w.value === word.value), 3), w => ({ value: w.fullDefinition() }))
   const choices = [_.pick(answer, 'value')].concat(redHerrings)
 
   return {
