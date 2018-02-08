@@ -164,8 +164,9 @@ describe('Question', () => {
   describe('/GET questions', () => {
     it('it should GET questions for a demo level', (done) => {
       chai.request(server)
-        .get(`/api/v2/question?type=train&id=${demoLevelMock._id}&user_id=${userMock._id}&stage=2`)
+        .get(`/api/v2/question?type=train&id=${demoLevelMock._id}&user_id=${userMock._id}&stage=1`)
         .end((err, res) => {
+          //console.log(res.body)
           res.should.have.status(200)
           done()
         })

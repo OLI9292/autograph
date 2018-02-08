@@ -48,7 +48,8 @@ const randomWords = (user, level, harcodedWords, allWords) => {
 }
 
 const singlePlayer = async (user, level, stage, allWords, allRoots) => {
-  const isDemo = level.isDemo && _.contains(_.keys(demos), level._id);
+  const isDemo = level.isDemo && _.some(_.keys(demos), k => mongoose.Types.ObjectId(k).equals(level._id));
+
   const progressBars = level.progressBars;
   const stageWordCount = level.words.length / progressBars;
 
@@ -66,6 +67,7 @@ const singlePlayer = async (user, level, stage, allWords, allRoots) => {
     const level = isDemo
       ? demoDifficulty(idx)
       : userWord ? userWord.experience : 1;
+
     return wordDoc && { level: level, word: wordDoc };
   }));
 
@@ -105,7 +107,6 @@ exports.read = async (req, res, next) => {
 
   switch(req.query.type) {
   case 'train':
-    console.log(req.query.id)
     result = await questions.forTrainLevel(req.query.id, req.query.user_id, req.query.stage)
     break
   case 'speed':
