@@ -47,7 +47,7 @@ const defToRoots = async (roots, words, word, cutToOneRoot = false) => {
   const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value')
 
   const redHerrings = _.sample(_.reject(roots, r => _.contains(answerValues, r.value)), CHOICES_COUNT - answerValues.length)
-  const choices = _.map(answerValues.concat(_.pluck(redHerrings, 'value')), v => addHintToRoot(v, roots))
+  const choices = _.shuffle(_.map(answerValues.concat(_.pluck(redHerrings, 'value')), v => addHintToRoot(v, roots)))
 
   return { prompt: prompt, answer: answer, choices: choices, word: word.value }
 }
@@ -63,7 +63,7 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
   
   const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value')
   const redHerrings = _.sample(_.shuffle(_.filter(ALPHABET, char => !_.contains(answerValues, char))), SPELL_CHOICES_COUNT - answerValues.length)
-  const choices = _.map(answerValues.concat(redHerrings), c => ({ value: c }))
+  const choices = _.shuffle(_.map(answerValues.concat(redHerrings), c => ({ value: c })))
 
   return {
     prompt: prompt,
@@ -89,7 +89,7 @@ const defCompletion = (roots, words, word) => {
   
   const params = word.defCompletionParams(wordRoots);
   const redHerrings = _.sample(_.reject(roots, r => r.value === params.answer.hint), 5)
-  const choices = _.map(redHerrings, c => ({ value: c.definitions[0], hint: c.value })).concat(params.answer)
+  const choices = _.shuffle(_.map(redHerrings, c => ({ value: c.definitions[0], hint: c.value })).concat(params.answer))
 
   return {
     prompt: params.prompt,
@@ -110,7 +110,7 @@ const defToWord = (roots, words, word) => {
 
   const answer = { value: word.value, missing: true };
   // todo: - remove redHerrings method
-  const choices = _.map(redHerrings(words, [word.value], 'roots').concat(word.value), c => ({ value: c }))
+  const choices = _.shuffle(_.map(redHerrings(words, [word.value], 'roots').concat(word.value), c => ({ value: c })))
 
   return {
     prompt: prompt,
@@ -130,7 +130,7 @@ const wordToDef = (roots, words, word) => {
   const prompt = { normal: [{ value: word.value, highlight: false }] };
   const answer = { value: word.fullDefinition(), missing: true }
   const redHerrings = _.map(_.sample(_.reject(words, w => w.value === word.value), 3), w => ({ value: w.fullDefinition() }))
-  const choices = [_.pick(answer, 'value')].concat(redHerrings)
+  const choices = _.shuffle([_.pick(answer, 'value')].concat(redHerrings))
 
   return {
     prompt: prompt,
@@ -157,7 +157,7 @@ const wordDefToRootDef = (roots, words, word) => {
   
   const answer = { value: _root.definition, missing: true }
   const redHerrings = _.map(_.sample(_.reject(roots, r => r.value === _root.value), CHOICES_COUNT - 1), r => _.pick(r, 'value'))
-  const choices = [_.pick(answer, 'value')].concat(redHerrings)
+  const choices = _.shuffle([_.pick(answer, 'value')].concat(redHerrings))
 
   return {
     prompt: prompt,
