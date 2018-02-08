@@ -15,6 +15,7 @@ const Word = require('../models/word')
 const Root = require('../models/root') 
 const Question = require('../models/question') 
 const levelMock = require('./mocks/level').mock
+const demoLevelMock = _.find(require('./mocks/level').mocks, m => m.isDemo)
 const wordMocks = require('./mocks/word').mocks
 const userMock = require('./mocks/user').mock
 
@@ -149,27 +150,27 @@ describe('Question', () => {
   })  
 
   describe('/GET questions', () => {
-    it('it should GET questions for a demo level', (done) => {
-      const DEMO_LEVEL = 1;
-      chai.request(server)
-        .get(`/api/v2/question?type=demo&id=${DEMO_LEVEL}`)
-        .end((err, res) => {
-          res.should.have.status(200)
-          done()
-        })
-    });
-  })  
-
-  describe('/GET questions', () => {
     it('it should GET questions for the user and level', (done) => {
       chai.request(server)
-        .get(`/api/v2/question?type=train&id=${levelMock._id}&user_id=${userMock._id}`)
+        .get(`/api/v2/question?type=train&id=${levelMock._id}&user_id=${userMock._id}&stage=3`)
         .end((err, res) => {
           res.should.have.status(200)
           done()
         })
     });
   })
+
+
+  describe('/GET questions', () => {
+    it('it should GET questions for a demo level', (done) => {
+      chai.request(server)
+        .get(`/api/v2/question?type=train&id=${demoLevelMock._id}&user_id=${userMock._id}&stage=2`)
+        .end((err, res) => {
+          res.should.have.status(200)
+          done()
+        })
+    });
+  })  
 
   describe('/GET questions', () => {
     it('it should GET questions for a speed round (difficulty 3)', (done) => {

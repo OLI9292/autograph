@@ -47,54 +47,49 @@ const randomWords = (user, level, harcodedWords, allWords) => {
   return seenWords.concat(unseenWords);
 }
 
-const singlePlayer = async (user, level, allWords, allRoots) => {
-  // level, if words not empty, divide the length of words by the progress bar, 
-  const userLevel = _.find(user.levels, l => l.slug === level.slug);
-  const userProgress = userLevel ? userLevel.progress : 0;
+const singlePlayer = async (user, level, stage, allWords, allRoots) => {
+  const isDemo = level.isDemo && _.contains(_.keys(demos), level._id);
   const progressBars = level.progressBars;
+  const stageWordCount = level.words.length / progressBars;
 
-  if (level.words.length) {
-    const levelWordCount = level.words.length / progressBars;
-    const harcoded = chunk(level.words, levelWordCount)[userProgress];
-    const random = randomWords(user, level, harcoded, allWords);
-    const sectionWords = harcoded.concat(random);
+  // TODO - for Philly, refactor after
+  const harcoded = chunk(level.words, stageWordCount)[stage - 1];
+  // const random = randomWords(user, level, harcoded, allWords);
+  const sectionWords = harcoded //.concat(random);
 
-    const questionData = _.compact(_.map(sectionWords, word => {
-      const wordDoc = _.find(allWords, w => w.value === word);
-      const userWord = _.find(user.words, w => w.name === word);
-      const level = userWord ? userWord.experience : 1;
-      return wordDoc && { level: level, word: wordDoc };
-    }));
+  const demoDifficulty = idx => chunk(demos[level._id], stageWordCount)[stage - 1][idx].level
 
-    return await Questions(questionData, allWords, allRoots);
-  }
+  const questionData = _.compact(_.map(sectionWords, (word, idx) => {
+    const wordDoc = _.find(allWords, w => w.value === word);
+    const userWord = _.find(user.words, w => w.name === word);
+    // TODO - for Philly, refactor after
+    const level = isDemo
+      ? demoDifficulty(idx)
+      : userWord ? userWord.experience : 1;
+    return wordDoc && { level: level, word: wordDoc };
+  }));
+
+  return await Questions(questionData, allWords, allRoots);
 }
 
 const questions = {
-  forDemoLevel: async level => {
-    const words = await wordDocs()
-    const roots = await rootDocs()
+  forTrainLevel: async (levelId, userId, stage) => {
+    if (!levelId || !userId || !stage) { return { error: 'Invalid params.' } }
 
-    const data = _.filter(_.map(demos[level] || [], q => ({
-      word: _.find(words, w => w.value === q.word),
-      level: q.level
-    })), d => d.word)
-
-    return await Questions(data, words, roots)
-  },
-
-  forTrainLevel: async (levelId, userId) => {
     const level = await levelDoc(levelId)
     const user = await userDoc(userId)
     const words = await wordDocs()
     const roots = await rootDocs()
 
-    if (user.error || level.error  || words.error) { return { error: _.find([user, level, words], d => d.error).error } }
-    return singlePlayer(user, level, words, roots)
+    const errored = _.find([user, level, words, roots], d => d.error)
+    if (errored) { return { error: errored.error } }      
+
+    return singlePlayer(user, level, stage, words, roots)
   },
 
   forSpeedLevel: async obscurity => {
-    if (!_.contains(_.range(1,11), obscurity)) { return { error: 'Invalid obscurity.'} }
+    if (!_.contains(_.range(1,11), obscurity)) { return { error: 'Invalid params.'} }
+
     const words = await wordDocs()
     const roots = await rootDocs()
     
@@ -109,11 +104,9 @@ exports.read = async (req, res, next) => {
   let result
 
   switch(req.query.type) {
-  case 'demo':
-    result = await questions.forDemoLevel(parseInt(req.query.id, 10))
-    break    
   case 'train':
-    result = await questions.forTrainLevel(req.query.id, req.query.user_id)
+    console.log(req.query.id)
+    result = await questions.forTrainLevel(req.query.id, req.query.user_id, req.query.stage)
     break
   case 'speed':
     result = await questions.forSpeedLevel(parseInt(req.query.id, 10))

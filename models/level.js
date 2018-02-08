@@ -2,8 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
 
-const logger = require('../config/logger')
-
 const levelSchema = new Schema({
   words: [String],
   ladder: { type: Number, required: true, min: 0 },
@@ -17,7 +15,8 @@ const levelSchema = new Schema({
   },
   name: { type: String, required: true },
   type: { type: String, required: true },
-  length: Number
+  length: Number,
+  isDemo: { type: Boolean, required: true, default: false }
 })
 
 const Level = mongoose.model('Level', levelSchema)
