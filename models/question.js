@@ -130,7 +130,7 @@ const defToCharsOneRoot = (...args) => defToChars(...args, true)
 
 const wordToDef = (roots, words, word) => {
   const prompt = { normal: [{ value: capitalize(word.value), highlight: false }] };
-  console.log(prompt)
+
   const answer = { value: word.fullDefinition(), missing: true }
   const redHerrings = _.map(_.sample(_.reject(words, w => w.value === word.value), 3), w => ({ value: w.fullDefinition() }))
   const choices = _.shuffle([_.pick(answer, 'value')].concat(redHerrings))
