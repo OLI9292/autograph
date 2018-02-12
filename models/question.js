@@ -158,22 +158,14 @@ const wordDefToRootDef = (roots, words, word) => {
 }
 
 const sentenceCompletion = (roots, words, word, context) => {
-  const normalPrompt = _.map(context.split(' '), value => {
-    if (value === word.value) { value = value.split('').fill('_').join('') };
-    return { value: value + ' ', highlight: false };
-  });
-
-  const easyPrompt = _.map(context.split(' '), value => {
-    const highlight = value === word.value;
-    value = highlight ? word.fullDefinition() : value;
-    return { value: value + ' ', highlight: highlight };
-  });
+  const underscores = word.value.split('').fill('_').join('')
+  const normalPrompt = { value: context.replace(word.value, underscores), highlight: false };
 
   const redHerrings =  _.sample(_.reject(words, w => w.value === word.value), 5);
-  const choices = _.shuffle(redHerrings.concat(word.value))
+  const choices = _.shuffle(redHerrings.concat({ value: word.value }))
 
   return {
-    prompt: { normal: normalPrompt, easy: easyPrompt },
+    prompt: { normal: normalPrompt },
     answer: [{ value: word.value, missing: true }],
     choices: choices
   }
