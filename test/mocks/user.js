@@ -2,6 +2,7 @@ const _ = require('underscore')
 
 const classData = require('./class')
 const schoolData = require('./school')
+const levelData = require('./level')
 
 const ID_1 = '5a4aea2c8293e0305e30ebc6'
 const ID_2 = '5a4aea2c8293e0305e30ebc7'
@@ -21,6 +22,20 @@ const primaryMock = {
     { name: 'herbivore', correct: 0, seen: 0, timeSpent: 0, experience: 8 },
     { name: 'terrestrial', correct: 0, seen: 0, timeSpent: 0, experience: 8 },
     { name: 'terrace', correct: 0, seen: 0, timeSpent: 0, experience: 8 }
+  ],
+  levels: [
+    {
+      id: levelData.mock._id,
+      progress: [
+        {
+          type: 'regular',
+          stage: 1,
+          bestScore: 10,
+          bestAccuracy: 0.85,
+          bestTime: 40
+        }
+      ]
+    }
   ],
   school: schoolData.ID_1,
   classes: [{ id: classData.ID_1, role: 'student' }],

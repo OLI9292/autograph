@@ -72,6 +72,7 @@ module.exports = (app) => {
   apiRoutes.patch('/v2/admin/user/joinSchool', UserController.joinSchool)  
   // TODO: - cleaner implementation
   apiRoutes.patch('/v2/auth/user/stats', UserController.update)
+  apiRoutes.patch('/v2/auth/user/:id/completedLevel', UserController.completedLevel)
   apiRoutes.patch('/v2/admin/user/resetStarCounts', UserController.resetStarCounts) // ADMIN
   apiRoutes.patch('/v2/auth/user/:id', UserController.update2)
   apiRoutes.patch('/v2/auth/user/joinClass', UserController.joinClass)

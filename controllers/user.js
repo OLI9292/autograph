@@ -4,6 +4,7 @@ const _ = require('underscore')
 
 const Class = require('../models/class')
 const School = require('../models/school')
+const Level = require('../models/level')
 const User = require('../models/user')
 
 const recordEvent = require('../middlewares/recordEvent');
@@ -96,6 +97,60 @@ exports.read = async (req, res, next) => {
 //
 // UPDATE
 //
+
+exports.completedLevel = async (req, res, next) => {
+  const {
+    levelId,
+    stage,
+    accuracy,
+    time,
+    score
+  } = req.body
+
+  User.findById(req.params.id, async (error, user) => {
+    if (error) { return res.status(422).send({ error: error.message }); }
+    if (!user) { return res.status(422).send({ error: 'User not found.' }); }
+    
+    Level.findById(levelId, async (error, level) => {
+      if (error) { return res.status(422).send({ error: error.message }); }
+      if (!level) { return res.status(422).send({ error: 'Level not found.' }); }
+
+      const userLevelIdx = _.findIndex(user.levels, l => l.id.equals(level._id))
+      
+      const userStage = userLevelIdx > -1 && _.find(user.levels[userLevelIdx].progress, p => p.stage === stage)
+      
+      if (userLevelIdx > -1 && userStage) { // updates a previously played stage
+        user.levels[userLevelIdx].progress = {
+          stage: stage,
+          type: 'regular',
+          bestTime: Math.min(time, userStage.bestTime),
+          bestAccuracy: Math.max(accuracy, userStage.bestAccuracy),
+          bestScore: Math.max(score, userStage.bestScore)
+        } 
+      } else {                                                    
+        const progress = { 
+          stage: stage,
+          type: 'regular',
+          bestTime: time,
+          bestAccuracy: accuracy,
+          bestScore: score 
+        };
+        if (userLevelIdx > -1) { // creates a new stage for a previously played level           
+          user.levels[userLevelIdx].progress.push(progress);
+        } else { // creates a new stage for a new level
+          user.levels.push({ id: level._id, progress: progress });
+        }
+      }
+
+      try {
+        await user.save()
+        return res.status(200).send(user)
+      } catch (error) {
+        return res.status(422).send({ error: error.message })
+      }
+    })
+  })
+}
 
 exports.update2 = async (req, res, next) => {
   User.update({ _id: req.params.id }, req.body, async (error, result) => {

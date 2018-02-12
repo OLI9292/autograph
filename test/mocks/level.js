@@ -37,5 +37,6 @@ const secondaryMocks = [
 
 module.exports = {
   mock: primaryMock,
+  mock2: secondaryMocks,
   mocks: secondaryMocks.concat(primaryMock)
 }
