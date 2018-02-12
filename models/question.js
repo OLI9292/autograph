@@ -159,7 +159,7 @@ const wordDefToRootDef = (roots, words, word) => {
 
 const sentenceCompletion = (roots, words, word, context) => {
   const underscores = word.value.split('').fill('_').join('')
-  const normalPrompt = { value: context.replace(word.value, underscores), highlight: false };
+  const normalPrompt = [{ value: context.replace(word.value, underscores), highlight: false }]
 
   const redHerrings =  _.sample(_.reject(words, w => w.value === word.value), 5);
   const choices = _.shuffle(redHerrings.concat({ value: word.value }))
