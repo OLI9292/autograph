@@ -15,6 +15,7 @@ const Word = require('../models/word')
 const Root = require('../models/root') 
 const Question = require('../models/question') 
 const levelMock = require('./mocks/level').mock
+const lessonMock = require('./mocks/lesson').mock
 const demoLevelMock = _.find(require('./mocks/level').mocks, m => m.isDemo)
 const wordMocks = require('./mocks/word').mocks
 const userMock = require('./mocks/user').mock
@@ -158,9 +159,7 @@ describe('Question', () => {
           done()
         })
     });
-  })
 
-  describe('/GET questions', () => {
     it('it should GET questions for an explore level', (done) => {
       const words = 'carnivore,herbivore,omnivore';
       chai.request(server)
@@ -171,9 +170,7 @@ describe('Question', () => {
           done()
         })
     });
-  })  
 
-  describe('/GET questions', () => {
     it('it should GET questions for a speed round (difficulty 3)', (done) => {
       const SPEED_ROUND = 3;
       const EXPECTED_COUNT = _.filter(wordMocks, m => m.obscurity === SPEED_ROUND).length;
@@ -197,5 +194,14 @@ describe('Question', () => {
           done()
         })
     });
+
+    it('it should GET questions for a read level', (done) => {
+      chai.request(server)
+        .get(`/api/v2/question?type=read&id=${lessonMock._id}`)
+        .end((err, res) => {
+          res.should.have.status(200)
+          done()
+        })
+    });    
   })
 })

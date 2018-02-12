@@ -31,14 +31,6 @@ const addHintToRoot = (value, roots) => {
   }
 }
 
-const addHintToRootDef = (value, roots) => {
-  const rootDoc = _.find(roots, r => _.contains(r.definitions, value))
-  return {
-    value: value,
-    hint: rootDoc && rootDoc.value
-  }
-}
-
 const defToRoots = async (roots, words, word, cutToOneRoot = false) => {
   const prompt = word.prompts()
 
@@ -70,8 +62,7 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
   return {
     prompt: prompt,
     answer: answer,
-    choices: choices,
-    word: word.value
+    choices: choices
   }
 }
 
@@ -96,8 +87,7 @@ const defCompletion = (roots, words, word) => {
   return {
     prompt: params.prompt,
     answer: [{ value: params.answer.value, missing: true }],
-    choices: choices,
-    word: word.value
+    choices: choices
   }
 }
 
@@ -117,8 +107,7 @@ const defToWord = (roots, words, word) => {
   return {
     prompt: prompt,
     answer: [answer],
-    choices: choices,
-    word: word.value
+    choices: choices
   }
 }
 
@@ -138,8 +127,7 @@ const wordToDef = (roots, words, word) => {
   return {
     prompt: prompt,
     answer: [answer],
-    choices: choices,
-    word: word.value
+    choices: choices
   }
 }
 
@@ -165,9 +153,30 @@ const wordDefToRootDef = (roots, words, word) => {
   return {
     prompt: prompt,
     answer: [answer],
-    choices: choices ,
-    word: word.value
+    choices: choices
   } 
+}
+
+const sentenceCompletion = (roots, words, word, context) => {
+  const normalPrompt = _.map(context.split(' '), value => {
+    if (value === word.value) { value = value.split('').fill('_').join('') };
+    return { value: value + ' ', highlight: false };
+  });
+
+  const easyPrompt = _.map(context.split(' '), value => {
+    const highlight = value === word.value;
+    value = highlight ? word.fullDefinition() : value;
+    return { value: value + ' ', highlight: highlight };
+  });
+
+  const redHerrings =  _.sample(_.reject(words, w => w.value === word.value), 5);
+  const choices = _.shuffle(redHerrings.concat(word.value))
+
+  return {
+    prompt: { normal: normalPrompt, easy: easyPrompt },
+    answer: [{ value: word.value, missing: true }],
+    choices: choices
+  }
 }
 
 const TYPES = {
@@ -180,17 +189,22 @@ const TYPES = {
   '7': [wordToDef],
   '8': [defToCharsAllRoots],
   '9': [wordDefToRootDef],
-  '10': [defToRoots]
+  '10': [defToRoots],
+  'sentenceCompletion': [sentenceCompletion]
 }
 
-const type = level => TYPES[level][0].name
+const type = level => level === 'sentenceCompletion' ? 'sentenceCompletion' : TYPES[level][0].name
 
 module.exports = async (data, words, roots) => { 
   if (_.isArray(data)) {
-    const questions = await Promise.all(_.map(data, elem => _.sample(TYPES[elem.level])(roots, words, elem.word)))
+    const promises = _.map(data, elem => {
+      return elem.level === 'sentenceCompletion'
+        ? sentenceCompletion(roots, words, elem.word, elem.context)
+        : _.sample(TYPES[elem.level])(roots, words, elem.word)
+    });
+    const questions = await Promise.all(promises)
     return _.map(questions, (q, i) => _.extend({}, q, { type: type(data[i].level), word: data[i].word.value }))
   } else {
-    const question = await _.sample(TYPES[data.level])(roots, words, data.word)
-    return _.extend({}, question, { type: type(data.level), word: data.word.value })
+    return _.sample(TYPES[data.level])(roots, words, data.word)
   }
 }

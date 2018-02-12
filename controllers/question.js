@@ -6,6 +6,7 @@ const { flatmap } = require('../lib/helpers')
 const Questions = require('../models/question')
 const Word = require('../models/word')
 const Level = require('../models/level')
+const Lesson = require('../models/lesson')
 const Root = require('../models/root')
 const User = require('../models/user')
 
@@ -13,6 +14,13 @@ const levelDoc = async levelId => {
   return Level.findById(levelId, async (error, level) => {
     if (error) { return { error: error.message } }
     return level || { error: 'Level not found.' }
+  })  
+} 
+
+const lessonDoc = async id => {
+  return Lesson.findById(id, async (error, lesson) => {
+    if (error) { return { error: error.message } }
+    return lesson || { error: 'Lesson not found.' }
   })  
 } 
 
@@ -110,7 +118,20 @@ const questions = {
     if (errored) { return { error: errored.error } }      
 
     return spExplore(user, words, allWords, allRoots)    
-  }
+  },
+
+  forReadLevel: async id => {
+    const lesson = await lessonDoc(id)
+    const allWords = await wordDocs()
+    const allRoots = await rootDocs()
+
+    const errored = _.find([lesson, allWords, allRoots], d => d.error)
+    
+    _.each(lesson.questions, q => q.word = _.find(allWords, w => w.value === q.word))
+    const data = _.map(lesson.questions, q => _.extend({}, q, { level: 'sentenceCompletion' }))
+    
+    return await Questions(data, allWords, allRoots)
+  }  
 }
 
 exports.read = async (req, res, next) => {
@@ -126,6 +147,9 @@ exports.read = async (req, res, next) => {
   case 'explore':
     result = await questions.forExploreLevel(req.query.user_id, req.query.words.split(','))
     break
+  case 'read':
+    result = await questions.forReadLevel(req.query.id)
+    break    
   default:
     result = { error: 'Invalid type.' }
   }
