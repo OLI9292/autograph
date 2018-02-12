@@ -117,10 +117,11 @@ exports.completedLevel = async (req, res, next) => {
 
       const userLevelIdx = _.findIndex(user.levels, l => l.id.equals(level._id))
       
-      const userStage = userLevelIdx > -1 && _.find(user.levels[userLevelIdx].progress, p => p.stage === stage)
+      const userStageIdx = userLevelIdx > -1 && _.findIndex(user.levels[userLevelIdx].progress, p => p.stage === stage)
       
-      if (userLevelIdx > -1 && userStage) { // updates a previously played stage
-        user.levels[userLevelIdx].progress = {
+      if (userLevelIdx > -1 && userStageIdx > -1) { // updates a previously played stage
+        const userStage = user.levels[userLevelIdx].progress[userStageIdx]
+        user.levels[userLevelIdx].progress[userStageIdx] = {
           stage: stage,
           type: 'regular',
           bestTime: Math.min(time, userStage.bestTime),
