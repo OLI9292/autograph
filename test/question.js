@@ -160,14 +160,14 @@ describe('Question', () => {
     });
   })
 
-
   describe('/GET questions', () => {
-    it('it should GET questions for a demo level', (done) => {
+    it('it should GET questions for an explore level', (done) => {
+      const words = 'carnivore,herbivore,omnivore';
       chai.request(server)
-        .get(`/api/v2/question?type=train&id=${demoLevelMock._id}&user_id=${userMock._id}&stage=1`)
+        .get(`/api/v2/question?type=explore&user_id=${userMock._id}&words=${words}`)
         .end((err, res) => {
-          //console.log(res.body)
           res.should.have.status(200)
+          res.body.should.be.a('array').of.length(3)
           done()
         })
     });

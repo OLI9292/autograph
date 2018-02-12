@@ -9,8 +9,6 @@ const Level = require('../models/level')
 const Root = require('../models/root')
 const User = require('../models/user')
 
-const demos = require('../lib/demoLevels')
-
 const levelDoc = async levelId => {
   return Level.findById(levelId, async (error, level) => {
     if (error) { return { error: error.message } }
@@ -47,27 +45,29 @@ const randomWords = (user, level, harcodedWords, allWords) => {
   return seenWords.concat(unseenWords);
 }
 
-const singlePlayer = async (user, level, stage, allWords, allRoots) => {
-  const isDemo = level.isDemo && _.some(_.keys(demos), k => mongoose.Types.ObjectId(k).equals(level._id));
-
+const spTrain = async (user, level, stage, allWords, allRoots) => {
   const progressBars = level.progressBars;
   const stageWordCount = level.words.length / progressBars;
 
-  // TODO - for Philly, refactor after
   const harcoded = chunk(level.words, stageWordCount)[stage - 1];
-  // const random = randomWords(user, level, harcoded, allWords);
-  const sectionWords = harcoded //.concat(random);
-
-  const demoDifficulty = idx => chunk(demos[level._id], stageWordCount)[stage - 1][idx].level
+  const random = randomWords(user, level, harcoded, allWords);
+  const sectionWords = harcoded.concat(random);
 
   const questionData = _.compact(_.map(sectionWords, (word, idx) => {
     const wordDoc = _.find(allWords, w => w.value === word);
     const userWord = _.find(user.words, w => w.name === word);
-    // TODO - for Philly, refactor after
-    const level = isDemo
-      ? demoDifficulty(idx)
-      : userWord ? userWord.experience : 1;
+    const level = userWord ? userWord.experience : 1;
+    return wordDoc && { level: level, word: wordDoc };
+  }));
 
+  return await Questions(questionData, allWords, allRoots);
+}
+
+const spExplore = async (user, words, allWords, allRoots) => {
+  const questionData = _.compact(_.map(words, (word, idx) => {
+    const wordDoc = _.find(allWords, w => w.value === word);
+    const userWord = _.find(user.words, w => w.name === word);
+    const level = userWord ? userWord.experience : 1;
     return wordDoc && { level: level, word: wordDoc };
   }));
 
@@ -86,7 +86,7 @@ const questions = {
     const errored = _.find([user, level, words, roots], d => d.error)
     if (errored) { return { error: errored.error } }      
 
-    return singlePlayer(user, level, stage, words, roots)
+    return spTrain(user, level, stage, words, roots)
   },
 
   forSpeedLevel: async obscurity => {
@@ -95,10 +95,21 @@ const questions = {
     const words = await wordDocs()
     const roots = await rootDocs()
     
-    const wordsForObscurity = _.filter(words, w => w.obscurity == obscurity)
+    const wordsForObscurity = _.filter(words, w => w.obscurity === obscurity)
     const data = _.map(wordsForObscurity, w => ({ word: w, level: obscurity }))
 
     return await Questions(data, words, roots)
+  },
+
+  forExploreLevel: async (userId, words) => {
+    const user = await userDoc(userId)
+    const allWords = await wordDocs()
+    const allRoots = await rootDocs()
+
+    const errored = _.find([user, allWords, allRoots], d => d.error)
+    if (errored) { return { error: errored.error } }      
+
+    return spExplore(user, words, allWords, allRoots)    
   }
 }
 
@@ -111,6 +122,9 @@ exports.read = async (req, res, next) => {
     break
   case 'speed':
     result = await questions.forSpeedLevel(parseInt(req.query.id, 10))
+    break
+  case 'explore':
+    result = await questions.forExploreLevel(req.query.user_id, req.query.words.split(','))
     break
   default:
     result = { error: 'Invalid type.' }
