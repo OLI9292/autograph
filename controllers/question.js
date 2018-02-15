@@ -10,41 +10,6 @@ const Lesson = require('../models/lesson')
 const Root = require('../models/root')
 const User = require('../models/user')
 
-const levelDoc = async levelId => {
-  return Level.findById(levelId, async (error, level) => {
-    if (error) { return { error: error.message } }
-    return level || { error: 'Level not found.' }
-  })  
-} 
-
-const lessonDoc = async id => {
-  return Lesson.findById(id, async (error, lesson) => {
-    if (error) { return { error: error.message } }
-    return lesson || { error: 'Lesson not found.' }
-  })  
-} 
-
-const userDoc = async userId => {
-  return User.findById(userId, async (error, user) => {
-    if (error) { return { error: error.message } }
-    return user || { error: 'User not found.' }
-  })  
-}
-
-const wordDocs = async () => {
-  return Word.find({}, async (error, words) => {
-    if (error) { return { error: error.message } }
-    return words || { error: 'Words not found.' }
-  })  
-}
-
-const rootDocs = async (word) => {
-  return Root.find({}, async (error, roots) => {
-    if (error) { return { error: error.message } }
-    return roots || { error: 'Roots not found.' }
-  })  
-}
-
 const randomWords = (user, level, harcodedWords, allWords) => {
   const totalCount = harcodedWords.length * (1 / (level.ratios.seen + level.ratios.unseen));
   const [seenCount, unseenCount] = [level.ratios.seen, level.ratios.unseen].map(r => Math.round(r * totalCount));
@@ -86,10 +51,10 @@ const questions = {
   forTrainLevel: async (levelId, userId, stage) => {
     if (!levelId || !userId || !stage) { return { error: 'Invalid params.' } }
 
-    const level = await levelDoc(levelId)
-    const user = await userDoc(userId)
-    const words = await wordDocs()
-    const roots = await rootDocs()
+    const level = await Level.doc(levelId)
+    const user = await User.doc(userId)
+    const words = await Word.docs()
+    const roots = await Root.docs()
 
     const errored = _.find([user, level, words, roots], d => d.error)
     if (errored) { return { error: errored.error } }      
@@ -100,8 +65,8 @@ const questions = {
   forSpeedLevel: async obscurity => {
     if (!_.contains(_.range(1,11), obscurity)) { return { error: 'Invalid params.'} }
 
-    const words = await wordDocs()
-    const roots = await rootDocs()
+    const words = await Word.docs()
+    const roots = await Root.docs()
     
     const wordsForObscurity = _.filter(words, w => w.obscurity === obscurity)
     const data = _.map(wordsForObscurity, w => ({ word: w, level: obscurity }))
@@ -110,9 +75,9 @@ const questions = {
   },
 
   forExploreLevel: async (userId, words) => {
-    const user = await userDoc(userId)
-    const allWords = await wordDocs()
-    const allRoots = await rootDocs()
+    const user = await User.doc(userId)
+    const allWords = await Word.docs()
+    const allRoots = await Root.docs()
 
     const errored = _.find([user, allWords, allRoots], d => d.error)
     if (errored) { return { error: errored.error } }      
@@ -121,9 +86,9 @@ const questions = {
   },
 
   forReadLevel: async id => {
-    const lesson = await lessonDoc(id)
-    const allWords = await wordDocs()
-    const allRoots = await rootDocs()
+    const lesson = await Lesson.doc(id)
+    const allWords = await Word.docs()
+    const allRoots = await Root.docs()
 
     const errored = _.find([lesson, allWords, allRoots], d => d.error)
     

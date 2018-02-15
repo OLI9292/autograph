@@ -61,7 +61,7 @@ module.exports = (app) => {
   // SCHOOL ROUTES
   apiRoutes.post('/v2/admin/school', SchoolController.create)
   apiRoutes.get('/v2/admin/school', SchoolController.read)
-  apiRoutes.get('/v2/admin/school/:id', SchoolController.read)
+  apiRoutes.get('/v2/auth/school/:id', SchoolController.read)
   apiRoutes.patch('/v2/admin/school/:id', SchoolController.update)
   apiRoutes.delete('/v2/admin/school/:id', SchoolController.delete)    
 
