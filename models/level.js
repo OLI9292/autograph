@@ -3,20 +3,19 @@ const Schema = mongoose.Schema
 const _ = require('underscore')
 
 const levelSchema = new Schema({
-  words: [String],
   ladder: { type: Number, required: true, min: 0 },
+  name: { type: String, required: true },
   progressBars: { type: Number, required: true, min: 1, max: 10 },
-  slug: { type: String, required: true }, // unique
   ratios: {
     type: {
       seen: Number, // validate
       unseen: Number // validate
     }
   },
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  length: Number,
-  isDemo: { type: Boolean, required: true, default: false }
+  seededBy: { type: String, enum: ['manual', 'root'] },
+  slug: { type: String, required: true }, // unique
+  type: { type: String, required: true, enum: ['train', 'general', 'topic'] },
+  words: [String]
 })
 
 const Level = mongoose.model('Level', levelSchema)
