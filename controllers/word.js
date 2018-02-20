@@ -58,6 +58,7 @@ const createWord = async (data) => {
 //
 
 exports.read = (req, res, next) => {
+  
   if (req.params.id) {
 
     Word.findById(req.params.id, async (error, word) => {
@@ -66,6 +67,14 @@ exports.read = (req, res, next) => {
       return word
         ? res.status(200).send(word)
         : res.status(404).send({ error: 'Not found.' })
+    })
+
+  } else if (req.query.root) {
+
+    Word.find({ roots: req.query.root }, (error, words) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(words)
     })
 
   } else {

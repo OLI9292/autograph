@@ -16,7 +16,6 @@ const Root = require('../models/root')
 const Question = require('../models/question') 
 const levelMock = require('./mocks/level').mock
 const lessonMock = require('./mocks/lesson').mock
-const demoLevelMock = _.find(require('./mocks/level').mocks, m => m.isDemo)
 const wordMocks = require('./mocks/word').mocks
 const userMock = require('./mocks/user').mock
 

@@ -10,6 +10,7 @@ const should = chai.should()
 const Word = require('../models/word')
 const wordMocks = require('./mocks/word').mocks
 const wordMock = require('./mocks/word').mock
+const rootMock = require('./mocks/root').mock
 
 const { cleanDB, seedDB } = require('../scripts/seedDB');
 
@@ -17,7 +18,7 @@ chai.use(chaiHttp)
 
 describe('Words', () => {
   describe('/GET words', () => {
-    before(async () => await seedDB())
+    beforeEach(async () => await seedDB())
 
     it('it should GET all the words', (done) => {
       chai.request(server)
@@ -29,6 +30,17 @@ describe('Words', () => {
           done()
         })
     });
+
+    it('it should GET all the words for a root', (done) => {
+      chai.request(server)
+        .get('/api/v2/words' + '?root=' + rootMock._id)
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.be.a('array')
+          res.body[0].value.should.eql('carnivore')
+          done()
+        })
+    });    
   })
 
   describe('/GET/:id word', () => {

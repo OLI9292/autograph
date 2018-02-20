@@ -7,7 +7,7 @@ exports.read = (req, res, next) => {
   Root.find({}, (error, roots) => {
     return error
       ? res.status(422).send({ error: error.message })
-      : res.status(201).send(roots)
+      : res.status(200).send(roots)
   })
 }
 
@@ -16,7 +16,7 @@ exports.readOne = (req, res, next) => {
     if (error) { return res.status(422).send({ error: error.message }) }
     
     return existing
-      ? res.status(201).send(existing)
+      ? res.status(200).send(existing)
       : res.status(422).send({ error: `Could not find root (${req.params.value})` })
   })
 }
