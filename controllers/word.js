@@ -71,11 +71,16 @@ exports.read = (req, res, next) => {
 
   } else if (req.query.root) {
 
-    Word.find({ roots: req.query.root }, (error, words) => {
-      return error
-        ? res.status(422).send({ error: error.message })
-        : res.status(200).send(words)
-    })
+    Root.findOne({ value: req.query.root }, async (error, _root) => {
+      if (error) { return res.status(422).send({ error: error.message }) }
+      if (!_root) { return res.status(422).send({ error: 'Not found.' }) }
+
+      Word.find({ roots: _root._id }, (error, words) => {
+        return error
+          ? res.status(422).send({ error: error.message })
+          : res.status(200).send(words)
+      })
+    })    
 
   } else {
 

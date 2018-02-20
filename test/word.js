@@ -31,9 +31,9 @@ describe('Words', () => {
         })
     });
 
-    it('it should GET all the words for a root', (done) => {
+    it.only('it should GET all the words for a root', (done) => {
       chai.request(server)
-        .get('/api/v2/words' + '?root=' + rootMock._id)
+        .get('/api/v2/words' + '?root=' + rootMock.value)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
