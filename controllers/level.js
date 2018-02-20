@@ -48,8 +48,8 @@ exports.update = (req, res, next) => {
   Level.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, async (error, level) => {
     if (error) { return res.status(422).send({ error: error.message }) }
       
-    return level.n > 0
-      ? res.status(200).send({ success: true })
+    return level
+      ? res.status(200).send(level)
       : res.status(422).send({ error: 'Not found.' })
   })
 }
