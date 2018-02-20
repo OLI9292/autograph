@@ -5,7 +5,7 @@ const _ = require('underscore')
 const levelSchema = new Schema({
   ladder: { type: Number, required: true, min: 0 },
   name: { type: String, required: true },
-  progressBars: { type: Number, required: true, min: 1, max: 10 },
+  progressBars: { type: Number, min: 1, max: 10 },
   ratios: {
     type: {
       seen: Number, // validate
