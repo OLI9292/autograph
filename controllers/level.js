@@ -45,7 +45,7 @@ exports.read = (req, res, next) => {
 //
 
 exports.update = (req, res, next) => {
-  Level.update({ _id: req.params.id }, req.body, async (error, level) => {
+  Level.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, async (error, level) => {
     if (error) { return res.status(422).send({ error: error.message }) }
       
     return level.n > 0
