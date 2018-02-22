@@ -157,6 +157,11 @@ const wordDefToRootDef = (roots, words, word) => {
   } 
 }
 
+// Level 10 (no default highlight on client)
+
+const defToCharsAllRootsNoHighlight = (...args) => defToCharsAllRoots(...args)
+
+
 const sentenceCompletion = (roots, words, word, context) => {
   const underscores = word.value.split('').fill('_').join('')
   const normalPrompt = [{ value: context.replace(word.value, underscores), highlight: false }]
@@ -181,7 +186,7 @@ const TYPES = {
   '7': [wordToDef],
   '8': [defToCharsAllRoots],
   '9': [wordDefToRootDef],
-  '10': [defToRoots],
+  '10': [defToCharsAllRootsNoHighlight],
   'sentenceCompletion': [sentenceCompletion]
 }
 
