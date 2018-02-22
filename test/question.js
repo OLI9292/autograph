@@ -39,7 +39,7 @@ describe('Question', () => {
   describe('question defToOneRoot', () => {
     it('it should return a definition to root button question with 1 answer', function () {
       const level = 1;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));      
       return Promise.all([
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
@@ -162,7 +162,7 @@ describe('Question', () => {
         })
     });
 
-    it.only('it should GET questions for an explore level', (done) => {
+    it('it should GET questions for an explore level', (done) => {
       chai.request(server)
         .get(`/api/v2/question?type=explore&user_id=${userMock._id}&id=${levelData.exploreMock._id}`)
         .end((err, res) => {

@@ -10,19 +10,6 @@ const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
 const { capitalize } = require('../lib/helpers')
 
-const redHerrings = (all, reject, type) => {
-  switch (type) {
-    case 'roots' || 'words':
-      return _.sample(_.reject(_.pluck(all, 'value'), a => _.contains(reject, a)), CHOICES_COUNT - reject.length)
-    case 'wordDefinitions':
-      return _.sample(_.map(_.reject(all, a => a.value === reject.value), w => w.fullDefinition()), CHOICES_COUNT - 1)
-    case 'spell':
-      return _.sample(_.reject('abcdefghijklmnopqrstuvwxyz'.split(''), c => _.contains(reject, c)), CHOICES_COUNT - reject.length)
-    default:
-      return []
-  }
-}
-
 const addHintToRoot = (value, roots) => {
   const rootDoc = _.find(roots, r => r.value === value)
   return {
@@ -41,7 +28,7 @@ const defToRoots = async (roots, words, word, cutToOneRoot = false) => {
   const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value')
 
   const redHerrings = _.sample(_.reject(roots, r => _.contains(answerValues, r.value)), CHOICES_COUNT - answerValues.length)
-  const choices = _.shuffle(_.map(answerValues.concat(_.pluck(redHerrings, 'value')), v => addHintToRoot(v, roots)))
+  const choices = _.map(answerValues.concat(_.pluck(redHerrings, 'value')), v => addHintToRoot(v, roots))
 
   return { prompt: prompt, answer: answer, choices: choices, word: word.value }
 }
@@ -57,7 +44,7 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
   
   const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value')
   const redHerrings = _.sample(_.shuffle(_.filter(ALPHABET, char => !_.contains(answerValues, char))), SPELL_CHOICES_COUNT - answerValues.length)
-  const choices = _.shuffle(_.map(answerValues.concat(redHerrings), c => ({ value: c })))
+  const choices = _.map(answerValues.concat(redHerrings), c => ({ value: c }))
 
   return {
     prompt: prompt,
@@ -82,7 +69,7 @@ const defCompletion = (roots, words, word) => {
   
   const params = word.defCompletionParams(wordRoots);
   const redHerrings = _.sample(_.reject(roots, r => r.value === params.answer.hint), 5)
-  const choices = _.shuffle(_.map(redHerrings, c => ({ value: c.definitions[0], hint: c.value })).concat(params.answer))
+  const choices = _.map(redHerrings, c => ({ value: c.definitions[0], hint: c.value })).concat(params.answer)
 
   return {
     prompt: params.prompt,
@@ -101,8 +88,7 @@ const defToWord = (roots, words, word) => {
   const prompt = word.prompts()
 
   const answer = { value: word.value, missing: true };
-  // todo: - remove redHerrings method
-  const choices = _.shuffle(_.map(redHerrings(words, [word.value], 'roots').concat(word.value), c => ({ value: c })))
+  const choices = _.map(_.sample(_.reject(words, w => w.value === answer.value, 'value'), 5).concat(answer), c => _.pick(c, 'value'))
 
   return {
     prompt: prompt,
@@ -122,7 +108,7 @@ const wordToDef = (roots, words, word) => {
 
   const answer = { value: word.fullDefinition(), missing: true }
   const redHerrings = _.map(_.sample(_.reject(words, w => w.value === word.value), 3), w => ({ value: w.fullDefinition() }))
-  const choices = _.shuffle([_.pick(answer, 'value')].concat(redHerrings))
+  const choices = redHerrings.concat(_.pick(answer, 'value'))
 
   return {
     prompt: prompt,
@@ -140,18 +126,23 @@ const defToCharsAllRoots = (...args) => defToChars(...args)
 const wordDefToRootDef = (roots, words, word) => {
   const _root = word.rootComponents(true)[0]; // TODO validate _root
 
-  const prompt = _.flatten([
-    { value: 'What is the meaning of the highlighted root in ', highlighted: false },
-    _.map(word.components, c => ({ value: c.value, highlight: _root.value === c.value })),
-    { value: '?', highlighted: false }
+  const normalPrompt = _.flatten([
+    { value: 'What is the meaning of the highlighted root?', highlighted: false },
+    _.map(word.components, c => ({
+      value: _root.value === c.value ? c.value.toUpperCase() : c.value,
+      highlight: _root.value === c.value 
+    }))
   ])
+
+  const easyPrompt = normalPrompt.concat({ value: ` = ${word.fullDefinition()}`, highlight: false })
+  const prompts = { normal: normalPrompt, easy: easyPrompt }
   
   const answer = { value: _root.definition, missing: true }
-  const redHerrings = _.map(_.sample(_.reject(roots, r => r.value === _root.value), CHOICES_COUNT - 1), r => _.pick(r, 'value'))
-  const choices = _.shuffle([_.pick(answer, 'value')].concat(redHerrings))
+  const redHerrings = _.map(_.sample(_.reject(roots, r => r.value === _root.value), 5), r => ({ value: r.definitions[0], hint: r.value }))
+  const choices = redHerrings.concat({ value: answer.value, hint: _root.value })
 
   return {
-    prompt: prompt,
+    prompt: prompts,
     answer: [answer],
     choices: choices
   } 
@@ -167,7 +158,7 @@ const sentenceCompletion = (roots, words, word, context) => {
   const normalPrompt = [{ value: context.replace(word.value, underscores), highlight: false }]
 
   const redHerrings =  _.sample(_.reject(words, w => w.value === word.value), 5);
-  const choices = _.shuffle(redHerrings.concat({ value: word.value }))
+  const choices = redHerrings.concat({ value: word.value })
 
   return {
     prompt: { normal: normalPrompt },
@@ -193,15 +184,23 @@ const TYPES = {
 const type = level => level === 'sentenceCompletion' ? 'sentenceCompletion' : TYPES[level][0].name
 
 module.exports = async (data, words, roots) => { 
-  if (_.isArray(data)) {
-    const promises = _.map(data, elem => {
-      return elem.level === 'sentenceCompletion'
-        ? sentenceCompletion(roots, words, elem.word, elem.context)
-        : _.sample(TYPES[elem.level])(roots, words, elem.word)
-    });
-    const questions = await Promise.all(promises)
-    return _.map(questions, (q, i) => _.extend({}, q, { type: type(data[i].level), word: data[i].word.value }))
-  } else {
-    return _.sample(TYPES[data.level])(roots, words, data.word)
-  }
+  const oneQuestion = !_.isArray(data)
+  if (oneQuestion) { data = [data] }
+
+  const promises = _.map(data, elem => {
+    return elem.level === 'sentenceCompletion'
+      ? sentenceCompletion(roots, words, elem.word, elem.context)
+      : _.sample(TYPES[elem.level])(roots, words, elem.word)
+  });
+  
+  let questions = await Promise.all(promises)
+
+  // Add type, word, and shuffle choices
+  questions = _.map(questions, (q, i) => _.extend({}, q, {
+    type: type(data[i].level),
+    word: data[i].word.value,
+    choices: _.shuffle(q.choices)
+  }))
+
+  return oneQuestion ? _.first(questions) : questions
 }
