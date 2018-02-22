@@ -162,7 +162,7 @@ describe('Question', () => {
         })
     });
 
-    it('it should GET questions for an explore level', (done) => {
+    it.only('it should GET questions for an explore level', (done) => {
       chai.request(server)
         .get(`/api/v2/question?type=explore&user_id=${userMock._id}&id=${levelData.exploreMock._id}`)
         .end((err, res) => {

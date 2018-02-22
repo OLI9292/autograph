@@ -88,7 +88,7 @@ exports.read = async (req, res, next) => {
     }
   })()
 
-  return result.error
-    ? res.status(422).send({ error: result.error })
-    : res.status(200).send(result)
+  return result.length
+    ? res.status(200).send(result)
+    : res.status(422).send({ error: result.error || 'No questions.' });
 }
