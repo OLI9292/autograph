@@ -77,6 +77,7 @@ const docs = async query => {
 
 exports.read = async (req, res, next) => {
   const data = await docs(req.query)
+  if (data.error) { res.status(422).send({ error: data.error }); }
 
   const result = await (async () => {
     switch (req.query.type) {
