@@ -1,6 +1,5 @@
 const docPlugin = function (schema, options) {
   schema.statics.doc = function(id) {
-    console.log(`${this.modelName} not found.`)
     return this.findById(id, async (error, doc) => {
       if (error) { return { error: error.message } }
       return doc || { error: `${this.modelName} not found.` }

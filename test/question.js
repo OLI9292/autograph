@@ -14,7 +14,8 @@ const chaiHttp = require('chai-http')
 const Word = require('../models/word') 
 const Root = require('../models/root') 
 const Question = require('../models/question') 
-const levelMock = require('./mocks/level').mock
+const levelData = require('./mocks/level')
+const levelMock = levelData.mock
 const lessonMock = require('./mocks/lesson').mock
 const wordMocks = require('./mocks/word').mocks
 const userMock = require('./mocks/user').mock
@@ -150,6 +151,8 @@ describe('Question', () => {
   })  
 
   describe('/GET questions', () => {
+    beforeEach(async () => await seedDB())
+
     it('it should GET questions for the user and level', (done) => {
       chai.request(server)
         .get(`/api/v2/question?type=train&id=${levelMock._id}&user_id=${userMock._id}&stage=3`)
@@ -160,15 +163,24 @@ describe('Question', () => {
     });
 
     it('it should GET questions for an explore level', (done) => {
-      const words = 'carnivore,herbivore,omnivore';
       chai.request(server)
-        .get(`/api/v2/question?type=explore&user_id=${userMock._id}&words=${words}`)
+        .get(`/api/v2/question?type=explore&user_id=${userMock._id}&id=${levelData.exploreMock._id}`)
         .end((err, res) => {
           res.should.have.status(200)
-          res.body.should.be.a('array').of.length(3)
+          res.body.should.be.a('array').of.length(levelData.exploreMock.words.length)
           done()
         })
     });
+
+    it('it should GET questions at the same level for an explore level', (done) => {
+      chai.request(server)
+        .get(`/api/v2/question?type=explore&user_id=${userMock._id}&id=${levelData.exploreMock._id}&questionLevel=4`)
+        .end((err, res) => {
+          res.should.have.status(200)
+          _.uniq(_.pluck(res.body, 'type')).should.be.a('array').of.length(1)
+          done()
+        })
+    });    
 
     it('it should GET questions for a speed round (difficulty 3)', (done) => {
       const SPEED_ROUND = 3;
@@ -192,15 +204,6 @@ describe('Question', () => {
           res.body.should.be.a('array').of.length(EXPECTED_COUNT)
           done()
         })
-    });
-
-    it('it should GET questions for a read level', (done) => {
-      chai.request(server)
-        .get(`/api/v2/question?type=read&id=${lessonMock._id}`)
-        .end((err, res) => {
-          res.should.have.status(200)
-          done()
-        })
-    });    
+    });  
   })
 })
