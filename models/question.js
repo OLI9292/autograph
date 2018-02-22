@@ -128,6 +128,7 @@ const wordDefToRootDef = (roots, words, word) => {
 
   const normalPrompt = _.flatten([
     { value: 'What is the meaning of the highlighted root?', highlighted: false },
+    { value: '<br />', highlighted: false },
     _.map(word.components, c => ({
       value: _root.value === c.value ? c.value.toUpperCase() : c.value,
       highlight: _root.value === c.value 
