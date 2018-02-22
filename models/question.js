@@ -123,7 +123,7 @@ const defToCharsAllRoots = (...args) => defToChars(...args)
 
 // Level 9
 
-const wordDefToRootDef = (roots, words, word) => {
+const rootInWordToDef = (roots, words, word) => {
   const _root = word.rootComponents(true)[0]; // TODO validate _root
 
   const normalPrompt = _.flatten([
@@ -177,7 +177,7 @@ const TYPES = {
   '6': [defToCharsOneRoot],
   '7': [wordToDef],
   '8': [defToCharsAllRoots],
-  '9': [wordDefToRootDef],
+  '9': [rootInWordToDef],
   '10': [defToCharsAllRootsNoHighlight],
   'sentenceCompletion': [sentenceCompletion]
 }
