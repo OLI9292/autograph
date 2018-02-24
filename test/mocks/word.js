@@ -1,4 +1,5 @@
 const ID_1 = '5a4aea2c8293e0305e30ebc0'
+const dummy_ID = '5a4aea2c8293e0307e30ebc0'
 
 const rootData = require('./root')
 
@@ -45,7 +46,8 @@ const secondaryMocks = [
     ],
     components: [
       { componentType: 'root', definition: 'test', value: 'test-root' }
-    ]
+    ],
+    roots: [rootData.vor_ID]
   },
   {
     value: 'aquifier',
@@ -55,7 +57,8 @@ const secondaryMocks = [
     ],
     components: [
       { componentType: 'root', definition: 'test', value: 'test-root' }
-    ]
+    ],
+    roots: [dummy_ID]
   },
   {
     value: 'monogram',
@@ -65,7 +68,8 @@ const secondaryMocks = [
     ],
     components: [
       { componentType: 'root', definition: 'test', value: 'test-root' }
-    ]
+    ],
+    roots: [dummy_ID]
   },
   {
     value: 'autograph',
@@ -75,7 +79,8 @@ const secondaryMocks = [
     ],
     components: [
       { componentType: 'root', definition: 'test', value: 'test-root' }
-    ]
+    ],
+    roots: [dummy_ID]
   },
   {
     value: 'terrace',
@@ -85,7 +90,8 @@ const secondaryMocks = [
     ],
     components: [
       { componentType: 'root', definition: 'test', value: 'test-root' }
-    ]
+    ],
+    roots: [dummy_ID]
   },
   {
     value: 'omnivore',
@@ -95,7 +101,8 @@ const secondaryMocks = [
     ],
     components: [
       { componentType: 'root', definition: 'test', value: 'test-root' }
-    ]
+    ],
+    roots: [rootData.vor_ID]
   }          
 ]
 

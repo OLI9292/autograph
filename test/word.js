@@ -2,10 +2,14 @@ process.env.NODE_ENV = 'test'
 
 const _ = require('underscore')
 const chai = require('chai')
+const expect = chai.expect
 const chaiHttp = require('chai-http')
+const chaiAsPromised = require('chai-as-promised')
+chai.use(chaiAsPromised)
 const mongoose = require('mongoose')
 const server = require('../server')
 const should = chai.should()
+const { xor } = require('lodash')
 
 const Word = require('../models/word')
 const wordMocks = require('./mocks/word').mocks
@@ -17,6 +21,18 @@ const { cleanDB, seedDB } = require('../scripts/seedDB');
 chai.use(chaiHttp)
 
 describe('Words', () => {
+  describe('user.sharesRootWith()', () => {
+    before(async () => { 
+      await seedDB()
+    })
+
+    it.only('it should return words that share a root', async () => {
+      const carnivore = await Word.findOne({ value: 'carnivore' })      
+      const sharesRoot = carnivore.sharesRootWith()
+      return expect(sharesRoot).to.eventually.satisfy(arr => _.isEmpty(xor(_.pluck(arr, 'value'), ['herbivore', 'omnivore'])))
+    });    
+  }); 
+
   describe('/GET words', () => {
     beforeEach(async () => await seedDB())
 
@@ -31,7 +47,7 @@ describe('Words', () => {
         })
     });
 
-    it.only('it should GET all the words for a root', (done) => {
+    it('it should GET all the words for a root', (done) => {
       chai.request(server)
         .get('/api/v2/words' + '?root=' + rootMock.value)
         .end((err, res) => {

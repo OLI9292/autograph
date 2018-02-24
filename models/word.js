@@ -43,9 +43,24 @@ wordSchema.methods.fullDefinition = function() {
   return _.pluck(this.definition, 'value').join('')
 }
 
+wordSchema.methods.equals = function(word) {
+  return this._id.equals(word._id)
+}
+
 wordSchema.methods.rootComponents = function(justOne = false) {
   const roots = _.filter(this.components, c => c.componentType === 'root');
   return justOne ? [_.sample(roots)] : roots;
+}
+
+wordSchema.methods.sharesRootWith = async function() {
+  return await Word.find(
+    { 
+      $and: [
+        { $or: _.map(this.roots, r => ({ roots: r })) },
+        { _id: { $ne: this._id } },
+      ]
+    }
+  )
 }
 
 wordSchema.methods.prompts = function() {

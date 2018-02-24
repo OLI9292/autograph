@@ -10,7 +10,7 @@ const primaryMock = {
   slug: 'vor',
   ratios: {
     seen: 0.5,
-    unseen: 0.7
+    unseen: 0.25
   },
   name: 'vor',
   type: 'general'

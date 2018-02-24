@@ -153,7 +153,7 @@ describe('Question', () => {
   describe('/GET questions', () => {
     beforeEach(async () => await seedDB())
 
-    it('it should GET questions for the user and level', (done) => {
+    it.only('it should GET questions for the user and level', (done) => {
       chai.request(server)
         .get(`/api/v2/question?type=train&id=${levelMock._id}&user_id=${userMock._id}&stage=3`)
         .end((err, res) => {

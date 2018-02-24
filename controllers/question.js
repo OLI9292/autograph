@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const _ = require('underscore')
-const { chunk } = require('lodash');
+const { chunk, get } = require('lodash');
 
 const Questions = require('../models/question')
 const Word = require('../models/word')
@@ -9,12 +9,46 @@ const Lesson = require('../models/lesson')
 const Root = require('../models/root')
 const User = require('../models/user')
 
-const randomWords = (user, level, harcodedWords, words) => {
-  const totalCount = harcodedWords.length * (1 / (level.ratios.seen + level.ratios.unseen));
-  const [seenCount, unseenCount] = [level.ratios.seen, level.ratios.unseen].map(r => Math.round(r * totalCount));
-  const seenWords = _.pluck(_.sample(_.reject(user.words, w => _.contains(harcodedWords, w.name)), seenCount), 'name');
-  const unseenWords = _.pluck(_.sample(_.reject(words, w => _.contains(harcodedWords.concat(seenWords), w.value)), unseenCount), 'value');
-  return seenWords.concat(unseenWords);
+const randomWordCounts = (level, hardcoded) => {
+  const { seen, unseen } = level.ratios
+  const totalCount = hardcoded.length / (1 - seen - unseen)
+  return _.map([seen, unseen], r => Math.round(r * totalCount))
+}
+
+const wordPool = (user, wordDocs) => {
+  const userWords = _.pluck(user.words, 'name') 
+  return _.partition(wordDocs, w => _.contains(userWords, w.value))
+}
+
+const addWordTo = async (words, pool, daisyChain = false) => {
+  const values = _.pluck(words, 'value')
+  const filtered = _.reject(pool, w => _.contains(values, w.value))
+  if (_.isEmpty(filtered)) { console.log('Pool is empty'); return words; }
+
+  const lastWord = _.last(words)
+
+  if (daisyChain && lastWord) {
+    const matches = await lastWord.sharesRootWith()
+    const match = _.find(matches, m => _.contains(_.pluck(filtered, 'value'), m.value))
+    if (match) { return words.concat(match); }
+  }
+
+  return words.concat(_.sample(filtered))
+}
+
+const randomWords = async (user, level, hardcoded, wordDocs) => {
+  const [seenCount, unseenCount] = randomWordCounts(level, hardcoded)
+  const totalCount = seenCount + unseenCount
+  const [seenWords, unseenWords] = wordPool(user, wordDocs)
+
+  const range = _.range(1, (totalCount + 1))
+  let arr = []
+
+  for (let n of range) {
+    const pool = n <= seenCount ? seenWords : unseenWords
+    arr = await addWordTo(arr, pool, true)
+    if (n === totalCount) { return _.pluck(arr, 'value'); }
+  }
 }
 
 const wordsAndLevels = (wordValues, wordDocs, user, questionLevel) => {
@@ -36,10 +70,11 @@ const wordsForStage = (level, stage) => {
 const questions = {
   forTrainLevel: async data => {
     const { level, user, words, roots, stage } = data
-    const harcoded = wordsForStage(level, stage)
-    const random = randomWords(user, level, harcoded, words)
-    const questionData = wordsAndLevels(harcoded.concat(random), words, user)
-    return await Questions(questionData, words, roots);
+    const hardcoded = wordsForStage(level, stage)
+    const random = await randomWords(user, level, hardcoded, words)
+    const all = _.union(hardcoded, random)
+    const questionData = wordsAndLevels(all, words, user)
+    return await Questions(questionData, words, roots)
   },
 
   forExploreLevel: async (data, questionLevel) => {
