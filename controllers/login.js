@@ -6,15 +6,15 @@ const User = require('../models/user')
 
 const helpers = require('../lib/helpers')
 
-const expiresIn = (numDays) => {
+const expiresIn = numDays => {
   var dateObj = new Date()
   return dateObj.setDate(dateObj.getDate() + numDays)
 }
 
-const genToken = (user) => {
+const genToken = user => {
   const expires = expiresIn(7)
   const token = jwt.encode({ exp: expires }, CONFIG.VALIDATION_TOKEN)
-  return { user: user, expires: expires, token: token, sessionId: helpers.guid() }
+  return { user: user, expires: expires, token: token, sessionId: helpers.guid(), isTeacher: user.isTeacher }
 }
 
 exports.login = async (req, res, next) => {
