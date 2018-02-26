@@ -14,7 +14,13 @@ const levelSchema = new Schema({
   },
   seededBy: { type: String, enum: ['manual', 'root'] },
   slug: { type: String, required: true }, // unique
-  type: { type: String, required: true, enum: ['train', 'general', 'topic'] },
+  type: { type: String, required: true, enum: ['train', 'general', 'topic', 'speed'] },
+  speed: {
+    type: {
+      time: { type: Number, min: 1, max: 15, default: 3 },
+      inputType: { type: String, enum: ['button', 'spell'], default: 'button' },
+    }
+  }
   words: [String]
 })
 
