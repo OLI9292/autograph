@@ -18,9 +18,9 @@ const levelSchema = new Schema({
   speed: {
     type: {
       time: { type: Number, min: 1, max: 15, default: 3 },
-      inputType: { type: String, enum: ['button', 'spell'], default: 'button' },
+      inputType: { type: String, enum: ['button', 'spell'], default: 'button' }
     }
-  }
+  },
   words: [String]
 })
 
