@@ -153,7 +153,7 @@ describe('Question', () => {
   describe('/GET questions', () => {
     beforeEach(async () => await seedDB())
 
-    it.only('it should GET questions for the user and level', (done) => {
+    it('it should GET questions for the user and level', (done) => {
       chai.request(server)
         .get(`/api/v2/question?type=train&id=${levelMock._id}&user_id=${userMock._id}&stage=3`)
         .end((err, res) => {
@@ -182,28 +182,14 @@ describe('Question', () => {
         })
     });    
 
-    it('it should GET questions for a speed round (difficulty 3)', (done) => {
-      const SPEED_ROUND = 3;
-      const EXPECTED_COUNT = _.filter(wordMocks, m => m.obscurity === SPEED_ROUND).length;
+    it('it should GET questions for a speed round', (done) => {
       chai.request(server)
-        .get(`/api/v2/question?type=speed&id=${SPEED_ROUND}`)
+      .get(`/api/v2/question?type=speed&user_id=${userMock._id}&id=${levelData.speedMock._id}`)
         .end((err, res) => {
           res.should.have.status(200)
-          res.body.should.be.a('array').of.length(EXPECTED_COUNT)
+          res.body.should.be.a('array')
           done()
         })
     });
-
-    it('it should GET questions for a speed round (difficulty 5)', (done) => {
-      const SPEED_ROUND = 5;
-      const EXPECTED_COUNT = _.filter(wordMocks, m => m.obscurity === SPEED_ROUND).length;
-      chai.request(server)
-        .get(`/api/v2/question?type=speed&id=${SPEED_ROUND}`)
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.be.a('array').of.length(EXPECTED_COUNT)
-          done()
-        })
-    });  
   })
 })

@@ -83,10 +83,13 @@ const questions = {
     return await Questions(questionData, words, roots)
   },  
 
-  forSpeedLevel: async obscurity => {
-    const wordsForObscurity = _.filter(words, w => w.obscurity === obscurity)
-    const data = _.map(wordsForObscurity, w => ({ word: w, level: obscurity }))
-    return await Questions(data, words, roots)
+  forSpeedLevel: async data => {
+    const { level, user, words, roots } = data
+    const hardcoded = level.words
+    const random = _.sample(_.pluck(user.words, 'name'), hardcoded.length)
+    const all = _.shuffle(_.uniq(_.union(hardcoded, random)))
+    const questionData = wordsAndLevels(all, words, user)
+    return await Questions(questionData, words, roots)
   }
 }
 
@@ -118,7 +121,7 @@ exports.read = async (req, res, next) => {
     switch (req.query.type) {
     case 'train':   return await questions.forTrainLevel(data)
     case 'explore': return await questions.forExploreLevel(data, req.query.questionLevel)
-    case 'speed':   return await questions.forSpeedLevel(parseInt(id, 10))
+    case 'speed':   return await questions.forSpeedLevel(data)
     default:        return { error: 'Invalid type.' }
     }
   })()

@@ -34,8 +34,27 @@ const exploreMock = {
   },
 }
 
+const speedMock = {
+  words: [
+    'carnivore',
+    'herbivore',
+    'omnivore'
+  ],
+  _id: '5a8d7e4aca19cf0030e8178e',
+  name: 'speed',
+  ladder: 3,
+  progressBars: null,
+  slug: 'speed-1',
+  type: 'speed',
+  ratios: {
+    seen: 0.5,
+    unseen: 0.25
+  },
+}
+
 module.exports = {
   mock: primaryMock,
   exploreMock: exploreMock,
-  mocks: [primaryMock, exploreMock]
+  speedMock: speedMock,
+  mocks: [primaryMock, exploreMock, speedMock]
 }
