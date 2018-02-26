@@ -46,6 +46,10 @@ const speedMock = {
   progressBars: null,
   slug: 'speed-1',
   type: 'speed',
+  speed: {
+    time: 5,
+    inputType: 'button'
+  },
   ratios: {
     seen: 0.5,
     unseen: 0.25

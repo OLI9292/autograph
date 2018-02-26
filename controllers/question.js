@@ -9,6 +9,10 @@ const Lesson = require('../models/lesson')
 const Root = require('../models/root')
 const User = require('../models/user')
 
+// look in models/question
+const SPELL_TYPES = [6, 8, 10]
+const BUTTON_TYPES = _.without(_.range(1, 11), SPELL_TYPES)
+
 const randomWordCounts = (level, hardcoded) => {
   const { seen, unseen } = level.ratios
   const totalCount = hardcoded.length / (1 - seen - unseen)
@@ -56,7 +60,7 @@ const wordsAndLevels = (wordValues, wordDocs, user, questionLevel) => {
     const doc = _.find(wordDocs, w => w.value === word)
     const userWord = _.find(user.words, w => w.name === word)
     const level = questionLevel
-      ? questionLevel
+      ? _.isArray(questionLevel) ? _.sample(questionLevel) : questionLevel
       : userWord ? userWord.experience : 1
     return doc ? { level: level, word: doc } : null
   }), o => o)
@@ -88,7 +92,9 @@ const questions = {
     const hardcoded = level.words
     const random = _.sample(_.pluck(user.words, 'name'), hardcoded.length)
     const all = _.shuffle(_.uniq(_.union(hardcoded, random)))
-    const questionData = wordsAndLevels(all, words, user)
+    const questionLevels = get(level.speed, 'inputType') === 'spell' ? SPELL_TYPES : BUTTON_TYPES
+    const questionData = wordsAndLevels(level.words, words, user, questionLevels)
+
     return await Questions(questionData, words, roots)
   }
 }

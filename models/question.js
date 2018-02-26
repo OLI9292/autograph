@@ -203,5 +203,7 @@ module.exports = async (data, words, roots) => {
     choices: _.shuffle(q.choices)
   }))
 
+  console.log(questions)
+
   return oneQuestion ? _.first(questions) : questions
 }

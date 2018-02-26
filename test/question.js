@@ -182,7 +182,7 @@ describe('Question', () => {
         })
     });    
 
-    it('it should GET questions for a speed round', (done) => {
+    it.only('it should GET questions for a speed round', (done) => {
       chai.request(server)
       .get(`/api/v2/question?type=speed&user_id=${userMock._id}&id=${levelData.speedMock._id}`)
         .end((err, res) => {
