@@ -103,7 +103,25 @@ const secondaryMocks = [
       { componentType: 'root', definition: 'test', value: 'test-root' }
     ],
     roots: [rootData.vor_ID]
-  }          
+  },
+  {
+    components: [
+      { componentType: 'root', definition: 'beautiful', value: 'cosm' },
+      { componentType: null, value: 'o' },
+      { componentType: 'root', definition: 'city', value: 'polis' }
+    ],
+    definition: [
+      { value: 'a ', isRoot: false },
+      { value: 'city', isRoot: true },
+      { value: ' inhabited by people from all parts of the world/universe, so named because the universe is ', isRoot: false },
+      { value: 'beautiful', isRoot: true },
+      { value: ' and orderly', isRoot: false }
+    ],
+    roots: [rootData.cosm_ID, '5a252a08dbcc2700215a1b66'],
+    _id: '5a252a07dbcc2700215a18fe',
+    value: 'cosmopolis',
+    obscurity: 5,
+  }            
 ]
 
 module.exports = {

@@ -26,12 +26,14 @@ chai.use(chaiHttp)
 
 let roots,
     word,
+    cosmopolis,
     words
 
 describe('Question', () => {
   before(async () => {
     await seedDB()
     word = await Word.findOne({ value: 'carnivore' })
+    cosmopolis = await Word.findOne({ value: 'cosmopolis' })
     words = await Word.find()
     roots = await Root.find()
   })
@@ -64,6 +66,17 @@ describe('Question', () => {
           .and.satisfy(c => _.contains(_.pluck(c, 'hint'), 'meat') && _.contains(_.pluck(c, 'hint'), 'eat'))
       ])
     })
+
+    it('it should return a definition to root button question with as many answers as roots', function () {
+      const level = 2;
+      const promise = Promise.resolve(Question({ word: cosmopolis, level: level }, words, roots));
+      return Promise.all([
+        expect(promise).to.eventually.have.property('answer')
+          .of.length(cosmopolis.components.length)
+          .and.satisfy(a => _.filter(a, x => x.missing).length === _.filter(cosmopolis.components, c => c.componentType === 'root').length),
+        expect(promise).to.eventually.have.property('choices').of.length(6)
+      ])
+    })    
   })  
 
   describe('question defCompletion', () => {
@@ -182,7 +195,7 @@ describe('Question', () => {
         })
     });    
 
-    it.only('it should GET questions for a speed round', (done) => {
+    it('it should GET questions for a speed round', (done) => {
       chai.request(server)
       .get(`/api/v2/question?type=speed&user_id=${userMock._id}&id=${levelData.speedMock._id}`)
         .end((err, res) => {

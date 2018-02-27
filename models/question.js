@@ -10,25 +10,15 @@ const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
 const { capitalize } = require('../lib/helpers')
 
-const addHintToRoot = (value, roots) => {
-  const rootDoc = _.find(roots, r => r.value === value)
-  return {
-    value: value,
-    hint: rootDoc && rootDoc.definitions[0]
-  }
-}
-
 const defToRoots = async (roots, words, word, cutToOneRoot = false) => {
   const prompt = word.prompts()
 
-  let rootIndices = _.without(_.map(word.components, (c, i) => c.componentType === 'root' && i), false);
-  if (cutToOneRoot) { rootIndices = [_.sample(rootIndices)]; }
-  
-  const answer = _.map(word.components, (c, i) => ({ value: c.value, missing: _.contains(rootIndices, i) }))
-  const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value')
+  const wordRoots = word.rootComponents(cutToOneRoot)
+  const answer = _.map(word.components, c => ({ value: c.value, missing: _.some(wordRoots, r => _.isEqual(r, c)) }))
+  const answerChoices = _.map(wordRoots, r => ({ value: r.value, hint: r.definition }))
 
-  const redHerrings = _.sample(_.reject(roots, r => _.contains(answerValues, r.value)), CHOICES_COUNT - answerValues.length)
-  const choices = _.map(answerValues.concat(_.pluck(redHerrings, 'value')), v => addHintToRoot(v, roots))
+  const redHerrings = _.sample(_.reject(roots, r => _.contains(_.pluck(answerChoices, 'value'), r.value)), CHOICES_COUNT - answerChoices.length)
+  const choices = _.map(redHerrings, h => ({ value: h.value, hint: _.sample(h.definitions) })).concat(answerChoices)
 
   return { prompt: prompt, answer: answer, choices: choices, word: word.value }
 }
@@ -52,7 +42,6 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
     choices: choices
   }
 }
-
 
 // Level 1
 
@@ -202,8 +191,6 @@ module.exports = async (data, words, roots) => {
     word: data[i].word.value,
     choices: _.shuffle(q.choices)
   }))
-
-  console.log(questions)
 
   return oneQuestion ? _.first(questions) : questions
 }
