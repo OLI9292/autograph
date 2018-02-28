@@ -213,11 +213,6 @@ const updateFromWeb = async (req, res, next) => {
       const newExperience = user.words.reduce((acc, w) => acc + w.experience, 0);
       user.weeklyStarCount = user.weeklyStarCount + (newExperience - oldExperience);
 
-      // Update word list completion
-      if (req.body.wordList) {
-        user.wordListsCompleted = _.uniq(_.union(user.wordListsCompleted || [], [req.body.wordList]));
-      }
-
       try {
         await user.save()
         return res.status(200).send(user)

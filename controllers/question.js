@@ -129,11 +129,11 @@ exports.read = async (req, res, next) => {
 
   const result = await (async () => {
     switch (req.query.type) {
-    case 'train':   return await questions.forTrainLevel(data)
-    case 'explore': return await questions.forExploreLevel(data, req.query.questionLevel)
-    case 'speed':   return await questions.forSpeedLevel(data)
+    case 'train':       return await questions.forTrainLevel(data)
+    case 'explore':     return await questions.forExploreLevel(data, req.query.questionLevel)
+    case 'speed':       return await questions.forSpeedLevel(data)
     case 'multiplayer': return await questions.forMultiplayerLevel(data)
-    default:        return { error: 'Invalid type.' }
+    default:            return { error: 'Invalid type.' }
     }
   })()
 
