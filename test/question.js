@@ -204,5 +204,16 @@ describe('Question', () => {
           done()
         })
     });
+
+    it.only('it should GET questions for a multiplayer round', (done) => {
+      const seed = 'terrace,carnivore,herbivore';
+      chai.request(server)
+      .get(`/api/v2/question?type=multiplayer&user_id=${userMock._id}&seed=${seed}`)
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.be.a('array')
+          done()
+        })
+    });    
   })
 })

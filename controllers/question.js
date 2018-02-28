@@ -96,27 +96,31 @@ const questions = {
     const questionData = wordsAndLevels(level.words, words, user, questionLevels)
 
     return await Questions(questionData, words, roots)
-  }
+  },
+
+  forMultiplayerLevel: async data => {
+    const { seed, user, words, roots } = data
+    const questionData = wordsAndLevels(seed.split(','), words, user)
+    return await Questions(questionData, words, roots)
+  }  
 }
 
 const docs = async query => {
-  const { id, stage, type, user_id } = query
+  const { id, stage, type, user_id, seed } = query
 
   const level = await Level.doc(id)
   const user = await User.doc(user_id)
   const words = await Word.docs()
   const roots = await Root.docs()
   
-  const data = {
+  return {
     level: level,
     user: user,
     roots: roots,
     words: words,
-    stage: stage || 0
+    stage: stage,
+    seed: seed
   }
-
-  const errored = _.find(_.keys(data), k => data[k].error)
-  return errored ? { error: `Error querying ${errored}.` } : data
 }
 
 exports.read = async (req, res, next) => {
@@ -128,6 +132,7 @@ exports.read = async (req, res, next) => {
     case 'train':   return await questions.forTrainLevel(data)
     case 'explore': return await questions.forExploreLevel(data, req.query.questionLevel)
     case 'speed':   return await questions.forSpeedLevel(data)
+    case 'multiplayer': return await questions.forMultiplayerLevel(data)
     default:        return { error: 'Invalid type.' }
     }
   })()
