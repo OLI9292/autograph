@@ -56,7 +56,7 @@ const randomWords = async (user, level, hardcoded, wordDocs) => {
 }
 
 const wordsAndLevels = (wordValues, wordDocs, user, questionLevel) => {
-  return _.filter(_.map(_.shuffle(wordValues), word => {
+  return _.filter(_.map(wordValues, word => {
     const doc = _.find(wordDocs, w => w.value === word)
     const userWord = _.find(user.words, w => w.name === word)
     const level = questionLevel
@@ -76,14 +76,14 @@ const questions = {
     const { level, user, words, roots, stage } = data
     const hardcoded = wordsForStage(level, stage)
     const random = await randomWords(user, level, hardcoded, words)
-    const all = _.union(hardcoded, random)
+    const all = _.union(_.shuffle(hardcoded), random)
     const questionData = wordsAndLevels(all, words, user)
     return await Questions(questionData, words, roots)
   },
 
   forExploreLevel: async (data, questionLevel) => {
     const { level, user, words, roots } = data
-    const questionData = wordsAndLevels(level.words, words, user, questionLevel)
+    const questionData = wordsAndLevels(_.shuffle(level.words), words, user, questionLevel)
     return await Questions(questionData, words, roots)
   },  
 
@@ -100,7 +100,7 @@ const questions = {
 
   forMultiplayerLevel: async data => {
     const { seed, user, words, roots } = data
-    const questionData = wordsAndLevels(seed.split(','), words, user)
+    const questionData = wordsAndLevels(_.shuffle(seed.split(',')), words, user)
     return await Questions(questionData, words, roots)
   }  
 }
