@@ -188,6 +188,7 @@ module.exports = async (data, words, roots) => {
   // Add type, word, and shuffle choices
   questions = _.map(questions, (q, i) => _.extend({}, q, {
     type: type(data[i].level),
+    level: data[i].level,
     word: data[i].word.value,
     choices: _.shuffle(q.choices)
   }))
