@@ -193,7 +193,7 @@ const updateFromWeb = async (req, res, next) => {
           const copy = user.words[idx]
           copy.seen += 1
           copy.correct += s.correct ? 1 : 0
-          copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0
+          copy.experience = Math.min(10, (s.correct ? (copy.experience + 1) : copy.experience))
           copy.timeSpent += s.time || 0
           user.words[idx] = copy
 
