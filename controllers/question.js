@@ -11,7 +11,7 @@ const User = require('../models/user')
 
 // look in models/question
 const SPELL_TYPES = [6, 7, 8, 10]
-const BUTTON_TYPES = _.without(_.range(1, 11), SPELL_TYPES)
+const BUTTON_TYPES = _.difference(_.range(1, 11), SPELL_TYPES)
 
 const randomWordCounts = (level, hardcoded) => {
   const { seen, unseen } = level.ratios
@@ -56,6 +56,7 @@ const randomWords = async (user, level, hardcoded, wordDocs) => {
 }
 
 const wordsAndLevels = (wordValues, wordDocs, user, questionLevel) => {
+  console.log(questionLevel)
   return _.filter(_.map(wordValues, word => {
     const doc = _.find(wordDocs, w => w.value === word)
     const userWord = _.find(user.words, w => w.name === word)
