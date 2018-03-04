@@ -56,7 +56,6 @@ const randomWords = async (user, level, hardcoded, wordDocs) => {
 }
 
 const wordsAndLevels = (wordValues, wordDocs, user, questionLevel) => {
-  console.log(questionLevel)
   return _.filter(_.map(wordValues, word => {
     const doc = _.find(wordDocs, w => w.value === word)
     const userWord = _.find(user.words, w => w.name === word)

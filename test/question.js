@@ -54,7 +54,7 @@ describe('Question', () => {
   })
 
   describe('question defToAllRoots', () => {
-    it('it should return a definition to root button question with as many answers as roots', function () {
+    it.only('it should return a definition to root button question with as many answers as roots', function () {
       const level = 2;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
@@ -130,7 +130,7 @@ describe('Question', () => {
   }) 
 
   describe('question wordToDef', () => {
-    it.only('it should return a word to a definition question', function () {
+    it('it should return a word to a definition question', function () {
       const level = 7;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([

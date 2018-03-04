@@ -8,7 +8,7 @@ const CHOICES_COUNT = 6
 const SPELL_CHOICES_COUNT = 12
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
-const { capitalize } = require('../lib/helpers')
+const { capitalize, upcase } = require('../lib/helpers')
 
 const defToRoots = async (roots, words, word, cutToOneRoot = false) => {
   const prompt = word.prompts()
@@ -19,6 +19,7 @@ const defToRoots = async (roots, words, word, cutToOneRoot = false) => {
 
   const redHerrings = _.sample(_.reject(roots, r => _.contains(_.pluck(answerChoices, 'value'), r.value)), CHOICES_COUNT - answerChoices.length)
   const choices = _.map(redHerrings, h => ({ value: h.value, hint: _.sample(h.definitions) })).concat(answerChoices)
+  choices.forEach(c => c.value = upcase(c.value))
 
   return { prompt: prompt, answer: answer, choices: choices, word: word.value }
 }
@@ -36,6 +37,7 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
   const redHerringsCount = SPELL_CHOICES_COUNT - answerValues.length
   const redHerrings = _.sample(_.filter(ALPHABET, char => !_.contains(answerValues, char)), redHerringsCount)
   const choices = _.map(answerValues.concat(redHerrings).sort(), c => ({ value: c }))
+  choices.forEach(c => c.value = upcase(c.value))
 
   return {
     prompt: prompt,
@@ -60,6 +62,7 @@ const defCompletion = (roots, words, word) => {
   const params = word.defCompletionParams(wordRoots);
   const redHerrings = _.sample(_.reject(roots, r => r.value === params.answer.hint), 5)
   const choices = _.map(redHerrings, c => ({ value: c.definitions[0], hint: c.value })).concat(params.answer)
+  choices.forEach(c => c.hint = upcase(c.hint))
 
   return {
     prompt: params.prompt,
@@ -131,6 +134,7 @@ const rootInWordToDef = (roots, words, word) => {
   const answer = { value: _root.definition, missing: true }
   const redHerrings = _.map(_.sample(_.reject(roots, r => r.value === _root.value), 5), r => ({ value: r.definitions[0], hint: r.value }))
   const choices = redHerrings.concat({ value: answer.value, hint: _root.value })
+  choices.forEach(c => c.hint = upcase(c.hint))
 
   return {
     prompt: prompts,

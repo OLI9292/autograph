@@ -99,7 +99,7 @@ wordSchema.methods.defCompletionParams = function(roots) {
 
   const prompt = _.flatten(
     this.highlightedComponents(_root.value).concat(
-    `is ${definition}`.split(' ').map(d => ({ value: ' ' + d, highlight: false }))))
+    `= ${definition}`.split(' ').map(d => ({ value: ' ' + d, highlight: false }))))
 
   return { prompt: { normal: prompt }, answer: { value: hiddenRoot.definition, hint: hiddenRoot.value } }
 }
