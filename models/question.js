@@ -32,9 +32,10 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
     return _.map(c.value.split(''), char => ({ value: char, missing: missing }))
   }))
   
-  const answerValues = _.pluck(_.filter(answer, a => a.missing), 'value')
-  const redHerrings = _.sample(_.shuffle(_.filter(ALPHABET, char => !_.contains(answerValues, char))), SPELL_CHOICES_COUNT - answerValues.length)
-  const choices = _.map(answerValues.concat(redHerrings), c => ({ value: c }))
+  const answerValues = _.uniq(_.pluck(_.filter(answer, a => a.missing), 'value'))
+  const redHerringsCount = SPELL_CHOICES_COUNT - answerValues.length
+  const redHerrings = _.sample(_.filter(ALPHABET, char => !_.contains(answerValues, char)), redHerringsCount)
+  const choices = _.map(answerValues.concat(redHerrings).sort(), c => ({ value: c }))
 
   return {
     prompt: prompt,
@@ -92,7 +93,7 @@ const defToCharsOneRoot = (...args) => defToChars(...args, true)
 
 // Level 7
 
-const wordToDef = (roots, words, word) => {
+/*const wordToDef = (roots, words, word) => {
   const prompt = { normal: [{ value: capitalize(word.value), highlight: false }] };
 
   const answer = { value: word.fullDefinition(), missing: true }
@@ -104,7 +105,7 @@ const wordToDef = (roots, words, word) => {
     answer: [answer],
     choices: choices
   }
-}
+}*/
 
 // Level 8
 
@@ -164,7 +165,7 @@ const TYPES = {
   '4': [defToAllRootsNoHighlight],
   '5': [defToWord],
   '6': [defToCharsOneRoot],
-  '7': [wordToDef],
+  '7': [defToCharsOneRoot],
   '8': [defToCharsAllRoots],
   '9': [rootInWordToDef],
   '10': [defToCharsAllRootsNoHighlight],

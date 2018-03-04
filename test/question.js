@@ -130,7 +130,7 @@ describe('Question', () => {
   }) 
 
   describe('question wordToDef', () => {
-    it('it should return a word to a definition question', function () {
+    it.only('it should return a word to a definition question', function () {
       const level = 7;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
@@ -205,7 +205,7 @@ describe('Question', () => {
         })
     });
 
-    it.only('it should GET questions for a multiplayer round', (done) => {
+    it('it should GET questions for a multiplayer round', (done) => {
       const seed = 'terrace,carnivore,herbivore';
       chai.request(server)
       .get(`/api/v2/question?type=multiplayer&user_id=${userMock._id}&seed=${seed}`)

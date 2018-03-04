@@ -28,7 +28,7 @@ const primaryMock = {
       id: levelData.mock._id,
       progress: [
         {
-          type: 'regular',
+          type: 'train',
           stage: 1,
           bestScore: 10,
           bestAccuracy: 0.85,
