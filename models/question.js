@@ -174,6 +174,9 @@ const TYPES = {
 
 const type = level => level === 'sentenceCompletion' ? 'sentenceCompletion' : TYPES[level][0].name
 
+const SPELL_TYPES = [6, 8, 10]
+const BUTTON_TYPES = _.without(_.range(1, 11), SPELL_TYPES)
+
 module.exports = async (data, words, roots) => { 
   const oneQuestion = !_.isArray(data)
   if (oneQuestion) { data = [data] }
@@ -191,7 +194,7 @@ module.exports = async (data, words, roots) => {
     type: type(data[i].level),
     level: data[i].level,
     word: data[i].word.value,
-    choices: _.shuffle(q.choices)
+    choices: _.contains(SPELL_TYPES, data[i].level) ? q.choices : _.shuffle(q.choices)
   }))
 
   return oneQuestion ? _.first(questions) : questions

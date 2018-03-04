@@ -10,7 +10,7 @@ const Root = require('../models/root')
 const User = require('../models/user')
 
 // look in models/question
-const SPELL_TYPES = [6, 8, 10]
+const SPELL_TYPES = [6, 7, 8, 10]
 const BUTTON_TYPES = _.without(_.range(1, 11), SPELL_TYPES)
 
 const randomWordCounts = (level, hardcoded) => {
