@@ -54,7 +54,7 @@ describe('Question', () => {
   })
 
   describe('question defToAllRoots', () => {
-    it.only('it should return a definition to root button question with as many answers as roots', function () {
+    it('it should return a definition to root button question with as many answers as roots', function () {
       const level = 2;
       const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
       return Promise.all([
@@ -166,6 +166,16 @@ describe('Question', () => {
   describe('/GET questions', () => {
     beforeEach(async () => await seedDB())
 
+    it('it should GET questions for a demo round', (done) => {
+      chai.request(server)
+      .get('/api/v2/question?type=demo')
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.be.a('array')
+          done()
+        })
+    });     
+
     it('it should GET questions for the user and level', (done) => {
       chai.request(server)
         .get(`/api/v2/question?type=train&id=${levelMock._id}&user_id=${userMock._id}&stage=3`)
@@ -195,7 +205,7 @@ describe('Question', () => {
         })
     });    
 
-    it.only('it should GET questions for a speed round', (done) => {
+    it('it should GET questions for a speed round', (done) => {
       chai.request(server)
       .get(`/api/v2/question?type=speed&user_id=${userMock._id}&id=${levelData.speedMock._id}`)
         .end((err, res) => {

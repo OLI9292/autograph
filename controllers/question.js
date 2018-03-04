@@ -9,6 +9,8 @@ const Lesson = require('../models/lesson')
 const Root = require('../models/root')
 const User = require('../models/user')
 
+const demoWords = require('../lib/demoWords')
+
 // look in models/question
 const SPELL_TYPES = [6, 7, 8, 10]
 const BUTTON_TYPES = _.difference(_.range(1, 11), SPELL_TYPES)
@@ -58,7 +60,7 @@ const randomWords = async (user, level, hardcoded, wordDocs) => {
 const wordsAndLevels = (wordValues, wordDocs, user, questionLevel) => {
   return _.filter(_.map(wordValues, word => {
     const doc = _.find(wordDocs, w => w.value === word)
-    const userWord = _.find(user.words, w => w.name === word)
+    const userWord = user && _.find(user.words, w => w.name === word)
     const level = questionLevel
       ? _.isArray(questionLevel) ? _.sample(questionLevel) : questionLevel
       : userWord ? userWord.experience : 1
@@ -72,6 +74,12 @@ const wordsForStage = (level, stage) => {
 }
 
 const questions = {
+  forDemoLevel: async data => {
+    const { words, roots } = data
+    const questionData = wordsAndLevels(demoWords, words, null, 1)
+    return await Questions(questionData, words, roots)    
+  },
+
   forTrainLevel: async data => {
     const { level, user, words, roots, stage } = data
     const hardcoded = wordsForStage(level, stage)
@@ -125,10 +133,10 @@ const docs = async query => {
 
 exports.read = async (req, res, next) => {
   const data = await docs(req.query)
-  if (data.error) { res.status(422).send({ error: data.error }); }
 
   const result = await (async () => {
     switch (req.query.type) {
+    case 'demo':        return await questions.forDemoLevel(data)
     case 'train':       return await questions.forTrainLevel(data)
     case 'explore':     return await questions.forExploreLevel(data, req.query.questionLevel)
     case 'speed':       return await questions.forSpeedLevel(data)
