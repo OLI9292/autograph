@@ -189,7 +189,6 @@ module.exports = async (data, words, roots) => {
     const promises = _.map(data, async elem => {
       try {
         const key = `${get(elem.word, 'value')}-${elem.level}`;
-        const key = 'blargg'
         return cached[key]
           ? JSON.parse(cached[key])
           : _.sample(TYPES[elem.level])(roots, words, elem.word)
