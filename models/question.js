@@ -184,29 +184,30 @@ module.exports = async (data, words, roots) => {
   const oneQuestion = !_.isArray(data)
   if (oneQuestion) { data = [data] }
 
-  const promises = _.map(data, elem => {
-    try {
-      const key = `${get(elem.word, 'value')}-${elem.level}`;
-      cache.hget('questions', key, (err, reply) => { 
-        return reply
-          ? JSON.parse(reply)
-          : Promise.resolve(_.sample(TYPES[elem.level])(roots, words, elem.word))
-      });
-    } catch (error) {
-      console.log(error.message)
-      return Promise.reject(new Error())
-    }
-  })  
+  cache.hgetall('questions', async (err, cached) => {
 
-  let questions = await Promise.all(promises.map(p => p.catch(e => e))).then(res => res)
+    const promises = _.map(data, async elem => {
+      try {
+        const key = `${get(elem.word, 'value')}-${elem.level}`;
+        const key = 'blargg'
+        return cached[key]
+          ? JSON.parse(cached[key])
+          : _.sample(TYPES[elem.level])(roots, words, elem.word)
+      } catch (error) {
+        return { error: error }
+      }
+    })
 
-  // Add type, word, and shuffle choices
-  questions = _.map(questions, (q, i) => _.extend({}, q, {
-    type: TYPES[data[i].level][0].name,
-    level: data[i].level,
-    word: data[i].word.value,
-    choices: _.contains(SPELL_TYPES, data[i].level) ? q.choices : _.shuffle(q.choices)
-  }))
+    let questions = _.reject((await Promise.all(promises)), question => question.error)
 
-  return oneQuestion ? _.first(questions) : questions
+    // Add type, word, and shuffle choices
+    questions = _.map(questions, (q, i) => _.extend({}, q, {
+      type: TYPES[data[i].level][0].name,
+      level: data[i].level,
+      word: data[i].word.value,
+      choices: _.contains(SPELL_TYPES, data[i].level) ? q.choices : _.shuffle(q.choices)
+    }))
+
+    return oneQuestion ? _.first(questions) : questions
+  })
 }

@@ -154,6 +154,6 @@ exports.all = async () => {
   const words = await Word.docs()
   const roots = await Root.docs()  
   const levels = _.range(1, 11)
-  const data = _.flatten(_.map(words, word => _.map(levels, level => ({ word: word, level: level })))).slice(0, 10)
+  const data = _.flatten(_.map(words, word => _.map(levels, level => ({ word: word, level: level }))))
   return await Questions(data, words, roots)
 }
