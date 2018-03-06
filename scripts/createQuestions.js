@@ -1,19 +1,33 @@
 const _ = require('underscore')
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const { get } = require('lodash')
 
-const cache = require('../cache')
+const db = require('../databases/accounts/index')
+
 const QuestionController = require('../controllers/question')
 
+var questionSchema = new Schema({
+  key: { type: String, required: true },
+  data: { type: String, required: true }
+})
+
+const Question = db.model('Question', questionSchema)
+
 module.exports.cache = async () => {
-  let questions = await QuestionController.all()
-  questions = _.flatten(questions.map(q => [`${q.word}-${q.level}`, JSON.stringify(q)]))
-  // Cache questions
-  console.log({ level: 'info', message: `Saving ${questions.length / 2} questions.` })
-  cache.hmset(...['questions', questions])
+  const questions = await QuestionController.all()
+  const docs = questions.map(q => (new Question({ key: q.key, data: JSON.stringify(q) })))
 
-  // Close connections
-  if (process.env.NODE_ENV !== 'test') { mongoose.connection.close(); }
-  cache.unref()
+  await Question.remove({})
 
-  return
+  Question.collection.insert(docs, (err, docs) => {
+    if (err) {
+      console.log('Error: ' + err)
+    } else {
+      console.log('Saved ' + get(docs, 'insertedCount') + ' docs succesfully.')
+    }
+
+    if (process.env.NODE_ENV !== 'test') { mongoose.connection.close(); }
+    return    
+  })
 }

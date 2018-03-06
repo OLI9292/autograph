@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 const _ = require('underscore')
 const { get } = require('lodash');
 
+const db = require('../databases/accounts/index')
 const Word = require('./word')
 const Root = require('./root')
 const cache = require('../cache')
@@ -180,33 +182,43 @@ const TYPES = {
 const SPELL_TYPES = [6, 7, 8, 10]
 const BUTTON_TYPES = _.difference(_.range(1, 11), SPELL_TYPES)
 
+var questionSchema = new Schema({
+  key: { type: String, required: true },
+  data: { type: String, required: true }
+})
+
+const Question = db.model('Question', questionSchema)
+
 module.exports = async (data, words, roots) => { 
   const oneQuestion = !_.isArray(data)
   if (oneQuestion) { data = [data] }
 
-  cache.hgetall('questions', async (err, cached) => {
-
-    const promises = _.map(data, async elem => {
-      try {
-        const key = `${get(elem.word, 'value')}-${elem.level}`;
-        return cached[key]
-          ? JSON.parse(cached[key])
-          : _.sample(TYPES[elem.level])(roots, words, elem.word)
-      } catch (error) {
-        return { error: error }
+  const promises = _.map(data, async elem => {
+    try {
+      const key = get(elem.word, 'value') + '-' + elem.level
+      const result = await Question.findOne({ key: key })
+      if (result) {
+        console.log(1)
+        return JSON.parse(result.data)
+      } else {
+        console.log(2)
+        return _.sample(TYPES[elem.level])(roots, words, elem.word)
       }
-    })
-
-    let questions = _.reject((await Promise.all(promises)), question => question.error)
-
-    // Add type, word, and shuffle choices
-    questions = _.map(questions, (q, i) => _.extend({}, q, {
-      type: TYPES[data[i].level][0].name,
-      level: data[i].level,
-      word: data[i].word.value,
-      choices: _.contains(SPELL_TYPES, data[i].level) ? q.choices : _.shuffle(q.choices)
-    }))
-
-    return oneQuestion ? _.first(questions) : questions
+    } catch (error) {
+      return { error: error }
+    }
   })
+
+  let questions = _.reject((await Promise.all(promises)), question => question.error)
+
+  // Add type, word, and shuffle choices
+  questions = _.map(questions, (q, i) => _.extend({}, q, {
+    key: data[i].word.value + '-' + data[i].level,
+    type: TYPES[data[i].level][0].name,
+    level: data[i].level,
+    word: data[i].word.value,
+    choices: _.contains(SPELL_TYPES, data[i].level) ? q.choices : _.shuffle(q.choices)
+  }))
+
+  return oneQuestion ? _.first(questions) : questions
 }
