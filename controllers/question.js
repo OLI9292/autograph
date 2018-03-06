@@ -1,3 +1,4 @@
+const moment = require('moment')
 const mongoose = require('mongoose')
 const _ = require('underscore')
 const { chunk, get } = require('lodash');
@@ -57,15 +58,14 @@ const randomWords = async (user, level, hardcoded, wordDocs) => {
   }
 }
 
-const wordsAndLevels = (wordValues, wordDocs, user, questionLevel) => {
-  return _.filter(_.map(wordValues, word => {
-    const doc = _.find(wordDocs, w => w.value === word)
+const wordsAndLevels = (words, user, questionLevel) => {
+  return _.map(words, word => {
     const userWord = user && _.find(user.words, w => w.name === word)
     const level = questionLevel
       ? _.isArray(questionLevel) ? _.sample(questionLevel) : questionLevel
       : userWord ? userWord.experience : 1
-    return doc ? { level: level, word: doc } : null
-  }), o => o)
+    return { word: word, level: level }
+  })
 }
 
 const wordsForStage = (level, stage) => {
@@ -89,10 +89,10 @@ const questions = {
     return await Questions(questionData, words, roots)
   },
 
-  forExploreLevel: async (data, questionLevel) => {
-    const { level, user, words, roots } = data
-    const questionData = wordsAndLevels(_.shuffle(level.words), words, user, questionLevel)
-    return await Questions(questionData, words, roots)
+  forExploreLevel: async (data, questionLevel, start) => {
+    const { level, user } = data
+    const questionData = wordsAndLevels(_.shuffle(level.words), user, questionLevel)
+    return await Questions(questionData)
   },  
 
   forSpeedLevel: async data => {
@@ -118,27 +118,27 @@ const docs = async query => {
 
   const level = await Level.doc(id)
   const user = await User.doc(user_id)
-  const words = await Word.docs()
-  const roots = await Root.docs()
   
   return {
     level: level,
     user: user,
-    roots: roots,
-    words: words,
     stage: stage,
     seed: seed
   }
 }
 
-exports.read = async (req, res, next) => {
-  const data = await docs(req.query)
+const timeSince = start => moment.duration(moment().diff(start))._data
 
+exports.read = async (req, res, next) => {
+  const start = moment()
+
+  const data = await docs(req.query)
+  
   const result = await (async () => {
     switch (req.query.type) {
     case 'demo':        return await questions.forDemoLevel(data)
     case 'train':       return await questions.forTrainLevel(data)
-    case 'explore':     return await questions.forExploreLevel(data, req.query.questionLevel)
+    case 'explore':     return await questions.forExploreLevel(data, req.query.questionLevel, start)
     case 'speed':       return await questions.forSpeedLevel(data)
     case 'multiplayer': return await questions.forMultiplayerLevel(data)
     default:            return { error: 'Invalid type.' }

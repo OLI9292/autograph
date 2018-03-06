@@ -189,27 +189,16 @@ var questionSchema = new Schema({
 
 const Question = db.model('Question', questionSchema)
 
-module.exports = async (data, words, roots) => { 
+module.exports = async (data) => { 
   const oneQuestion = !_.isArray(data)
   if (oneQuestion) { data = [data] }
 
-  const promises = _.map(data, async elem => {
-    try {
-      const key = get(elem.word, 'value') + '-' + elem.level
-      const result = await Question.findOne({ key: key })
-      if (result) {
-        console.log(1)
-        return JSON.parse(result.data)
-      } else {
-        console.log(2)
-        return _.sample(TYPES[elem.level])(roots, words, elem.word)
-      }
-    } catch (error) {
-      return { error: error }
-    }
-  })
 
-  let questions = _.reject((await Promise.all(promises)), question => question.error)
+  const keys = _.map(data, elem => elem.word + '-' + elem.level)
+  let questions = await Question.find({ key: { $in: keys } })
+  questions = _.map(questions, question => JSON.parse(question.data))
+  
+  // return _.sample(TYPES[elem.level])('roots', 'words', elem.word)
 
   // Add type, word, and shuffle choices
   questions = _.map(questions, (q, i) => _.extend({}, q, {
