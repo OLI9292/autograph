@@ -1,8 +1,10 @@
 const mongoose = require('mongoose')
 const _ = require('underscore')
+const { get } = require('lodash');
 
 const Word = require('./word')
 const Root = require('./root')
+const cache = require('../cache')
 
 const CHOICES_COUNT = 6
 const SPELL_CHOICES_COUNT = 12
@@ -148,7 +150,7 @@ const rootInWordToDef = (roots, words, word) => {
 const defToCharsAllRootsNoHighlight = (...args) => defToCharsAllRoots(...args)
 
 
-const sentenceCompletion = (roots, words, word, context) => {
+/*const sentenceCompletion = (roots, words, word, context) => {
   const underscores = word.value.split('').fill('_').join('')
   const normalPrompt = [{ value: context.replace(word.value, underscores), highlight: false }]
 
@@ -160,7 +162,7 @@ const sentenceCompletion = (roots, words, word, context) => {
     answer: [{ value: word.value, missing: true }],
     choices: choices
   }
-}
+}*/
 
 const TYPES = {
   '1': [defToOneRoot],
@@ -172,8 +174,7 @@ const TYPES = {
   '7': [defToCharsOneRoot],
   '8': [defToCharsAllRoots],
   '9': [rootInWordToDef],
-  '10': [defToCharsAllRootsNoHighlight],
-  'sentenceCompletion': [sentenceCompletion]
+  '10': [defToCharsAllRootsNoHighlight]
 }
 
 const SPELL_TYPES = [6, 7, 8, 10]
@@ -184,12 +185,20 @@ module.exports = async (data, words, roots) => {
   if (oneQuestion) { data = [data] }
 
   const promises = _.map(data, elem => {
-    return elem.level === 'sentenceCompletion'
-      ? sentenceCompletion(roots, words, elem.word, elem.context)
-      : _.sample(TYPES[elem.level])(roots, words, elem.word)
-  });
-  
-  let questions = await Promise.all(promises)
+    try {
+      const key = `${get(elem.word, 'value')}-${elem.level}`;
+      cache.hget('questions', key, (err, reply) => { 
+        return reply
+          ? JSON.parse(reply)
+          : Promise.resolve(_.sample(TYPES[elem.level])(roots, words, elem.word))
+      });
+    } catch (error) {
+      console.log(error.message)
+      return Promise.reject(new Error())
+    }
+  })  
+
+  let questions = await Promise.all(promises.map(p => p.catch(e => e))).then(res => res)
 
   // Add type, word, and shuffle choices
   questions = _.map(questions, (q, i) => _.extend({}, q, {

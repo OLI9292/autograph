@@ -1,3 +1,4 @@
+const db = require('../databases/accounts/index')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
@@ -24,6 +25,6 @@ const levelSchema = new Schema({
   words: [String]
 })
 
-const Level = mongoose.model('Level', levelSchema)
+const Level = db.model('Level', levelSchema)
 
 module.exports = Level

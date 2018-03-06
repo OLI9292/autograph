@@ -1,3 +1,4 @@
+const db = require('../databases/accounts/index')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
@@ -80,6 +81,6 @@ rootSchema.statics.createOrUpdateMultiple = async (words) => {
   }
 }
 
-const Root = mongoose.model('Root', rootSchema)
+const Root = db.model('Root', rootSchema)
 
 module.exports = Root

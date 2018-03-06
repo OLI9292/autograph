@@ -11,11 +11,11 @@ if (process.env.REDISTOGO_URL) {
 }
 
 client.on('connect', function() {
-  OLOG.log({ level: 'info', message: 'Redis connected' })
+  console.log({ level: 'info', message: 'Redis connected' })
 })
 
 client.on('error', function(error) {
-  OLOG.log({ level: 'error', message: error })
+  console.log({ level: 'error', message: error })
 })
 
 module.exports = client

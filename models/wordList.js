@@ -1,3 +1,4 @@
+const db = require('../databases/accounts/index')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
@@ -19,6 +20,6 @@ var wordListSchema = new Schema({
   isStudy: { type: Boolean, required: true, default: true }
 })
 
-const WordList = mongoose.model('WordList', wordListSchema)
+const WordList = db.model('WordList', wordListSchema)
 
 module.exports = WordList

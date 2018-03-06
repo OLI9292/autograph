@@ -1,3 +1,4 @@
+const db = require('../databases/accounts/index')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
@@ -10,6 +11,6 @@ var factoidSchema = new Schema({
   citation: { type: String, required: true }
 })
 
-const Factoid = mongoose.model('Factoid', factoidSchema)
+const Factoid = db.model('Factoid', factoidSchema)
 
 module.exports = Factoid

@@ -1,3 +1,4 @@
+const db = require('../databases/accounts/index')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore')
@@ -104,6 +105,6 @@ wordSchema.methods.defCompletionParams = function(roots) {
   return { prompt: { normal: prompt }, answer: { value: hiddenRoot.definition, hint: hiddenRoot.value } }
 }
 
-const Word = mongoose.model('Word', wordSchema)
+const Word = db.model('Word', wordSchema)
 
 module.exports = Word
