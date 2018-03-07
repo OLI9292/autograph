@@ -74,56 +74,57 @@ const wordsForStage = (level, stage) => {
 }
 
 const questions = {
-  forDemoLevel: async data => {
-    const { words, roots } = data
-    const questionData = wordsAndLevels(demoWords, words, null, 1)
-    return await Questions(questionData, words, roots)    
+  forDemoLevel: async () => {
+    const data = wordsAndLevels(demoWords, null, 1)
+    return await Questions(data)    
   },
 
-  forTrainLevel: async data => {
-    const { level, user, words, roots, stage } = data
+  forTrainLevel: async params => {
+    const { level, user, stage } = params
+    const words = await Word.find({})
     const hardcoded = wordsForStage(level, stage)
     const random = await randomWords(user, level, hardcoded, words)
     const all = _.union(_.shuffle(hardcoded), random)
-    const questionData = wordsAndLevels(all, words, user)
-    return await Questions(questionData, words, roots)
+    const data = wordsAndLevels(all, user)
+    return await Questions(data)
   },
 
-  forExploreLevel: async (data, questionLevel, start) => {
-    const { level, user } = data
-    const questionData = wordsAndLevels(_.shuffle(level.words), user, questionLevel)
-    return await Questions(questionData)
+  forExploreLevel: async params => {
+    const { level, questionLevel, user } = params
+    const data = wordsAndLevels(_.shuffle(level.words), user, questionLevel)
+    return await Questions(data)
   },  
 
-  forSpeedLevel: async data => {
-    const { level, user, words, roots } = data
+  forSpeedLevel: async params => {
+    const { level, user } = params
     const hardcoded = level.words
     const random = _.sample(_.pluck(user.words, 'name'), hardcoded.length)
     const all = _.shuffle(_.uniq(_.union(hardcoded, random)))
     const questionLevels = get(level.speed, 'inputType') === 'spell' ? SPELL_TYPES : BUTTON_TYPES
-    const questionData = wordsAndLevels(level.words, words, user, questionLevels)
+    const data = wordsAndLevels(level.words, user, questionLevels)
 
-    return await Questions(questionData, words, roots)
+    return await Questions(data)
   },
 
-  forMultiplayerLevel: async data => {
-    const { seed, user, words, roots } = data
-    const questionData = wordsAndLevels(_.shuffle(seed.split(',')), words, user)
-    return await Questions(questionData, words, roots)
+  forMultiplayerLevel: async params => {
+    const { seed, user } = params
+    const data = wordsAndLevels(_.shuffle(seed.split(',')), user)
+    return await Questions(data)
   }  
 }
 
-const docs = async query => {
-  const { id, stage, type, user_id, seed } = query
+const questionParams = async query => {
+  const { id, questionLevel, seed, stage, user_id } = query
 
   const level = await Level.doc(id)
   const user = await User.doc(user_id)
   
   return {
     level: level,
-    user: user,
+    questionLevel: questionLevel,
     stage: stage,
-    seed: seed
+    seed: seed,
+    user: user
   }
 }
 
@@ -132,15 +133,15 @@ const timeSince = start => moment.duration(moment().diff(start))._data
 exports.read = async (req, res, next) => {
   const start = moment()
 
-  const data = await docs(req.query)
+  const params = await questionParams(req.query)
   
   const result = await (async () => {
     switch (req.query.type) {
-    case 'demo':        return await questions.forDemoLevel(data)
-    case 'train':       return await questions.forTrainLevel(data)
-    case 'explore':     return await questions.forExploreLevel(data, req.query.questionLevel, start)
-    case 'speed':       return await questions.forSpeedLevel(data)
-    case 'multiplayer': return await questions.forMultiplayerLevel(data)
+    case 'demo':        return await questions.forDemoLevel()
+    case 'train':       return await questions.forTrainLevel(params)
+    case 'explore':     return await questions.forExploreLevel(params)
+    case 'speed':       return await questions.forSpeedLevel(params)
+    case 'multiplayer': return await questions.forMultiplayerLevel(params)
     default:            return { error: 'Invalid type.' }
     }
   })()
