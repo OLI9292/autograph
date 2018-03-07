@@ -6,7 +6,6 @@ const { get } = require('lodash');
 const db = require('../databases/accounts/index')
 const Word = require('./word')
 const Root = require('./root')
-const cache = require('../cache')
 
 const CHOICES_COUNT = 6
 const SPELL_CHOICES_COUNT = 12
@@ -25,7 +24,7 @@ const defToRoots = async (roots, words, word, cutToOneRoot = false) => {
   const choices = _.map(redHerrings, h => ({ value: h.value, hint: _.sample(h.definitions) })).concat(answerChoices)
   choices.forEach(c => c.value = upcase(c.value))
 
-  return { prompt: prompt, answer: answer, choices: choices, word: word.value }
+  return { prompt: prompt, answer: answer, choices: choices }
 }
 
 const defToChars = async (roots, words, word, cutToOneRoot = false) => {
@@ -52,11 +51,11 @@ const defToChars = async (roots, words, word, cutToOneRoot = false) => {
 
 // Level 1
 
-const defToOneRoot = (...args) => defToRoots(...args, true)
+const defToOneRoot = async (...args) => await defToRoots(...args, true)
 
 // Level 2
 
-const defToAllRoots = (...args) => defToRoots(...args)
+const defToAllRoots = async (...args) => await defToRoots(...args)
 
 // Level 3
 
@@ -77,7 +76,7 @@ const defCompletion = (roots, words, word) => {
 
 // Level 4 (no default highlight on client)
 
-const defToAllRootsNoHighlight = (...args) => defToAllRoots(...args)
+const defToAllRootsNoHighlight = async (...args) => await defToAllRoots(...args)
 
 // Level 5
 
@@ -96,27 +95,11 @@ const defToWord = (roots, words, word) => {
 
 // Level 6
 
-const defToCharsOneRoot = (...args) => defToChars(...args, true)
-
-// Level 7
-
-/*const wordToDef = (roots, words, word) => {
-  const prompt = { normal: [{ value: capitalize(word.value), highlight: false }] };
-
-  const answer = { value: word.fullDefinition(), missing: true }
-  const redHerrings = _.map(_.sample(_.reject(words, w => w.value === word.value), 3), w => ({ value: w.fullDefinition() }))
-  const choices = redHerrings.concat(_.pick(answer, 'value'))
-
-  return {
-    prompt: prompt,
-    answer: [answer],
-    choices: choices
-  }
-}*/
+const defToCharsOneRoot = async (...args) => await defToChars(...args, true)
 
 // Level 8
 
-const defToCharsAllRoots = (...args) => defToChars(...args)
+const defToCharsAllRoots = async (...args) => await defToChars(...args)
 
 // Level 9
 
@@ -149,22 +132,7 @@ const rootInWordToDef = (roots, words, word) => {
 
 // Level 10 (no default highlight on client)
 
-const defToCharsAllRootsNoHighlight = (...args) => defToCharsAllRoots(...args)
-
-
-/*const sentenceCompletion = (roots, words, word, context) => {
-  const underscores = word.value.split('').fill('_').join('')
-  const normalPrompt = [{ value: context.replace(word.value, underscores), highlight: false }]
-
-  const redHerrings =  _.sample(_.reject(words, w => w.value === word.value), 5);
-  const choices = redHerrings.concat({ value: word.value })
-
-  return {
-    prompt: { normal: normalPrompt },
-    answer: [{ value: word.value, missing: true }],
-    choices: choices
-  }
-}*/
+const defToCharsAllRootsNoHighlight = async (...args) => await defToCharsAllRoots(...args)
 
 const TYPES = {
   '1': [defToOneRoot],
@@ -173,7 +141,7 @@ const TYPES = {
   '4': [defToAllRootsNoHighlight],
   '5': [defToWord],
   '6': [defToCharsOneRoot],
-  '7': [defToCharsOneRoot],
+  '7': [defToCharsOneRoot], // Repeat
   '8': [defToCharsAllRoots],
   '9': [rootInWordToDef],
   '10': [defToCharsAllRootsNoHighlight]
@@ -182,32 +150,42 @@ const TYPES = {
 const SPELL_TYPES = [6, 7, 8, 10]
 const BUTTON_TYPES = _.difference(_.range(1, 11), SPELL_TYPES)
 
+// Question Model
 var questionSchema = new Schema({
   key: { type: String, required: true },
   data: { type: String, required: true }
 })
 
 const Question = db.model('Question', questionSchema)
+exports.Question = Question
 
-module.exports = async (data) => { 
-  const oneQuestion = !_.isArray(data)
-  if (oneQuestion) { data = [data] }
+// Create every possible question daily via script
+exports.createQuestions = async (data, words, roots) => { 
+  const promises = _.map(data, async elem => {
+    const { level, word } = elem
+    const wordValue = get(word, 'value')
+    try {
+      const question = await _.sample(TYPES[1])(roots, words, word)
+      return _.extend({}, question, {
+        level: level,
+        word: wordValue,
+        key: wordValue + '-' + level,
+        type: TYPES[level][0].name,
+        choices: _.contains(SPELL_TYPES, level) ? question.choices : _.shuffle(question.choices)        
+      })
+    } catch (error) {
+      return { error: { message: get(word, 'value') + ' - ' + error.message } }
+    }
+  })
 
+  let [questions, errors] = _.partition((await Promise.all(promises)), elem => !elem.error);  
+  console.log({ errors: errors.length ? errors : 'none' })
+  return questions
+}
 
+// Get question via array of [word, level]
+exports.getQuestions = async data => { 
   const keys = _.map(data, elem => elem.word + '-' + elem.level)
   let questions = await Question.find({ key: { $in: keys } })
-  questions = _.map(questions, question => JSON.parse(question.data))
-  
-  // return _.sample(TYPES[elem.level])('roots', 'words', elem.word)
-
-  // Add type, word, and shuffle choices
-  questions = _.map(questions, (q, i) => _.extend({}, q, {
-    key: data[i].word.value + '-' + data[i].level,
-    type: TYPES[data[i].level][0].name,
-    level: data[i].level,
-    word: data[i].word.value,
-    choices: _.contains(SPELL_TYPES, data[i].level) ? q.choices : _.shuffle(q.choices)
-  }))
-
-  return oneQuestion ? _.first(questions) : questions
+  return _.map(questions, question => JSON.parse(question.data))
 }

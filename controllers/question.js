@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const _ = require('underscore')
 const { chunk, get } = require('lodash');
 
-const Questions = require('../models/question')
+const { createQuestions, getQuestions } = require('../models/question')
 const Word = require('../models/word')
 const Level = require('../models/level')
 const Lesson = require('../models/lesson')
@@ -76,7 +76,7 @@ const wordsForStage = (level, stage) => {
 const questions = {
   forDemoLevel: async () => {
     const data = wordsAndLevels(demoWords, null, 1)
-    return await Questions(data)    
+    return await getQuestions(data)
   },
 
   forTrainLevel: async params => {
@@ -86,13 +86,13 @@ const questions = {
     const random = await randomWords(user, level, hardcoded, words)
     const all = _.union(_.shuffle(hardcoded), random)
     const data = wordsAndLevels(all, user)
-    return await Questions(data)
+    return await getQuestions(data)
   },
 
   forExploreLevel: async params => {
     const { level, questionLevel, user } = params
     const data = wordsAndLevels(_.shuffle(level.words), user, questionLevel)
-    return await Questions(data)
+    return await getQuestions(data)
   },  
 
   forSpeedLevel: async params => {
@@ -102,14 +102,13 @@ const questions = {
     const all = _.shuffle(_.uniq(_.union(hardcoded, random)))
     const questionLevels = get(level.speed, 'inputType') === 'spell' ? SPELL_TYPES : BUTTON_TYPES
     const data = wordsAndLevels(level.words, user, questionLevels)
-
-    return await Questions(data)
+    return await getQuestions(data)
   },
 
   forMultiplayerLevel: async params => {
     const { seed, user } = params
     const data = wordsAndLevels(_.shuffle(seed.split(',')), user)
-    return await Questions(data)
+    return await getQuestions(data)
   }  
 }
 
@@ -139,7 +138,7 @@ exports.read = async (req, res, next) => {
     switch (req.query.type) {
     case 'demo':        return await questions.forDemoLevel()
     case 'train':       return await questions.forTrainLevel(params)
-    case 'explore':     return await questions.forExploreLevel(params)
+    case 'explore':     return await questions.forExploreLevel(params, start)
     case 'speed':       return await questions.forSpeedLevel(params)
     case 'multiplayer': return await questions.forMultiplayerLevel(params)
     default:            return { error: 'Invalid type.' }
@@ -153,8 +152,8 @@ exports.read = async (req, res, next) => {
 
 exports.all = async () => {
   const words = await Word.docs()
-  const roots = await Root.docs()  
+  const roots = await Root.docs()
   const levels = _.range(1, 11)
   const data = _.flatten(_.map(words, word => _.map(levels, level => ({ word: word, level: level }))))
-  return await Questions(data, words, roots)
+  return await createQuestions(data, words, roots)
 }
