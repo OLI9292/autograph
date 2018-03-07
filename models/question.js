@@ -186,6 +186,7 @@ exports.createQuestions = async (data, words, roots) => {
 // Get question via array of [word, level]
 exports.getQuestions = async data => { 
   const keys = _.map(data, elem => elem.word + '-' + elem.level)
-  let questions = await Question.find({ key: { $in: keys } })
-  return _.map(questions, question => JSON.parse(question.data))
+  const questions = await Question.find({ key: { $in: keys } })
+  const parsed = _.map(questions, question => JSON.parse(question.data))
+  return _.sortBy(parsed, question => keys.indexOf(question.key));
 }

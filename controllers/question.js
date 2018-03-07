@@ -84,7 +84,7 @@ const questions = {
     const words = await Word.find({})
     const hardcoded = wordsForStage(level, stage)
     const random = await randomWords(user, level, hardcoded, words)
-    const all = _.union(_.shuffle(hardcoded), random)
+    const all = _.union(hardcoded, random)
     const data = wordsAndLevels(all, user)
     return await getQuestions(data)
   },
