@@ -55,7 +55,7 @@ const userSchema = new Schema({
         progress: [
           {
             type: { type: String, required: true },
-            stage: { type: Number, min: 1 },
+            stage: { type: Number, min: 0 },
             bestScore: { type: Number, min: 0 },
             bestAccuracy: { type: Number, min: 0, max: 1, required: true },
             bestTime: { type: Number, min: 0, required: true }
