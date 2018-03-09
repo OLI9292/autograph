@@ -104,7 +104,8 @@ exports.completedLevel = async (req, res, next) => {
     stage,
     accuracy,
     time,
-    score
+    score,
+    type
   } = req.body
 
   User.findById(req.params.id, async (error, user) => {
@@ -123,7 +124,7 @@ exports.completedLevel = async (req, res, next) => {
         const userStage = user.levels[userLevelIdx].progress[userStageIdx]
         user.levels[userLevelIdx].progress[userStageIdx] = {
           stage: stage,
-          type: 'train',
+          type: type,
           bestTime: Math.min(time, userStage.bestTime),
           bestAccuracy: Math.max(accuracy, userStage.bestAccuracy),
           bestScore: Math.max(score, userStage.bestScore)
@@ -131,7 +132,7 @@ exports.completedLevel = async (req, res, next) => {
       } else {                                                    
         const progress = { 
           stage: stage,
-          type: 'train',
+          type: type,
           bestTime: time,
           bestAccuracy: accuracy,
           bestScore: score 

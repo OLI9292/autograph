@@ -165,7 +165,7 @@ exports.createQuestions = async (data, words, roots) => {
     const { level, word } = elem
     const wordValue = get(word, 'value')
     try {
-      const question = await _.sample(TYPES[1])(roots, words, word)
+      const question = await _.sample(TYPES[level])(roots, words, word)
       return _.extend({}, question, {
         level: level,
         word: wordValue,
@@ -174,12 +174,12 @@ exports.createQuestions = async (data, words, roots) => {
         choices: _.contains(SPELL_TYPES, level) ? question.choices : _.shuffle(question.choices)        
       })
     } catch (error) {
-      return { error: { message: get(word, 'value') + ' - ' + error.message } }
+      return { error: get(word, 'value') + ' - ' + error.message }
     }
   })
 
   let [questions, errors] = _.partition((await Promise.all(promises)), elem => !elem.error);  
-  console.log({ errors: errors.length ? errors : 'none' })
+  console.log({ errors: errors.length ? _.pluck(errors, 'message') : 'none' })
   return questions
 }
 
