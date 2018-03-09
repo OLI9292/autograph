@@ -27,6 +27,7 @@ const userSchema = new Schema({
   optedIntoEmail: Boolean,
   password: String,
   roundsCompleted: { type: Number, required: true, default: 0 },
+  role: String,
   school: Schema.Types.ObjectId,
   signUpMethod: {
     type: String, 
@@ -46,6 +47,22 @@ const userSchema = new Schema({
       }
     ],
     default: []
+  },
+  levels: {
+    type: [
+      {
+        id: { type: Schema.Types.ObjectId, required: true },
+        progress: [
+          {
+            type: { type: String, required: true },
+            stage: { type: Number, min: 0 },
+            bestScore: { type: Number, min: 0 },
+            bestAccuracy: { type: Number, min: 0, max: 1, required: true },
+            bestTime: { type: Number, min: 0, required: true }
+          }
+        ]
+      }
+    ]
   }
 })
 

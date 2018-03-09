@@ -1,4 +1,7 @@
-const redis = require('redis')
+const redis = require('redis');
+const bluebird = require('bluebird');
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype);
 
 let client
 
@@ -11,11 +14,11 @@ if (process.env.REDISTOGO_URL) {
 }
 
 client.on('connect', function() {
-  console.log('Redis connected')
+  console.log({ level: 'info', message: 'Redis connected' })
 })
 
-client.on('error', function(err) {
-  console.log('Error ' + err)
+client.on('error', function(error) {
+  console.log({ level: 'error', message: error })
 })
 
 module.exports = client

@@ -4,6 +4,7 @@ const _ = require('underscore')
 
 const Class = require('../models/class')
 const School = require('../models/school')
+const Level = require('../models/level')
 const User = require('../models/user')
 
 const recordEvent = require('../middlewares/recordEvent');
@@ -42,7 +43,7 @@ const createUser = async (data) => {
     await user.save()
     return user
   } catch (error) {
-    return { error: 'Something went wrong.' }
+    return { error: error.message }
   }
 }
 
@@ -97,6 +98,62 @@ exports.read = async (req, res, next) => {
 // UPDATE
 //
 
+exports.completedLevel = async (req, res, next) => {
+  const {
+    levelId,
+    stage,
+    accuracy,
+    time,
+    score,
+    type
+  } = req.body
+
+  User.findById(req.params.id, async (error, user) => {
+    if (error) { return res.status(422).send({ error: error.message }); }
+    if (!user) { return res.status(422).send({ error: 'User not found.' }); }
+    
+    Level.findById(levelId, async (error, level) => {
+      if (error) { return res.status(422).send({ error: error.message }); }
+      if (!level) { return res.status(422).send({ error: 'Level not found.' }); }
+
+      const userLevelIdx = _.findIndex(user.levels, l => l.id.equals(level._id))
+      
+      const userStageIdx = userLevelIdx > -1 && _.findIndex(user.levels[userLevelIdx].progress, p => p.stage === stage)
+      
+      if (userLevelIdx > -1 && userStageIdx > -1) { // updates a previously played stage
+        const userStage = user.levels[userLevelIdx].progress[userStageIdx]
+        user.levels[userLevelIdx].progress[userStageIdx] = {
+          stage: stage,
+          type: type,
+          bestTime: Math.min(time, userStage.bestTime),
+          bestAccuracy: Math.max(accuracy, userStage.bestAccuracy),
+          bestScore: Math.max(score, userStage.bestScore)
+        } 
+      } else {                                                    
+        const progress = { 
+          stage: stage,
+          type: type,
+          bestTime: time,
+          bestAccuracy: accuracy,
+          bestScore: score 
+        };
+        if (userLevelIdx > -1) { // creates a new stage for a previously played level           
+          user.levels[userLevelIdx].progress.push(progress);
+        } else { // creates a new stage for a new level
+          user.levels.push({ id: level._id, progress: progress });
+        }
+      }
+
+      try {
+        await user.save()
+        return res.status(200).send(user)
+      } catch (error) {
+        return res.status(422).send({ error: error.message })
+      }
+    })
+  })
+}
+
 exports.update2 = async (req, res, next) => {
   User.update({ _id: req.params.id }, req.body, async (error, result) => {
     if (error) { return res.status(422).send({ error: error.message }) }
@@ -137,7 +194,7 @@ const updateFromWeb = async (req, res, next) => {
           const copy = user.words[idx]
           copy.seen += 1
           copy.correct += s.correct ? 1 : 0
-          copy.experience += s.difficulty >= copy.experience && s.correct ? 1 : 0
+          copy.experience = Math.min(10, (s.correct ? (copy.experience + 1) : copy.experience))
           copy.timeSpent += s.time || 0
           user.words[idx] = copy
 
@@ -156,11 +213,6 @@ const updateFromWeb = async (req, res, next) => {
       // Update weekly experience
       const newExperience = user.words.reduce((acc, w) => acc + w.experience, 0);
       user.weeklyStarCount = user.weeklyStarCount + (newExperience - oldExperience);
-
-      // Update word list completion
-      if (req.body.wordList) {
-        user.wordListsCompleted = _.uniq(_.union(user.wordListsCompleted || [], [req.body.wordList]));
-      }
 
       try {
         await user.save()

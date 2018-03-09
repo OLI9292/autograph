@@ -10,7 +10,7 @@ const findUser = async (id) => {
     const db = await MongoClient.connect(CONFIG.MONGODB_URI)
     return await db.collection('users').findOne({ _id: ObjectId(id) })
   } catch (error) {
-    return
+    return { error: error.message }
   }
 }
 
@@ -45,16 +45,16 @@ module.exports = async (req, res, next) => {
 
       const user = await findUser(key)
 
-      if (user) {
+      if (user.error) {
+        return res.status(401).send({ error: user.error })
+      } else {
         if (isAdmin(user) && requiresAdmin(req.url))  {
           req.sessionId = sessionId
           req.userId = key
           next()
         } else {
           return res.status(403).send({ error: 'Not authorized.' })
-        }
-      } else {
-        return res.status(401).send({ error: 'Invalid user.' })
+        }        
       }
     } catch (error) {
       return res.status(500).send({ error: 'Something went wrong.' })

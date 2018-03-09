@@ -7,19 +7,16 @@ const mongoose = require('mongoose')
 const server = require('../server')
 const should = chai.should()
 
-const { cleanDB, seedDB } = require('../scripts/seedDB');
-
 const Lesson = require('../models/lesson')
+const lessonMock = require('./mocks/lesson').mock
 
-const lessonMock = require('./mocks/lesson').mock;
+const { cleanDB, seedDB } = require('../scripts/seedDB');
 
 chai.use(chaiHttp)
 
 describe('Lessons', () => {
   describe('/GET lesson', () => {
-    before(async () => {
-      await seedDB()
-    })
+    before(async () => await seedDB())
 
     it('it should GET all the lessons', (done) => {
       chai.request(server)

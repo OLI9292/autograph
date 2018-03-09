@@ -1,6 +1,6 @@
 const query = require('./query');
 const sql = require('./sql');
-const questionMocks = require('../../test/mocks/question').mocks;
+const questionMocks = require('../../test/mocks/loggedQuestion').mocks;
 const sessionMocks = require('../../test/mocks/session').mocks;
 
 const seed = async () => {

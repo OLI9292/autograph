@@ -14,6 +14,7 @@ const QUESTION_FIELD_DATA = [
   { name: 'time_spent', datatype: 'float', options: ['not null', 'check(time_spent > 0)'] },
   { name: 'type', datatype: 'varchar(60)', options: ['not null'] },
   { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] },
+  { name: 'session_id', datatype: 'varchar(60)', options: [] },
   { name: 'word', datatype: 'varchar(40)', options: [] },
   { name: 'answers', datatype: 'json', options: [] },
   { name: 'choices', datatype: 'json', options: [] }
@@ -23,9 +24,9 @@ const QUESTION_FIELD_NAMES = _.pluck(QUESTION_FIELD_DATA.slice(1), 'name').sort(
 const QUESTION_FIELDS = QUESTION_FIELD_DATA.map(f => `${f.name} ${f.datatype} ${f.options.join(' ')}`);
 
 const SESSION_FIELD_DATA = [
-  { name: 'id', datatype: 'varchar(60)', options: ['primary key'] },
-  { name: 'user_id', datatype: 'varchar(40)', options: ['not null'] },
-  { name: 'session_id', datatype: 'varchar(40)', options: ['not null'] },
+  { name: 'id', datatype: 'varchar(120)', options: ['primary key'] },
+  { name: 'user_id', datatype: 'varchar(60)', options: ['not null'] },
+  { name: 'session_id', datatype: 'varchar(60)', options: ['not null'] },
   { name: 'ip', datatype: 'varchar(60)', options: ['not null'] },
   { name: 'date', datatype: 'varchar(30)', options: ['not null'] },
   { name: 'start', datatype: 'varchar(30)', options: ['not null'] },
@@ -63,7 +64,7 @@ exports.saveQuestion = data => {
 
 exports.saveSession = data => {
   const [keys, values] = [_.keys(data), _.values(data)];
-  console.log('Saving session: ' + data.id);
+  OLOG.log({ level: 'info', message: 'Saving session: ' + data.id });
   return [`INSERT INTO sessions(${keys.join(', ')}) ${valueText(keys.length)};`, values];
 }
 

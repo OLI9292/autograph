@@ -12,6 +12,7 @@ const User = require('../models/user')
 
 const schoolMock = require('./mocks/school').mock;
 const userMock = require('./mocks/user').mock;
+const levelData = require('./mocks/level');
 const userMocks = require('./mocks/user').mocks;
 const { cleanDB, seedDB } = require('../scripts/seedDB');
 
@@ -189,6 +190,83 @@ describe('Users', () => {
     })
   });
 
+  describe('PATCH /completedLevel', () => {
+    beforeEach(async () => await seedDB())
+
+    it('it should UPDATE a users stats for a previously played stage', (done) => {
+      const userId = userMock._id;
+      const levelId = levelData.mock._id;
+      const userStage = _.find(userMock.levels, l => l.id === levelId).progress[0];
+      const stage = 1;
+      const accuracy = 0.74;
+      const score = 1000;
+      const time = 50;
+      chai.request(server)
+        .patch(`/api/v2/auth/user/${userId}/completedLevel`)
+        .send({ levelId: levelId, stage: stage, accuracy: accuracy, score: score, time: time })
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.levels.should.be.a('array').lengthOf(1)
+            res.body.levels[0].should.have.property('id').eql(levelId)
+            res.body.levels[0].progress.should.be.a('array').lengthOf(1)
+            res.body.levels[0].progress[0].stage.should.eql(1)
+            res.body.levels[0].progress[0].bestAccuracy.should.eql(Math.max(accuracy, userStage.bestAccuracy))
+            res.body.levels[0].progress[0].bestScore.should.eql(Math.max(score, userStage.bestScore))
+            res.body.levels[0].progress[0].bestTime.should.eql(Math.min(time, userStage.bestTime))
+          done()
+      })
+    })
+
+    it('it should UPDATE a users stats for a new stage on a previously played level', (done) => {
+      const userId = userMock._id;
+      const levelId = levelData.mock._id;
+      const stage = 2;
+      const accuracy = 0.74;
+      const score = 1000;
+      const time = 50;
+      chai.request(server)
+        .patch(`/api/v2/auth/user/${userId}/completedLevel`)
+        .send({ levelId: levelId, stage: stage, accuracy: accuracy, score: score, time: time })
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.levels.should.be.a('array').lengthOf(1)
+            res.body.levels[0].should.have.property('id').eql(levelId)
+            res.body.levels[0].progress.should.be.a('array').lengthOf(2)
+            res.body.levels[0].progress[1].stage.should.eql(2)
+            res.body.levels[0].progress[1].bestAccuracy.should.eql(accuracy)
+            res.body.levels[0].progress[1].bestScore.should.eql(score)
+            res.body.levels[0].progress[1].bestTime.should.eql(time)
+          done()
+      })
+    })
+
+    it('it should UPDATE a users stats for a new stage on a new level', (done) => {
+      const userId = userMocks[1]._id;
+      const levelId = levelData.mock._id;
+      const stage = 1;
+      const accuracy = 0.74;
+      const score = 1000;
+      const time = 50;
+      chai.request(server)
+        .patch(`/api/v2/auth/user/${userId}/completedLevel`)
+        .send({ levelId: levelId, stage: stage, accuracy: accuracy, score: score, time: time })
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            res.body.levels.should.be.a('array').lengthOf(1)
+            res.body.levels[0].should.have.property('id').eql(levelId)
+            res.body.levels[0].progress.should.be.a('array').lengthOf(1)
+            res.body.levels[0].progress[0].stage.should.eql(1)
+            res.body.levels[0].progress[0].bestAccuracy.should.eql(accuracy)
+            res.body.levels[0].progress[0].bestScore.should.eql(score)
+            res.body.levels[0].progress[0].bestTime.should.eql(time)
+          done()
+      })
+    })
+  });  
+
   describe('/PATCH/joinSchool user', () => {
     before(async () => await seedDB())
 
@@ -226,7 +304,7 @@ describe('Users', () => {
             res.body.should.be.a('object')
             res.body.should.have.property('words')
             res.body.should.have.property('weeklyStarCount').eql(userMock.weeklyStarCount + 2)
-            res.body.words.should.be.a('array').lengthOf(3)
+            res.body.words.should.be.a('array')
             res.body.should.be.a('object')
           done()
         })
