@@ -7,7 +7,7 @@ const CONFIG = require('../config/main')
 const findUser = async (id) => {
   if (!ObjectId.isValid(id)) { return }
   try {
-    const db = await MongoClient.connect(CONFIG.MONGODB_URI)
+    const db = mongoose.createConnection(CONFIG.MONGODB_URI, { promiseLibrary: global.Promise })
     return await db.collection('users').findOne({ _id: ObjectId(id) })
   } catch (error) {
     return { error: error.message }
@@ -42,15 +42,11 @@ module.exports = async (req, res, next) => {
     try {
       const decoded = jwt.decode(token, CONFIG.VALIDATION_TOKEN)
       if (decoded.exp <= Date.now()) { return res.status(400).send('Token expired.') }
-
       const user = await findUser(key)
-
       if (user.error) {
         return res.status(401).send({ error: user.error })
       } else {
         if (isAdmin(user) && requiresAdmin(req.url))  {
-          req.sessionId = sessionId
-          req.userId = key
           next()
         } else {
           return res.status(403).send({ error: 'Not authorized.' })
