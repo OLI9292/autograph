@@ -1,18 +1,6 @@
 const jwt = require('jwt-simple')
-const MongoClient = require('mongodb').MongoClient
-const ObjectId = require('mongoose').Types.ObjectId
-
+const User = require('../models/user')
 const CONFIG = require('../config/main')
-
-const findUser = async (id) => {
-  if (!ObjectId.isValid(id)) { return }
-  try {
-    const db = mongoose.createConnection(CONFIG.MONGODB_URI, { promiseLibrary: global.Promise })
-    return await db.collection('users').findOne({ _id: ObjectId(id) })
-  } catch (error) {
-    return { error: error.message }
-  }
-}
 
 const isAdmin = (user) => user.role === 'admin'
 const requiresAdmin = (url) => url.indexOf('admin') >= 0
@@ -23,7 +11,7 @@ module.exports = async (req, res, next) => {
     || (req.query && req.query.access_token)
     || req.headers['access-token']
 
-  const key = (req.body && req.body.x_key)
+  const userId = (req.body && req.body.x_key)
     || (req.query && req.query.x_key)
     || req.headers['key']
 
@@ -33,24 +21,26 @@ module.exports = async (req, res, next) => {
 
   if (!requiresAdmin(req.url)) {
     req.sessionId = sessionId
-    req.userId = key
+    req.userId = userId
     next()
     return
   }        
     
-  if (token || key) {
+  if (token || userId) {
     try {
       const decoded = jwt.decode(token, CONFIG.VALIDATION_TOKEN)
       if (decoded.exp <= Date.now()) { return res.status(400).send('Token expired.') }
-      const user = await findUser(key)
-      if (user.error) {
-        return res.status(401).send({ error: user.error })
-      } else {
+      
+      const user = await User.findById(userId)
+      
+      if (user) {
         if (isAdmin(user) && requiresAdmin(req.url))  {
           next()
         } else {
           return res.status(403).send({ error: 'Not authorized.' })
-        }        
+        }           
+      } else {  
+        return res.status(401).send({ error: user.error })
       }
     } catch (error) {
       return res.status(500).send({ error: 'Something went wrong.' })
