@@ -31,7 +31,7 @@ exports.create = async (req, res, next) => {
   } else {
     const result = await createFactoid(data)
     const statusCode = result.error ? 422 : 201
-    return res.status(statusCode).send(response)
+    return res.status(statusCode).send(result)
   }
 }
 

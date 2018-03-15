@@ -30,9 +30,9 @@ module.exports = async (req, res, next) => {
     try {
       const decoded = jwt.decode(token, CONFIG.VALIDATION_TOKEN)
       if (decoded.exp <= Date.now()) { return res.status(400).send('Token expired.') }
-      
+
       const user = await User.findById(userId)
-      
+
       if (user) {
         if (isAdmin(user) && requiresAdmin(req.url))  {
           next()
@@ -40,7 +40,7 @@ module.exports = async (req, res, next) => {
           return res.status(403).send({ error: 'Not authorized.' })
         }           
       } else {  
-        return res.status(401).send({ error: user.error })
+        return res.status(401).send({ error: 'User not found.' })
       }
     } catch (error) {
       return res.status(500).send({ error: 'Something went wrong.' })
