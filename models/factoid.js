@@ -5,13 +5,12 @@ const _ = require('underscore')
 
 var factoidSchema = new Schema({
   value: { type: String, required: true },
-  word: { type: String, required: true },
   words: [String],
   excludedWords: [String],
   lastEditedBy: String,
   language: String,
   level: { type: Number, min: 1, max: 10 },
-  citation: { type: String, required: true }
+  citation: String
 })
 
 const Factoid = db.model('Factoid', factoidSchema)
