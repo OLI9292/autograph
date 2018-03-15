@@ -37,14 +37,12 @@ const search = async (filepath, cb) => {
 
     grep.on('close', (code) => {
       const uniqueMatches = _.flatten(allMatches)
-      
-      let grouped = _.groupBy(uniqueMatches, m => m.lineNo)
-      
-      grouped = _.values(_.mapObject(grouped), (matches, lineNo) => ({
+
+      const grouped = _.values(_.mapObject(_.groupBy(uniqueMatches, m => m.lineNo), (matches, lineNo) => ({
         lineNo: lineNo,
         context: matches[0].context,
         words: _.pluck(matches, 'word').sort()
-      }))
+      })))
 
       cb(grouped)
     })
