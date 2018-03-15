@@ -6,7 +6,9 @@ const _ = require('underscore')
 var factoidSchema = new Schema({
   value: { type: String, required: true },
   word: { type: String, required: true },
-  secondaryWords: [String],
+  words: [String],
+  excludedWords: [String],
+  lastEditedBy: String,
   level: { type: Number, min: 1, max: 10 },
   citation: { type: String, required: true }
 })
