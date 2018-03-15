@@ -9,6 +9,7 @@ var factoidSchema = new Schema({
   words: [String],
   excludedWords: [String],
   lastEditedBy: String,
+  language: String,
   level: { type: Number, min: 1, max: 10 },
   citation: { type: String, required: true }
 })
