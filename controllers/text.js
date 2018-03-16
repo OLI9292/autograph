@@ -18,6 +18,7 @@ const search = async (filepath, cb) => {
 
     let allMatches = []
     const pattern = words.map((w) => w.value).join('|')
+
     const grep = spawn('grep', ['-n', '-oiw', '-E', pattern, filepath])
 
     grep.stdout.on('data', (data) => {
@@ -25,13 +26,25 @@ const search = async (filepath, cb) => {
         .split('\n')
         .filter(m => m.length && m.split(':').length > 1)
         .map((m) => ({ lineNo: m.split(':')[0], word: m.split(':')[1] }))
-      matches.forEach((m) => m.context = lines.slice(parseInt(m.lineNo) - CONTEXT - 1, parseInt(m.lineNo) + CONTEXT).join(' '))  
+      
+      matches.forEach((m) => m.context = lines.slice(
+        parseInt(m.lineNo) - CONTEXT - 1,
+        parseInt(m.lineNo) + CONTEXT).join(' ')
+      )  
+
       allMatches.push(matches)
     })
 
     grep.on('close', (code) => {
       const uniqueMatches = _.flatten(allMatches)
-      cb(uniqueMatches)
+
+      const grouped = _.values(_.mapObject(_.groupBy(uniqueMatches, m => m.lineNo), (matches, lineNo) => ({
+        lineNo: lineNo,
+        context: matches[0].context,
+        words: _.pluck(matches, 'word').sort()
+      })))
+
+      cb(grouped)
     })
   })
 }
@@ -41,7 +54,7 @@ exports.parse = (req, res, next) => {
 
   busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
     const saveTo = path.join('.', filename)
-    
+
     file.pipe(fs.createWriteStream(saveTo)).on('finish', async () => {
       OLOG.log({ level: 'info', message: `File ${filename} is ${fs.statSync(saveTo).size/1000000} mb.` });
 
