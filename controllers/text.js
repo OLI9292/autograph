@@ -34,8 +34,8 @@ const searchDoc = (doc, cb) => {
       }
     })
 
-    const notTooLong = _.filter(allMatches, match => match.context.length < 3000)
-    cb(notTooLong)
+    const filtered = _.filter(allMatches, match => (match.context.length < 3000) && (match.words.length < 4))
+    cb(filtered)
   })
 }
 
