@@ -1,5 +1,7 @@
 const path = require('path')
 const fs = require('fs')
+
+const https = require('https')
 const mongoose = require('mongoose')
 const Busboy = require('busboy')
 const _ = require('underscore')
@@ -9,6 +11,32 @@ const spawn = require('child_process').spawn
 const Word = require('../models/word')
 
 const CONTEXT = 2
+
+const likelySentence = sentence => (sentence.split(' ').length > 8) && (sentence.split('>').length < 8)
+
+const searchDoc = (doc, cb) => {
+  const sentences = doc.split('.')
+
+  Word.find({}, (error, words) => {
+    let allMatches = []
+    const values = _.pluck(words, 'value')
+    const likelySentences = _.filter(sentences, likelySentence)
+
+    sentences.forEach((sentence, idx) => {
+      if (likelySentence(sentence)) {
+        const matches = _.filter(values, value => sentence.toLowerCase().includes(value))
+        if (matches.length) {
+          allMatches.push({
+            words: matches,
+            context: sentences.splice(idx - 1, 2).join('. ')
+          })
+        }
+      }
+    })
+
+    cb(allMatches)
+  })
+}
 
 const search = async (filepath, cb) => {
   const lines = fs.readFileSync(filepath).toString().split('\n')
@@ -50,20 +78,36 @@ const search = async (filepath, cb) => {
 }
 
 exports.parse = (req, res, next) => {
-  const busboy = new Busboy({ headers: req.headers })
+  if (req.query.type === 'url') {
+    const url = req.query.url || 'https://en.wikipedia.org/wiki/Carnivore';
+    
+    https.get(url, resp => {
+      let data = '';
 
-  busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
-    const saveTo = path.join('.', filename)
-
-    file.pipe(fs.createWriteStream(saveTo)).on('finish', async () => {
-      OLOG.log({ level: 'info', message: `File ${filename} is ${fs.statSync(saveTo).size/1000000} mb.` });
-
-      search(saveTo, (result) => {
-        fs.unlink(saveTo)
-        return res.status(201).send(result)
+      resp.on('data', chunk => data += chunk)
+      
+      resp.on('end', () => {
+        searchDoc(data, result => {
+          return res.status(201).send(result)
+        })
       })
     })
-  })
+  } else {
+    const busboy = new Busboy({ headers: req.headers })
 
-  req.pipe(busboy) 
+    busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
+      const saveTo = path.join('.', filename)
+
+      file.pipe(fs.createWriteStream(saveTo)).on('finish', async () => {
+        OLOG.log({ level: 'info', message: `File ${filename} is ${fs.statSync(saveTo).size/1000000} mb.` });
+
+        search(saveTo, (result) => {
+          fs.unlink(saveTo)
+          return res.status(201).send(result)
+        })
+      })
+    })
+
+    req.pipe(busboy) 
+  }
 }
