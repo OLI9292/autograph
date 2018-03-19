@@ -16,8 +16,7 @@ const primaryMock = {
     { value: "HEDR" },
     { value: "ACU" },
     { value: "CRED" }
-  ],
-  key: "credence-2"
+  ]
 }
 
 module.exports = {
