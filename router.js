@@ -112,6 +112,7 @@ module.exports = (app) => {
 
   // QUESTION
   apiRoutes.get('/v2/question', QuestionController.read)
+  apiRoutes.post('/v2/question', QuestionController.create)
 
   // TEXT
   apiRoutes.post('/v2/texts/parse', TextController.parse) // Admin only

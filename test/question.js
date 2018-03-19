@@ -13,14 +13,15 @@ const chaiHttp = require('chai-http')
 
 const Word = require('../models/word') 
 const Root = require('../models/root') 
-const Question = require('../models/question') 
+const { getQuestions } = require('../models/question') 
 const levelData = require('./mocks/level')
 const levelMock = levelData.mock
 const lessonMock = require('./mocks/lesson').mock
 const wordMocks = require('./mocks/word').mocks
+const questionMock = require('./mocks/question').mock
 const userMock = require('./mocks/user').mock
 
-const { cleanDB, seedDB } = require('../scripts/seedDB');
+const { cleanDB, seedDB } = require('../scripts/seedDB')
 
 chai.use(chaiHttp)
 
@@ -38,10 +39,25 @@ describe('Question', () => {
     roots = await Root.find()
   })
 
+  describe('/POST questions', () => {
+    beforeEach(async () => await cleanDB())
+
+    it('it should POST a valid question', (done) => {
+      chai.request(server)
+        .post('/api/v2/question')
+        .send({ level: 'abcd-chinese', questions: [questionMock] })
+        .end((err, res) => {
+          res.should.have.status(201)
+          res.body.should.be.a('object')
+          done()
+        })
+    });
+  });  
+
   describe('question defToOneRoot', () => {
     it('it should return a definition to root button question with 1 answer', function () {
       const level = 1;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));      
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));      
       return Promise.all([
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
@@ -56,7 +72,7 @@ describe('Question', () => {
   describe('question defToAllRoots', () => {
     it('it should return a definition to root button question with as many answers as roots', function () {
       const level = 2;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
@@ -69,7 +85,7 @@ describe('Question', () => {
 
     it('it should return a definition to root button question with as many answers as roots', function () {
       const level = 2;
-      const promise = Promise.resolve(Question({ word: cosmopolis, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: cosmopolis, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('answer')
           .of.length(cosmopolis.components.length)
@@ -82,7 +98,7 @@ describe('Question', () => {
   describe('question defCompletion', () => {
     it('it should return a definition completion question', function () {
       const level = 3;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('answer')
           .and.satisfy(a => a[0].value === 'meat' || a[0].value === 'eat'),
@@ -94,7 +110,7 @@ describe('Question', () => {
   describe('question defToAllRootsNoHighlight', () => {
     it('it should return a definition to root button question with as many answers as roots and no highlight', function () {
       const level = 4;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('answer')
           .of.length(word.components.length)
@@ -109,7 +125,7 @@ describe('Question', () => {
   describe('question wordToDef', () => {
     it('it should return a definition to a word question', function () {
       const level = 5;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('answer').deep.equal([{ value: 'carnivore', missing: true }]),
         expect(promise).to.eventually.have.property('choices').of.length(6)
@@ -120,7 +136,7 @@ describe('Question', () => {
   describe('question defToCharacters', () => {
     it('it should return a definition to character (for 1 root) button question', function () {
       const level = 6;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('carnivore'),
         expect(promise).to.eventually.have.property('answer').to.satisfy(a => _.pluck(a, 'value').join('') === 'carnivore'),
@@ -132,7 +148,7 @@ describe('Question', () => {
   describe('question wordToDef', () => {
     it('it should return a word to a definition question', function () {
       const level = 7;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt')
           .to.satisfy(a => _.isEqual(a.normal, [{ value: 'Carnivore', highlight: false }])),
@@ -144,7 +160,7 @@ describe('Question', () => {
   describe('question defToCharacters', () => {
     it('it should return a definition to character (for all roots) button question', function () {
       const level = 8;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('carnivore'),
         expect(promise).to.eventually.have.property('answer').to.satisfy(a => _.pluck(a, 'value').join('') === 'carnivore'),
@@ -156,7 +172,7 @@ describe('Question', () => {
   describe('question defToCharacters', () => {
     it('it should return a definition to character (for all roots) button question', function () {
       const level = 9;
-      const promise = Promise.resolve(Question({ word: word, level: level }, words, roots));
+      const promise = Promise.resolve(getQuestions({ word: word, level: level }, words, roots));
       return Promise.all([
         expect(promise).to.eventually.have.property('prompt').eq('carnivore')
       ])

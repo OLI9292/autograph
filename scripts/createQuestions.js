@@ -14,13 +14,9 @@ exports.cache = async () => {
   await Question.remove({})
   
   Question.collection.insert(docs, (err, docs) => {
-    if (err) {
-      console.log('Error: ' + err)
-    } else {
-      console.log('Saved ' + get(docs, 'insertedCount') + ' docs succesfully.')
-    }
-
-    if (process.env.NODE_ENV !== 'test') { mongoose.connection.close(); }
+    err
+      ? console.log('Error: ' + err)
+      : console.log('Saved ' + get(docs, 'insertedCount') + ' docs succesfully.')
     return    
   })
 }

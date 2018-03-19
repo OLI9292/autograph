@@ -9,6 +9,7 @@ const Level = require('../models/level')
 const Lesson = require('../models/lesson')
 const Root = require('../models/root')
 const User = require('../models/user')
+const { Question } = require('../models/question')
 
 const demoWords = require('../lib/demoWords')
 
@@ -156,4 +157,16 @@ exports.all = async () => {
   const levels = _.range(1, 11)
   const data = _.flatten(_.map(words, word => _.map(levels, level => ({ word: word, level: level }))))
   return await createQuestions(data, words, roots)
+}
+
+exports.create = async (req, res, next) => {
+  const { questions, level } = req.body
+
+  const docs = _.map(questions, q => (new Question({ key: `test-${level}`, data: JSON.stringify(q) })))
+  
+  Question.collection.insert(docs, (err, docs) => {
+    return err
+      ? res.status(422).send('Error: ' + err.message)
+      : res.status(201).send('Saved ' + get(docs, 'insertedCount') + ' docs succesfully.')
+  })
 }
