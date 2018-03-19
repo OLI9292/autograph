@@ -26,7 +26,7 @@ describe('Words', () => {
       await seedDB()
     })
 
-    it.only('it should return words that share a root', async () => {
+    it('it should return words that share a root', async () => {
       const carnivore = await Word.findOne({ value: 'carnivore' })      
       const sharesRoot = carnivore.sharesRootWith()
       return expect(sharesRoot).to.eventually.satisfy(arr => _.isEmpty(xor(_.pluck(arr, 'value'), ['herbivore', 'omnivore'])))

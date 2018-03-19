@@ -24,7 +24,7 @@ describe('Levels', () => {
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.be.a('array')
-          res.body.length.should.be.eql(1)
+          res.body.length.should.be.eql(3)
           done()
         })
     });
@@ -76,7 +76,6 @@ describe('Levels', () => {
         .end((err, res) => {
             res.should.have.status(200)
             res.body.should.be.a('object')
-            res.body.should.have.property('success').eql(true)
           done()
         })
     })

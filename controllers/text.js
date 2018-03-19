@@ -28,13 +28,14 @@ const searchDoc = (doc, cb) => {
         if (matches.length) {
           allMatches.push({
             words: matches,
-            context: sentences.splice(idx - 1, 2).join('. ')
+            context: sentences.splice(idx - 1, 4).join('. ')
           })
         }
       }
     })
 
-    cb(allMatches)
+    const filtered = _.filter(allMatches, match => (match.context.length < 3000) && (match.words.length < 4))
+    cb(filtered)
   })
 }
 
