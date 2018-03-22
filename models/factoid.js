@@ -14,7 +14,7 @@ var factoidSchema = new Schema({
   imageCaption: String,
   publicDomain: { type: Boolean, default: false },
   imagePublicDomain: { type: Boolean, default: false },
-  level: { type: Number, min: 1, max: 10 },
+  level: { type: Number, min: 1, max: 10, default: 5 },
   citation: String
 })
 

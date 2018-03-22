@@ -2,7 +2,6 @@ const express = require('express')
 
 const ClassController = require('./controllers/class')
 const LeaderboardController = require('./controllers/leaderboard')
-const LessonController = require('./controllers/lesson')
 const LoginController = require('./controllers/login')
 const SessionsController = require('./controllers/session')
 const SchoolController = require('./controllers/school')
@@ -15,7 +14,6 @@ const WordController = require('./controllers/word')
 const RootController = require('./controllers/root')
 const QuestionController = require('./controllers/question')
 const TextController = require('./controllers/text')
-const WordListController = require('./controllers/wordList')
 
 module.exports = (app) => {  
   const apiRoutes = express.Router()
@@ -50,13 +48,6 @@ module.exports = (app) => {
 
   // LEADERBOARDS ROUTES
   apiRoutes.get('/v2/auth/leaderboard', LeaderboardController.read)
-
-  // LESSON ROUTES
-  apiRoutes.post('/v2/admin/lesson', LessonController.create)
-  apiRoutes.get('/v2/lesson', LessonController.read)
-  apiRoutes.get('/v2/lesson/:id', LessonController.read)
-  apiRoutes.patch('/v2/admin/lesson/:id', LessonController.update)
-  apiRoutes.delete('/v2/admin/lesson/:id', LessonController.delete)  
 
   // SCHOOL ROUTES
   apiRoutes.post('/v2/admin/school', SchoolController.create)
@@ -116,13 +107,6 @@ module.exports = (app) => {
 
   // TEXT
   apiRoutes.post('/v2/texts/parse', TextController.parse) // Admin only
-
-  // WORD LIST
-  apiRoutes.post('/v2/admin/word-lists', WordListController.create) // Admin only
-  apiRoutes.get('/v2/word-lists', WordListController.read)
-  apiRoutes.get('/v2/word-lists/:id', WordListController.read)
-  apiRoutes.patch('/v2/admin/word-lists/:id', WordListController.update) // Admin only
-  apiRoutes.delete('/v2/admin/word-lists/:id', WordListController.delete) // Admin only  
 
   app.use('/api', apiRoutes)
 }

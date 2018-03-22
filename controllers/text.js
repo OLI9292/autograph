@@ -10,7 +10,7 @@ const spawn = require('child_process').spawn
 
 const Word = require('../models/word')
 
-const CONTEXT = 2
+const CONTEXT = 3
 
 const likelySentence = sentence => (sentence.split(' ').length > 8) && (sentence.split('>').length < 8)
 
