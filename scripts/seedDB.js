@@ -3,7 +3,6 @@ const _ = require('underscore')
 const mongoose = require('mongoose')
 
 const Class = require('../models/class');
-const Lesson = require('../models/lesson');
 const School = require('../models/school');
 const User = require('../models/user');
 const Root = require('../models/root');
@@ -12,7 +11,6 @@ const WordList = require('../models/wordList');
 const Level = require('../models/level');
 
 const classData = require('../test/mocks/class');
-const lessonData = require('../test/mocks/lesson');
 const schoolData = require('../test/mocks/school');
 const userData = require('../test/mocks/user');
 const wordData = require('../test/mocks/word');
@@ -23,7 +21,6 @@ const rootData = require('../test/mocks/root');
 const collections = [
   { model: School, mocks: schoolData.mocks },
   { model: Class, mocks: classData.mocks },
-  { model: Lesson, mocks: lessonData.mocks },
   { model: User, mocks: userData.mocks },
   { model: Word, mocks: wordData.mocks },
   { model: WordList, mocks: wordListData.mocks },

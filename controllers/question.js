@@ -6,7 +6,6 @@ const { chunk, get } = require('lodash');
 const { createQuestions, getQuestions } = require('../models/question')
 const Word = require('../models/word')
 const Level = require('../models/level')
-const Lesson = require('../models/lesson')
 const Root = require('../models/root')
 const User = require('../models/user')
 const { Question } = require('../models/question')
