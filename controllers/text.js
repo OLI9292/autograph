@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 const https = require('https')
+const http = require('http')
 const mongoose = require('mongoose')
 const Busboy = require('busboy')
 const _ = require('underscore')
@@ -79,10 +80,9 @@ const search = async (filepath, cb) => {
 }
 
 exports.parse = (req, res, next) => {
-  if (req.query.type === 'url') {
-    const url = req.query.url || 'https://en.wikipedia.org/wiki/Carnivore';
-    
-    https.get(url, resp => {
+  if (req.query.type === 'url' && req.query.url) {
+    const protocol = req.query.url.includes('https') ? https : http;
+    protocol.get(req.query.url, resp => {
       let data = '';
 
       resp.on('data', chunk => data += chunk)
