@@ -35,9 +35,9 @@ exports.create = async (req, res, next) => {
   })
 
   // create users & class
-  User.insertMany(users, (error, docs) => {
+  User.create(users, (error, docs) => {
     if (error) { return res.status(422).send({ error: error.message }) }
-    
+
     const [teacher, students] = _.partition(docs, doc => doc.isTeacher)
     _class.teacher = _.pluck(teacher, '_id')[0]
     _class.students = _.pluck(students, '_id')
