@@ -20,9 +20,7 @@ chai.use(chaiHttp)
 
 describe('Classes', () => {
   describe('/GET class', () => {
-    beforeEach(async () => {
-      await seedDB()
-    })
+    beforeEach(async () => await seedDB())
 
     it('it should GET all the classes', (done) => {
       chai.request(server)
@@ -37,9 +35,7 @@ describe('Classes', () => {
   });
 
   describe('/GET/:id class', () => {
-    beforeEach(async () => {
-      await seedDB()
-    })
+    beforeEach(async () => await seedDB())
 
     it('it should GET a class by the given id', (done) => {
       chai.request(server)
@@ -97,9 +93,7 @@ describe('Classes', () => {
   });
 
   describe('/PATCH/:id class', () => {
-    beforeEach(async () => {
-      await seedDB()
-    })
+    beforeEach(async () => await seedDB())
 
     it('it should UPDATE a class given the id', (done) => {
       const updated = _.extend(classMock, { name: 'Lower Lab' })
@@ -116,12 +110,10 @@ describe('Classes', () => {
     })
   }); 
 
-  describe('/DELETE/:id word', () => {
-    beforeEach(async () => {
-      await seedDB()
-    })
+  describe('/DELETE/:id class', () => {
+    beforeEach(async () => await seedDB())
 
-    it('it should DELETE a word given the id', (done) => {
+    it('it should DELETE a class and its users given the id', (done) => {
       chai.request(server)
         .delete('/api/v2/admin/class/' + classMock._id)
         .end((err, res) => {

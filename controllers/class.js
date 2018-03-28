@@ -178,8 +178,11 @@ exports.delete = async (req, res, next) => {
   Class.findOneAndRemove({ _id: req.params.id }, async (error, removed) => {
     if (error) { return res.status(422).send({ error: error.message }) }
 
-    return removed
-      ? res.status(200).send(removed)
-      : res.status(422).send({ error: 'Not found' })
+    if (removed) {
+      await User.remove({ _id: { $in: removed.students.concat(removed.teacher) } })
+      return res.status(200).send(removed)
+    } else {
+      return res.status(422).send({ error: 'Not found' })
+    }
   })  
 }
