@@ -72,7 +72,7 @@ describe('Classes', () => {
       ]
 
       chai.request(server)
-        .post('/api/v2/admin/class')
+        .post('/api/v2/auth/class')
         .send(data)
         .end((err, res) => {
           res.should.have.status(201)

@@ -59,11 +59,9 @@ exports.create = async (req, res, next) => {
 
 const usernameWithIndex = (base, usernames) => {
   const matches = _.map(_.filter(usernames, u => u.startsWith(base)), u => u.replace(base, ''))
+  const numbers = _.filter(_.map(matches, m => parseInt(m, 10)), m => Number.isInteger(m))
   let index = 1
-  if (matches.length) {
-    const numbers = _.filter(_.map(matches, m => parseInt(m, 10)), m => _.isNumber(m))
-    index += Math.max(...numbers)
-  }
+  if (numbers.length) { index += Math.max(...numbers) }
   return base + index
 }
 
