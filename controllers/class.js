@@ -4,37 +4,70 @@ const _ = require('underscore')
 const Class = require('../models/class')
 const User = require('../models/user')
 
+const sampleSize = require('lodash/sampleSize')
+
 //
 // CREATE
 //
 
-exports.create = (req, res, next) => {
-  const data = req.body
-  const teacher = data.teacher
-
-  if (teacher) {
-    User.findById(teacher, async (error, teacher) => {
-      if (error) { return res.status(422).send({ error: error.message }) }
-
-      if (teacher) {
-        try {
-          const _class = new Class(data)
-          teacher.isTeacher = true
-          teacher.classes.push({ id: _class._id, role: 'teacher' })
-          await teacher.save()
-          await _class.save()
-          return res.status(201).send(_class)
-        } catch (error) {
-          return res.status(422).send({ error: error.message })
-        }
-      } else {
-        return res.status(422).send({ error: 'Teacher not found.' })
-      }      
-    }) 
-  } else {
-    return res.status(422).send({ error: 'Create class requires a teacher id' })
+exports.create = async (req, res, next) => {
+  const users = req.body
+  
+  const [teacher, students] = _.partition(users, u => u.isTeacher)
+  if ((teacher.length !== 1) || (students.length <= 1)) {
+    return res.status(422).send({ error: 'Classes require 1 teacher and multiple students.' })
   }
+
+  const usernames = _.pluck(await User.find({}, 'email'), 'email')
+  const _class = new Class()
+  
+  // add attributes
+  _.forEach(users, u => {
+    u.signUpMethod = 'teacherSignUp'
+    const role = u.isTeacher ? 'teacher' : 'student'
+    u.classes = [{ id: _class.id, role: role }]
+    // generate a unique username and random password for students (not teacher)
+    if (!u.isTeacher) {
+      const base = (u.firstName + u.lastName.charAt(0)).toLowerCase()
+      u.email = usernameWithIndex(base, usernames)
+      u.password = generatePassword()      
+    }
+  })
+
+  // create users & class
+  User.insertMany(users, (error, docs) => {
+    if (error) { return res.status(422).send({ error: error.message }) }
+    
+    const [teacher, students] = _.partition(docs, doc => doc.isTeacher)
+    _class.teacher = _.pluck(teacher, '_id')[0]
+    _class.students = _.pluck(students, '_id')
+    
+    _class.save(error => {
+      if (error) {
+        User.remove({ _id: { $in: _.pluck(docs, '_id') } })
+        return res.status(422).send({ error: error.message })
+      } else {
+        return res.status(201).send({
+          class: _class,
+          students: students,
+          teacher: teacher[0]
+        })
+      }
+    })
+  })
 }
+
+const usernameWithIndex = (base, usernames) => {
+  const matches = _.map(_.filter(usernames, u => u.startsWith(base)), u => u.replace(base, ''))
+  let index = 1
+  if (matches.length) {
+    const numbers = _.filter(_.map(matches, m => parseInt(m, 10)), m => _.isNumber(m))
+    index += Math.max(...numbers)
+  }
+  return base + index
+}
+
+const generatePassword = () => sampleSize('abcdefghkmnpqrstuvwxyz23456789', 10).join('')
 
 //
 // READ

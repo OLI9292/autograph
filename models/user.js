@@ -31,7 +31,7 @@ const userSchema = new Schema({
   school: Schema.Types.ObjectId,
   signUpMethod: {
     type: String, 
-    enum: ['email', 'facebook', 'google'], 
+    enum: ['email', 'facebook', 'google', 'teacherSignUp'], 
     required: true
   },
   weeklyStarCount: { type: Number, default: 0 },

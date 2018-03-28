@@ -7,14 +7,12 @@ const School = require('../models/school');
 const User = require('../models/user');
 const Root = require('../models/root');
 const Word = require('../models/word');
-const WordList = require('../models/wordList');
 const Level = require('../models/level');
 
 const classData = require('../test/mocks/class');
 const schoolData = require('../test/mocks/school');
 const userData = require('../test/mocks/user');
 const wordData = require('../test/mocks/word');
-const wordListData = require('../test/mocks/wordList');
 const levelData = require('../test/mocks/level');
 const rootData = require('../test/mocks/root');
 
@@ -23,7 +21,6 @@ const collections = [
   { model: Class, mocks: classData.mocks },
   { model: User, mocks: userData.mocks },
   { model: Word, mocks: wordData.mocks },
-  { model: WordList, mocks: wordListData.mocks },
   { model: Level, mocks: levelData.mocks },
   { model: Root, mocks: rootData.mocks }
 ]

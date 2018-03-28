@@ -66,51 +66,34 @@ describe('Classes', () => {
   });  
 
   describe('/POST class', () => {
-    beforeEach(async () => {
-      await cleanDB()
-    })
+    beforeEach(async () => await seedDB())
 
     it('it should POST a valid class', (done) => {
-      const teacher = new User(teacherMock)
-      const updatedClassMock = _.extend(classMock, { teacher: teacherMock._id });
+      const data = [
+        { firstName: 'tammy', lastName: 'lee' },
+        { firstName: 'rocky', lastName: 'bro' },
+        { firstName: 'john', lastName: 'bee', email: 'john@gmail.com', password: 'super-dumb-pw', isTeacher: true }
+      ]
 
-      teacher.save((err, teacher) => {
-        chai.request(server)
-          .post('/api/v2/admin/class')
-          .send(updatedClassMock)
-          .end((err, res) => {
-            res.should.have.status(201)
-            res.body.should.have.property('teacher').eql(updatedClassMock.teacher)
-            res.body.should.have.property('name').eql(updatedClassMock.name)
-            res.body.should.be.a('object')
-            done()
-          })
-      })
-    }); 
-
-    it('it should not POST a class without a valid teacher', (done) => {
       chai.request(server)
         .post('/api/v2/admin/class')
-        .send(classMock)
+        .send(data)
         .end((err, res) => {
-          res.should.have.status(422)
-          res.body.should.have.property('error')
+          res.should.have.status(201)
           res.body.should.be.a('object')
+          res.body.should.have.property('class').be.a('object')
+          res.body.should.have.property('teacher').be.a('object')
+          res.body.should.have.property('students').be.a('array').of.length(2)
+          _.pluck(res.body.students, 'firstName').should.deep.eq(['tammy','rocky'])
+          res.body.teacher.firstName.should.eq('john')
+          res.body.class.students.should.deep.eq(_.pluck(res.body.students, '_id'))
+          res.body.class.teacher.should.eq(res.body.teacher._id)
+          const classes = _.flatten(_.pluck(res.body.students.concat(res.body.teacher), 'classes'))
+          _.pluck(classes, 'role').should.deep.eq(['student', 'student', 'teacher'])
+          _.uniq(_.pluck(classes, 'id')).should.deep.eq([res.body.class._id])
           done()
         })
-    });
-
-    it('it should not POST a class missing a name', (done) => {
-      chai.request(server)
-        .post('/api/v2/admin/class')
-        .send(_.omit(classMock, 'name'))
-        .end((err, res) => {
-          res.should.have.status(422)
-          res.body.should.have.property('error')
-          res.body.should.be.a('object')
-          done()
-        })
-    });         
+    });      
   });
 
   describe('/PATCH/:id class', () => {
