@@ -37,7 +37,7 @@ module.exports = (app) => {
   apiRoutes.get('/v2/auth/session/:userId', SessionsController.read)
 
   // CLASS ROUTES
-  apiRoutes.post('/v2/admin/class', ClassController.create) // ADMIN
+  apiRoutes.post('/v2/auth/class', ClassController.create) // ADMIN
   // TODO: - cleaner implementation
   apiRoutes.post('/v2/class/:id', ClassController.join)  
   apiRoutes.get('/v2/auth/class', ClassController.read)
