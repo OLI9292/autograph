@@ -50,7 +50,7 @@ exports.create = async (req, res, next) => {
         return res.status(422).send({ error: error.message })
       } else {
         if (req.query.login) { // send welcome email and return session
-          send(teacher[0].email, 'welcome', teacher[0].name, result => console.log(result))
+          send(teacher[0].email, 'welcome', teacher[0].firstName, result => console.log(result))
           return login(...teacherLogin, result => res.status(result.error ? 422 : 201).send(result))
         } else {
           return res.status(201).send({
