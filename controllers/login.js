@@ -17,25 +17,24 @@ const genToken = user => {
   return { user: user, expires: expires, token: token, sessionId: helpers.guid(), isTeacher: user.isTeacher }
 }
 
-exports.login = async (req, res, next) => {
-  const [email, password] = [req.body.email, req.body.password]
-
-  if (!email || !password) { return res.status(422).send({ error: 'Email & password required.' }) }
+exports.login = async (email, password, cb) => {
+  if (!email || !password) { cb({ error: 'Email & password required.' }) }
 
   try {
     const user = await User.findOne({ email: email.toLowerCase() })
-
-    if (!user) { return res.status(422).send({ error: 'Email not found.' }) }
+    if (!user) { cb({ error: 'Email not found.' }) }
     
-    user.comparePassword(password, function(error, isMatch) {
-      if (error) { return res.status(422).send({ error: 'Something went wrong.' }) }
-
-      return isMatch
-        ? res.status(200).send(genToken(user))
-        : res.status(422).send({ error: 'Incorrect password.' })
+    await user.comparePassword(password, function(error, isMatch) {
+      if (error) { return { error: 'Something went wrong.' }; }
+      const result = isMatch ? genToken(user) : { error: 'Incorrect password.' }
+      cb(result)
     })
-
   } catch (error) {
-    return res.status(422).send({ error: 'Something went wrong.' })
-  }
+    cb({ error: 'Something went wrong.' })
+  }  
+}
+
+exports.loginRequest = async (req, res, next) => {
+  const { email, password } = req.body
+  exports.login(email, password, result => res.status(result.error ? 422 : 200).send(result))
 }

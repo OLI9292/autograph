@@ -25,7 +25,7 @@ module.exports = (app) => {
   apiRoutes.patch('/user', UserController.update)
 
   // V2
-  apiRoutes.post('/v2/login', LoginController.login)  
+  apiRoutes.post('/v2/login', LoginController.loginRequest)  
 
   // QUESTION ROUTES
   apiRoutes.get('/v2/auth/question', LoggedQuestionsController.read)

@@ -4,6 +4,8 @@ const _ = require('underscore')
 const Class = require('../models/class')
 const User = require('../models/user')
 
+const { login } = require('./login')
+
 const sampleSize = require('lodash/sampleSize')
 
 //
@@ -18,6 +20,7 @@ exports.create = async (req, res, next) => {
     return res.status(422).send({ error: 'Classes require 1 teacher and multiple students.' })
   }
 
+  const teacherLogin = [teacher[0]['email'], teacher[0]['password']]
   const usernames = _.pluck(await User.find({}, 'email'), 'email')
   const _class = new Class()
   
@@ -47,11 +50,13 @@ exports.create = async (req, res, next) => {
         User.remove({ _id: { $in: _.pluck(docs, '_id') } })
         return res.status(422).send({ error: error.message })
       } else {
-        return res.status(201).send({
-          class: _class,
-          students: students,
-          teacher: teacher[0]
-        })
+        return req.query.login
+          ? login(...teacherLogin, result => res.status(result.error ? 422 : 201).send(result))
+          : res.status(201).send({
+              class: _class,
+              students: students,
+              teacher: teacher[0]
+          })
       }
     })
   })

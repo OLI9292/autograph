@@ -63,14 +63,13 @@ describe('Classes', () => {
 
   describe('/POST class', () => {
     beforeEach(async () => await seedDB())
+    const data = [
+      { firstName: 'tammy', lastName: 'lee' },
+      { firstName: 'rocky', lastName: 'bro' },
+      { firstName: 'john', lastName: 'bee', email: 'john@gmail.com', password: 'super-dumb-pw', isTeacher: true }
+    ]
 
     it('it should POST a valid class', (done) => {
-      const data = [
-        { firstName: 'tammy', lastName: 'lee' },
-        { firstName: 'rocky', lastName: 'bro' },
-        { firstName: 'john', lastName: 'bee', email: 'john@gmail.com', password: 'super-dumb-pw', isTeacher: true }
-      ]
-
       chai.request(server)
         .post('/api/v2/auth/class')
         .send(data)
@@ -89,7 +88,20 @@ describe('Classes', () => {
           _.uniq(_.pluck(classes, 'id')).should.deep.eq([res.body.class._id])
           done()
         })
-    });      
+    });  
+
+    it('it should POST a valid class and LOGIN when login=true', (done) => {
+      chai.request(server)
+        .post('/api/v2/auth/class?login=true')
+        .send(data)
+        .end((err, res) => {
+          res.should.have.status(201)
+          res.body.should
+            .be.a('object')
+            .have.all.keys('user','expires','isTeacher','sessionId','token')
+          done()
+        })
+    });          
   });
 
   describe('/PATCH/:id class', () => {
