@@ -1,12 +1,11 @@
 const mongoose = require('mongoose')
 const _ = require('underscore')
+const sampleSize = require('lodash/sampleSize')
 
 const Class = require('../models/class')
 const User = require('../models/user')
-
 const { login } = require('./login')
-
-const sampleSize = require('lodash/sampleSize')
+const { send } = require('./mail')
 
 //
 // CREATE
@@ -50,13 +49,16 @@ exports.create = async (req, res, next) => {
         User.remove({ _id: { $in: _.pluck(docs, '_id') } })
         return res.status(422).send({ error: error.message })
       } else {
-        return req.query.login
-          ? login(...teacherLogin, result => res.status(result.error ? 422 : 201).send(result))
-          : res.status(201).send({
-              class: _class,
-              students: students,
-              teacher: teacher[0]
+        if (req.query.login) { // send welcome email and return session
+          send(teacher[0].email, 'welcome', teacher[0].name, result => console.log(result))
+          return login(...teacherLogin, result => res.status(result.error ? 422 : 201).send(result))
+        } else {
+          return res.status(201).send({
+            class: _class,
+            students: students,
+            teacher: teacher[0]
           })
+        }
       }
     })
   })
