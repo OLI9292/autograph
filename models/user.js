@@ -1,22 +1,22 @@
-const db = require('../databases/accounts/index')
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-const _ = require('underscore')
-const bcrypt = require('bcrypt')
-const SALT_WORK_FACTOR = 10
+const db = require("../databases/accounts/index");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const _ = require("underscore");
+const bcrypt = require("bcrypt");
+const SALT_WORK_FACTOR = 10;
 
 const userSchema = new Schema({
   classes: {
     type: [
       {
         id: Schema.Types.ObjectId,
-        role: { type: String, enum: ['teacher', 'student'], default: 'student' }
+        role: { type: String, enum: ["teacher", "student"], default: "student" }
       }
     ],
     default: []
   },
   isTeacher: { type: Boolean, default: false },
-  gender: { type: String, enum: ['male', 'female'] },
+  gender: { type: String, enum: ["male", "female"] },
   deviceId: String,
   email: String,
   facebookId: String,
@@ -30,12 +30,12 @@ const userSchema = new Schema({
   role: String,
   school: Schema.Types.ObjectId,
   signUpMethod: {
-    type: String, 
-    enum: ['email', 'facebook', 'google', 'teacherSignUp'], 
+    type: String,
+    enum: ["email", "facebook", "google", "teacherSignUp"],
     required: true
   },
   weeklyStarCount: { type: Number, default: 0 },
-  wordListsCompleted: [Schema.Types.ObjectId],  
+  wordListsCompleted: [Schema.Types.ObjectId],
   words: {
     type: [
       {
@@ -64,64 +64,68 @@ const userSchema = new Schema({
       }
     ]
   }
-})
+});
 
-userSchema.pre('save', function(next) {
+userSchema.pre("save", function(next) {
   const user = this;
 
-  if (!user.isModified('password')) {
-    return next()
+  if (!user.isModified("password")) {
+    return next();
   }
 
   bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
     if (err) {
-      return next(err)
+      return next(err);
     }
 
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) {
-        return next(err)
+        return next(err);
       }
 
-      user.password = hash
-      next()
-    })
-  })
-})
+      user.password = hash;
+      next();
+    });
+  });
+});
 
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) {
-      return cb(err)
+      return cb(err);
     }
 
-    cb(null, isMatch)
-  })
-}
+    cb(null, isMatch);
+  });
+};
 
 userSchema.methods.fullName = function() {
-  return this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName
-}
+  return this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName;
+};
 
 userSchema.methods.initials = function() {
-  let initials = this.firstName.charAt(0)
-  if (this.lastName) { initials += this.lastName.charAt(0) }
-  return initials.toUpperCase()
-}
+  let initials = this.firstName.charAt(0);
+  if (this.lastName) {
+    initials += this.lastName.charAt(0);
+  }
+  return initials.toUpperCase();
+};
 
 userSchema.methods.firstNameLastInitial = function() {
-  return this.lastName ? `${this.firstName} ${this.lastName.charAt(0).toUpperCase()}` : this.firstName
-}
+  return this.lastName
+    ? `${this.firstName} ${this.lastName.charAt(0).toUpperCase()}`
+    : this.firstName;
+};
 
 userSchema.methods.starCount = function() {
-  return _.reduce(this.words, (acc, w) => acc + w.experience, 0)
-}
+  return _.reduce(this.words, (acc, w) => acc + w.experience, 0);
+};
 
 userSchema.methods.schoolName = function(schools) {
-  const school = _.find(schools, s => s._id.equals(this.school))
-  return school ? school.name : '';
-}
+  const school = _.find(schools, s => s._id.equals(this.school));
+  return school ? school.name : "";
+};
 
-const User = db.model('User', userSchema)
+const User = db.model("User", userSchema);
 
-module.exports = User
+module.exports = User;

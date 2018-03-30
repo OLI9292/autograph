@@ -5,10 +5,7 @@ const primaryMock = {
       { value: " or acceptance of something as true" }
     ]
   },
-  answer: [
-    { value: "cred", missing: true },
-    { value: "ence", missing: false }
-  ],
+  answer: [{ value: "cred", missing: true }, { value: "ence", missing: false }],
   choices: [
     { value: "FER" },
     { value: "GRAPH" },
@@ -17,8 +14,8 @@ const primaryMock = {
     { value: "ACU" },
     { value: "CRED" }
   ]
-}
+};
 
 module.exports = {
   mock: primaryMock
-}
+};
