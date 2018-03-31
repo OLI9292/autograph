@@ -343,8 +343,7 @@ describe("Users", () => {
         id: userMock._id,
         platform: "web",
         stats: [
-          { word: "hypnotism", correct: false, difficulty: 5, time: 3 },
-          { word: "carnivore", correct: true, difficulty: 10, time: 4 },
+          { word: "carnivore", correct: false, difficulty: 10, time: 4 },
           { word: "herbivore", correct: true, difficulty: 4, time: 2 }
         ]
       };
@@ -359,7 +358,7 @@ describe("Users", () => {
           res.body.should.have.property("words");
           res.body.should.have
             .property("weeklyStarCount")
-            .eql(userMock.weeklyStarCount + 2);
+            .eql(userMock.weeklyStarCount + 1);
           res.body.words.should.be.a("array");
           res.body.should.be.a("object");
           done();

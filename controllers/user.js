@@ -191,10 +191,7 @@ const updateFromWeb = async (req, res, next) => {
     }
 
     if (user) {
-      const oldExperience = user.words.reduce(
-        (acc, w) => acc + w.experience,
-        0
-      );
+      const oldExperience = user.starCount();
 
       stats.forEach(s => {
         const idx = _.findIndex(user.words, w => s.word === w.name);
@@ -221,12 +218,7 @@ const updateFromWeb = async (req, res, next) => {
       });
 
       // Update weekly experience
-      const newExperience = user.words.reduce(
-        (acc, w) => acc + w.experience,
-        0
-      );
-      user.weeklyStarCount =
-        user.weeklyStarCount + (newExperience - oldExperience);
+      user.weeklyStarCount = user.weeklyStarCount + user.starCount() - oldExperience;
 
       try {
         await user.save();

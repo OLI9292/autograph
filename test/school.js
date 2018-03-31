@@ -38,7 +38,7 @@ describe("Schools", () => {
     it("it should GET a school by the given id", done => {
       chai
         .request(server)
-        .get("/api/v2/admin/school/" + schoolMock._id)
+        .get("/api/v2/auth/school/" + schoolMock._id)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("name").eql(schoolMock.name);
@@ -66,7 +66,7 @@ describe("Schools", () => {
     it("it should not POST a school missing a name", done => {
       chai
         .request(server)
-        .post("/api/v2/admin/lesson")
+        .post("/api/v2/admin/school")
         .send(_.omit(schoolMock, "name"))
         .end((err, res) => {
           res.should.have.status(422);

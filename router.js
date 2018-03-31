@@ -22,8 +22,8 @@ module.exports = app => {
   //
   // CLASS
   //
-  apiRoutes.post("/v2/auth/class", ClassController.create);
-  apiRoutes.post("/v2/class/:id", ClassController.join);
+  apiRoutes.post("/v2/auth/class", ClassController.create); // TODO: > admin
+  apiRoutes.post("/v2/class/:id", ClassController.join); // TODO: remove
   apiRoutes.get("/v2/auth/class", ClassController.read);
   apiRoutes.get("/v2/auth/class/:id", ClassController.read);
   apiRoutes.get("/v2/auth/class/:id/students", ClassController.readStudents);
@@ -54,18 +54,18 @@ module.exports = app => {
   //
   // LEVEL
   //
-  apiRoutes.post("/v2/level", LevelController.create);
+  apiRoutes.post("/v2/level", LevelController.create); // TODO: > admin
   apiRoutes.get("/v2/level", LevelController.read);
   apiRoutes.get("/v2/level/:id", LevelController.read);
-  apiRoutes.patch("/v2/level/:id", LevelController.update);
-  apiRoutes.delete("/v2/level/:id", LevelController.delete);
+  apiRoutes.patch("/v2/level/:id", LevelController.update); // TODO: > admin
+  apiRoutes.delete("/v2/level/:id", LevelController.delete); // TODO: > admin
 
   //
   // LOGGED QUESTION
   //
   apiRoutes.get("/v2/auth/question", LoggedQuestionsController.read);
   apiRoutes.get("/v2/auth/question/:userId", LoggedQuestionsController.read);
-  apiRoutes.post("/v2/auth/question", LoggedQuestionsController.create);
+  apiRoutes.post("/v2/auth/question", LoggedQuestionsController.create); // TODO: > admin
 
   //
   // LOGIN
@@ -76,12 +76,12 @@ module.exports = app => {
   // QUESTION
   //
   apiRoutes.get("/v2/question", QuestionController.read);
-  apiRoutes.post("/v2/question", QuestionController.create);
+  apiRoutes.post("/v2/question", QuestionController.create); // TODO: > admin
 
   //
   // MAIL
   //
-  apiRoutes.post("/v2/auth/mail", MailController.post);
+  apiRoutes.post("/v2/auth/mail", MailController.post); // TODO: > admin
 
   //
   // ROOT
@@ -107,7 +107,7 @@ module.exports = app => {
   //
   // TEXT
   //
-  apiRoutes.post("/v2/texts/parse", TextController.parse);
+  apiRoutes.post("/v2/texts/parse", TextController.parse); // TODO: > admin
 
   //
   // USER V1
@@ -121,8 +121,8 @@ module.exports = app => {
   //
   // USER V2
   //
-  apiRoutes.post("/v2/user", UserController.create);
-  apiRoutes.get("/v2/auth/user", UserController.read);
+  apiRoutes.post("/v2/user", UserController.create); // TODO: > admin
+  apiRoutes.get("/v2/auth/user", UserController.read); // TODO: > admin
   apiRoutes.get("/v2/auth/user/:id", UserController.read);
   apiRoutes.patch("/v2/admin/user/joinSchool", UserController.joinSchool);
   apiRoutes.patch("/v2/auth/user/stats", UserController.update);

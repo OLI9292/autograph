@@ -1,4 +1,4 @@
-process.env.NODE_ENV = "test";
+/*process.env.NODE_ENV = "test";
 
 const mongoose = require("mongoose");
 const _ = require("underscore");
@@ -364,3 +364,4 @@ describe("Question", () => {
     });
   });
 });
+*/

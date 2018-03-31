@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const _ = require("underscore");
 const sampleSize = require("lodash/sampleSize");
+const get = require("lodash/get");
 
 const Class = require("../models/class");
 const User = require("../models/user");
@@ -11,68 +12,25 @@ const { send } = require("./mail");
 // CREATE
 //
 
-exports.create = async (req, res, next) => {
-  const users = req.body;
-
-  const [teacher, students] = _.partition(users, u => u.isTeacher);
-  if (teacher.length !== 1 || students.length <= 1) {
-    return res
-      .status(422)
-      .send({ error: "Classes require 1 teacher and multiple students." });
+const addAttributesToUser = (user, _class, usernames) => {
+  user.signUpMethod = "teacherSignUp";
+  const role = user.isTeacher ? "teacher" : "student";
+  user.classes = [{ id: _class.id, role: role }];
+  // generate a unique username and random password for students (not teacher)
+  if (!user.isTeacher) {
+    const base = (user.firstName + user.lastName.charAt(0)).toLowerCase();
+    user.email = usernameWithIndex(base, usernames);
+    user.password = generatePassword();
   }
+  return user;
+}
 
-  const teacherLogin = [teacher[0]["email"], teacher[0]["password"]];
-  const usernames = _.pluck(await User.find({}, "email"), "email");
-  const _class = new Class();
+const generatePassword = () =>
+  sampleSize("abcdefghkmnpqrstuvwxyz23456789", 10).join("");
 
-  // add attributes
-  _.forEach(users, u => {
-    u.signUpMethod = "teacherSignUp";
-    const role = u.isTeacher ? "teacher" : "student";
-    u.classes = [{ id: _class.id, role: role }];
-    // generate a unique username and random password for students (not teacher)
-    if (!u.isTeacher) {
-      const base = (u.firstName + u.lastName.charAt(0)).toLowerCase();
-      u.email = usernameWithIndex(base, usernames);
-      u.password = generatePassword();
-    }
-  });
+const teacherAndStudents = users => [_.find(users, u => u.isTeacher), _.reject(users, u => u.isTeacher)];
 
-  // create users & class
-  User.create(users, (error, docs) => {
-    if (error) {
-      return res.status(422).send({ error: error.message });
-    }
-
-    const [teacher, students] = _.partition(docs, doc => doc.isTeacher);
-    _class.teacher = _.pluck(teacher, "_id")[0];
-    _class.students = _.pluck(students, "_id");
-
-    _class.save(error => {
-      if (error) {
-        User.remove({ _id: { $in: _.pluck(docs, "_id") } });
-        return res.status(422).send({ error: error.message });
-      } else {
-        if (req.query.login) {
-          // send welcome email and return session
-          send(teacher[0].email, "welcome", teacher[0].firstName, result =>
-            console.log(result)
-          );
-          return login(...teacherLogin, result =>
-            res.status(result.error ? 422 : 201).send(result)
-          );
-        } else {
-          return res.status(201).send({
-            class: _class,
-            students: students,
-            teacher: teacher[0]
-          });
-        }
-      }
-    });
-  });
-};
-
+// gives the user a unique username = firstName + first letter of lastName + index
 const usernameWithIndex = (base, usernames) => {
   const matches = _.map(_.filter(usernames, u => u.startsWith(base)), u =>
     u.replace(base, "")
@@ -87,8 +45,58 @@ const usernameWithIndex = (base, usernames) => {
   return base + index;
 };
 
-const generatePassword = () =>
-  sampleSize("abcdefghkmnpqrstuvwxyz23456789", 10).join("");
+exports.create = async (req, res, next) => {
+  let users = req.body;
+  const [teacher, students] = teacherAndStudents(users);
+
+  if (!teacher || students.length < 2) {
+    return res
+      .status(422)
+      .send({ error: "Classes require 1 teacher and multiple students." });
+  }
+
+  const usernames = await User.existingUsernames();
+  const _class = new Class();
+  users = _.map(users, user => addAttributesToUser(user, _class, usernames));
+
+  User.create(users, (error, docs) => {
+    if (error) {
+      return res.status(422).send({ error: error.message });
+    }
+
+    const [teacherDoc, studentDocs] = teacherAndStudents(docs)
+    _class.teacher = get(teacherDoc, "_id");
+    _class.students = _.pluck(studentDocs, "_id");
+
+    _class.save(error => {
+      if (error) {
+        User.remove({ _id: { $in: _.pluck(docs, "_id") } });
+        return res.status(422).send({ error: error.message });
+      } else {
+        if (req.query.login) {
+          const params = {
+            email: teacher.email,
+            password: teacher.password,
+            name: teacher.firstName,
+            type: "welcome",
+            students: teacherAndStudents(users)[1]
+          }
+          console.log("Sending welcome email to " + teacher.email);
+          send(params, () => {});
+          return login(teacher.email, teacher.password, result =>
+            res.status(result.error ? 422 : 201).send(result)
+          );
+        } else {
+          return res.status(201).send({
+            class: _class,
+            students: studentDocs,
+            teacher: teacherDoc
+          });
+        }
+      }
+    });
+  });
+};
 
 //
 // READ

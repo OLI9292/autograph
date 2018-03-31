@@ -126,6 +126,10 @@ userSchema.methods.schoolName = function(schools) {
   return school ? school.name : "";
 };
 
+userSchema.statics.existingUsernames = async () => {
+  return _.pluck(await User.find({}, "email"), "email")
+};
+
 const User = db.model("User", userSchema);
 
 module.exports = User;
