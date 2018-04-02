@@ -79,20 +79,20 @@ exports.send = (data, cb) => {
         ]),
         styles: {
           header: {
-            color: '#f3be5b',
+            color: "#f3be5b",
             bold: true,
             fontSize: 20
           },
           subHeader: {
-            alignment: 'center',
+            alignment: "center",
             fontSize: 16
           },
           masterListCredentials: {
-            alignment: 'center',
+            alignment: "center",
             fontSize: 12
           },
           accountCardCredentials: {
-            alignment: 'center',
+            alignment: "center",
             bold: true,
             fontSize: 18
           }
@@ -107,15 +107,12 @@ exports.send = (data, cb) => {
 
         zip.generateAsync({ type: "base64" }).then(attachment => {
           const msg = message(email, type, name, attachment);
-          if (process.env.NODE_ENV === "test") {
-            cb(msg);
-          } else {
-            console.log(`Sending ${type} email to ${email}.`)
-            sgMail
-              .send(msg)
-              .then(() => cb(msg))
-              .catch(error => cb({ error: error.message }));
-          }
+          process.env.NODE_ENV === "test"
+            ? cb(msg)
+            : sgMail
+                .send(msg)
+                .then(() => cb(msg))
+                .catch(error => cb({ error: error.message }));
         })
       });      
     });

@@ -80,9 +80,12 @@ exports.create = async (req, res, next) => {
             name: teacher.firstName,
             type: "welcome",
             students: teacherAndStudents(users)[1]
-          }
-          console.log("Sending welcome email to " + teacher.email);
-          send(params, () => {});
+          };
+
+          send(params, result =>
+            console.log(result.error || `Sent ${result.subject} email to ${result.to}.`)
+          );
+
           return login(teacher.email, teacher.password, result =>
             res.status(result.error ? 422 : 201).send(result)
           );
