@@ -16,6 +16,7 @@ const message = (email, type, name, attachment) =>
     welcome: {
       to: email,
       from: "ben@playwordcraft.com",
+      bcc: ["ben@playwordcraft.com"],
       subject: "Welcome to Wordcraft",
       templateId: "248a901d-22b5-493c-a255-44e431954da0",
       attachments: [{
