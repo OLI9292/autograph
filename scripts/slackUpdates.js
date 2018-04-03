@@ -2,7 +2,7 @@
 
 const firebase = require('firebase');
 const Slack = require('node-slack');
-const CONFIG = require('../Config/main');
+const CONFIG = require('../config/main');
 
 const slack = new Slack(CONFIG.SLACK_HOOK, {});
 
