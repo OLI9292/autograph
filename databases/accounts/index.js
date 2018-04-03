@@ -1,10 +1,12 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const CONFIG = require('../../config/main')
-const plugins = require('./plugins')
+const CONFIG = require("../../config/main");
+const plugins = require("./plugins");
 
-plugins.forEach(plugin => mongoose.plugin(plugin))
+plugins.forEach(plugin => mongoose.plugin(plugin));
 
-const db = mongoose.createConnection(CONFIG.MONGODB_URI, { promiseLibrary: global.Promise })
+const db = mongoose.createConnection(CONFIG.MONGODB_URI, {
+  promiseLibrary: global.Promise
+});
 
-module.exports = db
+module.exports = db;

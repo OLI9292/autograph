@@ -1,7 +1,7 @@
-const db = require('../databases/accounts/index')
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-const _ = require('underscore')
+const db = require("../databases/accounts/index");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const _ = require("underscore");
 
 var factoidSchema = new Schema({
   value: { type: String, required: true },
@@ -16,8 +16,8 @@ var factoidSchema = new Schema({
   imagePublicDomain: { type: Boolean, default: false },
   level: { type: Number, min: 1, max: 10, default: 5 },
   citation: String
-})
+});
 
-const Factoid = db.model('Factoid', factoidSchema)
+const Factoid = db.model("Factoid", factoidSchema);
 
-module.exports = Factoid
+module.exports = Factoid;
