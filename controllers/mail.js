@@ -59,7 +59,7 @@ exports.send = (data, cb) => {
           { text: `${email} - ${password}`, style: ['masterListCredentials'] },
           { text: 'Student Accounts', style: ['subHeader'], margin: [0,30,0,10] },
           _.map(students, student => ({
-            text: `${student.firstName + student.lastName ? ` ${student.lastName}` : ''}, ${student.email} - ${student.password}`,
+            text: `${student.firstName + (student.lastName ? ` ${student.lastName}` : '')}, ${student.email} - ${student.password}`,
             style: ['masterListCredentials'],
             margin: [0,2,0,0]
           })),
