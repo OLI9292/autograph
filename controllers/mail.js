@@ -15,7 +15,7 @@ const message = (email, type, name, attachment) =>
   ({
     welcome: {
       to: email,
-      from: "ben@playwordcraft.com",
+      from: "hello@playwordcraft.com",
       bcc: ["ben@playwordcraft.com"],
       subject: "Welcome to Wordcraft",
       templateId: "248a901d-22b5-493c-a255-44e431954da0",
@@ -59,7 +59,7 @@ exports.send = (data, cb) => {
           { text: `${email} - ${password}`, style: ['masterListCredentials'] },
           { text: 'Student Accounts', style: ['subHeader'], margin: [0,30,0,10] },
           _.map(students, student => ({
-            text: `${student.firstName + (student.lastName ? ` ${student.lastName}` : '')}, ${student.email} - ${student.password}`,
+            text: `${student.firstName} ${student.lastName}, ${student.email} - ${student.password}`,
             style: ['masterListCredentials'],
             margin: [0,2,0,0]
           })),
