@@ -3,6 +3,7 @@
 const firebase = require('firebase');
 const Slack = require('node-slack');
 const CONFIG = require('../config/main');
+const get = require('lodash/get');
 
 const slack = new Slack(CONFIG.SLACK_HOOK, {});
 
@@ -32,16 +33,10 @@ ref.once('value').then((snap) => {
   })
 });
 
-const postToSlack = (data) => {
+const postToSlack = data => {
   return new Promise((resolve, reject) => {
-    let message = `${data.firstName} ${data.lastName} (email: ${data.email}) from ${data.school} just submitted a form!\n\n`
-    
-    if (data.comments.length) {
-      message += `In the comments section he/she wrote: ${data.comments}`
-    }
-
     slack.send({
-      text: message,
+      text: get(data, 'message'),
       channel: '#growth',
       username: 'Form-Bot'
     }, () => resolve());
