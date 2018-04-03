@@ -43,7 +43,7 @@ const postToSlack = (data) => {
     slack.send({
       text: message,
       channel: '#growth',
-      username: 'Form-Bot'
+      username: 'Form-Bot2'
     }, () => resolve());
   })
 }
