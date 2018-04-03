@@ -9,7 +9,7 @@ const slack = new Slack(CONFIG.SLACK_HOOK, {});
 const firebaseConfig = {
   apiKey: CONFIG.FIREBASE_API_KEY,
   authDomain: CONFIG.FIREBASE_AUTH_DOMAIN,
-  databaseURL: CONFIG.FIREBASE_DATABASE_URL
+  databaseURL: CONFIG.FIREBASE_DATABASE_URL,
   storageBucket: CONFIG.FIREBASE_STORAGE_BUCKET
 };
 
@@ -34,7 +34,7 @@ ref.once('value').then((snap) => {
 
 const postToSlack = (data) => {
   return new Promise((resolve, reject) => {
-    let message = `${data.firstName} ${data.lastName} (email: ${data.email}) from ${data.school} just submitted a form.\n\n`
+    let message = `${data.firstName} ${data.lastName} (email: ${data.email}) from ${data.school} just submitted a form!\n\n`
     
     if (data.comments.length) {
       message += `In the comments section he/she wrote: ${data.comments}`
@@ -43,7 +43,7 @@ const postToSlack = (data) => {
     slack.send({
       text: message,
       channel: '#growth',
-      username: 'Form-Bot2'
+      username: 'Form-Bot'
     }, () => resolve());
   })
 }
