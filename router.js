@@ -13,11 +13,17 @@ const LevelController = require("./controllers/level");
 const FactoidController = require("./controllers/factoid");
 const WordController = require("./controllers/word");
 const RootController = require("./controllers/root");
+const ImageController = require("./controllers/image");
 const QuestionController = require("./controllers/question");
 const TextController = require("./controllers/text");
 
 module.exports = app => {
   const apiRoutes = express.Router();
+
+  //
+  // IMAGE
+  //
+  apiRoutes.get("/v2/auth/image", ImageController.read);
 
   //
   // CLASS
