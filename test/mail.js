@@ -31,7 +31,7 @@ describe("Mail", () => {
           res.should.have.status(200);
           res.body.should.be
             .a("object")
-            .have.all.keys("to", "from", "subject", "templateId", "attachments");
+            .have.all.keys("to", "bcc:, "from", "subject", "templateId", "attachments");
           done();
         });
     }).timeout(100000);

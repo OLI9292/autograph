@@ -154,7 +154,7 @@ describe("Classes", () => {
         });
     });
 
-    it.only("it should add students to a class given the id", done => {
+    it("it should add students to a class given the id", done => {
       const students = [{ firstName: "ben", lastName: "burn" }, { firstName: "akiva", lastName: "sauce" }];
       const data = { students: students };
       chai
