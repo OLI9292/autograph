@@ -22,6 +22,6 @@ exports.read = (req, res, next) => {
   s3.getObject(params, (error, response) => {
     return error
       ? res.status(404).send({ error: error.message })
-      : res.status(200).send(encode(response.Body));
+      : res.status(200).send({ source: encode(response.Body) });
   });
 };
