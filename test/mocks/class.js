@@ -8,7 +8,7 @@ const primaryMock = {
   _id: ID_1,
   name: "Super Cool Class",
   school: schoolData.ID_1,
-  students: userData.mock._id,
+  students: [userData.mock._id],
   teacher: userData.teacherMock._id
 };
 

@@ -6,6 +6,7 @@ const chaiHttp = require("chai-http");
 const mongoose = require("mongoose");
 const server = require("../server");
 const should = chai.should();
+const get = require("lodash/get");
 
 const { cleanDB, seedDB } = require("../scripts/seedDB");
 
@@ -142,7 +143,7 @@ describe("Classes", () => {
       const updated = _.extend(classMock, { name: "Lower Lab" });
       chai
         .request(server)
-        .patch("/api/v2/admin/class/" + classMock._id)
+        .patch("/api/v2/auth/class/" + classMock._id)
         .send(_.extend(classMock, { name: "Lower Lab" }))
         .end((err, res) => {
           res.should.have.status(200);
@@ -152,6 +153,28 @@ describe("Classes", () => {
           done();
         });
     });
+
+    it("it should add students to a class given the id", done => {
+      const students = [{ firstName: "ben", lastName: "burn" }, { firstName: "akiva", lastName: "sauce" }];
+      const data = { 
+        email: "oliver@playwordcraft.com",
+        students: students
+      };
+      chai
+        .request(server)
+        .patch("/api/v2/auth/class/" + classMock._id)
+        .send(data)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.should.have.property("class");
+          res.body.class.should.have.property("students");
+          res.body.class.students.length.should.eql(classMock.students.length + students.length);
+          res.body.should.have.property("newStudents");
+          _.forEach(res.body.newStudents, student => get(student.classes[0], "id").should.eql(classMock._id));
+          done();
+        });
+    });    
   });
 
   describe("/DELETE/:id class", () => {

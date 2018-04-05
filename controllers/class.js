@@ -12,10 +12,10 @@ const { send } = require("./mail");
 // CREATE
 //
 
-const addAttributesToUser = (user, _class, usernames) => {
+const addAttributesToUser = (user, classId, usernames) => {
   user.signUpMethod = "teacherSignUp";
   const role = user.isTeacher ? "teacher" : "student";
-  user.classes = [{ id: _class.id, role: role }];
+  user.classes = [{ id: classId, role: role }];
   // generate a unique username and random password for students (not teacher)
   if (!user.isTeacher) {
     const base = (user.firstName + user.lastName.charAt(0)).toLowerCase();
@@ -57,12 +57,11 @@ exports.create = async (req, res, next) => {
 
   const usernames = await User.existingUsernames();
   const _class = new Class();
-  users = _.map(users, user => addAttributesToUser(user, _class, usernames));
+  const classId = _class.id;
+  users = _.map(users, user => addAttributesToUser(user, classId, usernames));
 
   User.create(users, (error, docs) => {
-    if (error) {
-      return res.status(422).send({ error: error.message });
-    }
+    if (error) { return res.status(422).send({ error: error.message }); }
 
     const [teacherDoc, studentDocs] = teacherAndStudents(docs)
     _class.teacher = get(teacherDoc, "_id");
@@ -199,20 +198,62 @@ exports.join = async (req, res, next) => {
 //
 
 exports.update = async (req, res, next) => {
-  Class.findOneAndUpdate(
-    { _id: req.params.id },
-    req.body,
-    { new: true },
-    async (error, _class) => {
-      if (error) {
-        return res.status(422).send({ error: error.message });
-      }
+  const {
+    id
+  } = req.params;
 
-      return _class
-        ? res.status(200).send(_class)
-        : res.status(422).send({ error: "Not found." });
-    }
-  );
+  if (req.body.students && req.body.email) {
+    const usernames = await User.existingUsernames();
+    const users = _.map(req.body.students, user => addAttributesToUser(user, id, usernames));
+
+    User.create(users, (error, userDocs) => {
+      if (error) { return res.status(422).send({ error: error.message }); }
+      
+      const studentIds = _.pluck(userDocs, "_id");
+
+      Class.findOneAndUpdate(
+        { _id: id },
+        { $push: { students: { $each: studentIds } } }, 
+        { new: true },
+        (error, doc) => {
+        if (error || !doc) {
+          User.remove({ _id: { $in: studentIds } });
+          const errorMessage = error.message || "Class not found.";
+          return res.status(422).send({ error: errorMessage });
+        }
+
+        const params = {
+          email: req.body.email,
+          type: "newAccounts",
+          students: users
+        };
+
+        send(params, result => console.log(result.error || `Sent new accounts email to ${params.email}.`));        
+
+        return res.status(200).send({ class: doc, newStudents: userDocs });
+      });
+    });
+
+  } else {
+
+    console.log(1)
+
+    Class.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      { new: true },
+      async (error, _class) => {
+        if (error) {
+          return res.status(422).send({ error: error.message });
+        }
+
+        return _class
+          ? res.status(200).send(_class)
+          : res.status(422).send({ error: "Not found." });
+      }
+    );
+
+  }
 };
 
 //
