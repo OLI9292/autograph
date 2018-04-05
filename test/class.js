@@ -115,7 +115,7 @@ describe("Classes", () => {
         });
     });
 
-    it.only("it should POST a valid class and LOGIN when login=true", done => {
+    it("it should POST a valid class and LOGIN when login=true", done => {
       chai
         .request(server)
         .post("/api/v2/auth/class?login=true")
