@@ -115,7 +115,7 @@ describe("Classes", () => {
         });
     });
 
-    it("it should POST a valid class and LOGIN when login=true", done => {
+    it.only("it should POST a valid class and LOGIN when login=true", done => {
       chai
         .request(server)
         .post("/api/v2/auth/class?login=true")
@@ -143,7 +143,7 @@ describe("Classes", () => {
       const updated = _.extend(classMock, { name: "Lower Lab" });
       chai
         .request(server)
-        .patch("/api/v2/admin/class/" + classMock._id)
+        .patch("/api/v2/auth/class/" + classMock._id)
         .send(_.extend(classMock, { name: "Lower Lab" }))
         .end((err, res) => {
           res.should.have.status(200);
@@ -156,10 +156,13 @@ describe("Classes", () => {
 
     it("it should add students to a class given the id", done => {
       const students = [{ firstName: "ben", lastName: "burn" }, { firstName: "akiva", lastName: "sauce" }];
-      const data = { students: students };
+      const data = { 
+        email: "oliver@playwordcraft.com",
+        students: students
+      };
       chai
         .request(server)
-        .patch("/api/v2/admin/class/" + classMock._id)
+        .patch("/api/v2/auth/class/" + classMock._id)
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);

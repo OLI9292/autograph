@@ -202,8 +202,7 @@ exports.update = async (req, res, next) => {
     id
   } = req.params;
 
-  if (_.isEqual(_.keys(req.body), ["students"])) {
-
+  if (req.body.students && req.body.email) {
     const usernames = await User.existingUsernames();
     const users = _.map(req.body.students, user => addAttributesToUser(user, id, usernames));
 
@@ -211,7 +210,7 @@ exports.update = async (req, res, next) => {
       if (error) { return res.status(422).send({ error: error.message }); }
       
       const studentIds = _.pluck(userDocs, "_id");
-      
+
       Class.findOneAndUpdate(
         { _id: id },
         { $push: { students: { $each: studentIds } } }, 
@@ -223,11 +222,21 @@ exports.update = async (req, res, next) => {
           return res.status(422).send({ error: errorMessage });
         }
 
+        const params = {
+          email: req.body.email,
+          type: "newAccounts",
+          students: users
+        };
+
+        send(params, result => console.log(result.error || `Sent new accounts email to ${params.email}.`));        
+
         return res.status(200).send({ class: doc, newStudents: userDocs });
       });
     });
 
   } else {
+
+    console.log(1)
 
     Class.findOneAndUpdate(
       { _id: req.params.id },
