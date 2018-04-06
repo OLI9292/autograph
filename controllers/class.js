@@ -88,13 +88,9 @@ exports.create = async (req, res, next) => {
           return login(teacher.email, teacher.password, result =>
             res.status(result.error ? 422 : 201).send(result)
           );
-        } else {
-          return res.status(201).send({
-            class: _class,
-            students: studentDocs,
-            teacher: teacherDoc
-          });
         }
+        
+        return res.status(201).send({ class: _class, users: users, students: studentDocs, teacher: teacherDoc });
       }
     });
   });
