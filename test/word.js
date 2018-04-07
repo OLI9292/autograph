@@ -38,7 +38,7 @@ describe("Words", () => {
   describe("/GET words", () => {
     beforeEach(async () => await seedDB());
 
-    it("it should GET all the words", done => {
+    it.only("it should GET all the words", done => {
       chai
         .request(server)
         .get("/api/v2/words")

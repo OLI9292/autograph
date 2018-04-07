@@ -82,7 +82,13 @@ exports.read = (req, res, next) => {
       });
     });
   } else {
+    var start = new Date();
+    var end = new Date();
+
     Word.find({}, (error, words) => {
+      var seconds = (end.getTime() - start.getTime()) / 1000;
+      console.log(seconds)
+      console.log(words.length)
       return error
         ? res.status(400).send({ error: error.message })
         : res.status(200).send(words);
