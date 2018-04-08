@@ -31,7 +31,7 @@ const saveLocations = res => {
   });
 }
 
-const getLocations = (words, res) => {
+const getLocations = res => {
   cache.lrange("images", 0, -1, async (error, reply) => {
     return reply
       ? res.status(200).send(reply)
@@ -54,18 +54,15 @@ const getImage = (key, res) => {
 
 exports.read = (req, res, next) => {
   const {
-    words,
     key,
     save
   } = req.query;
 
-  if (words) {
-    return getLocations(words, res);
-  } else if (save) {
+  if (save) {
     return saveLocations(res);
   } else if (key) {
     return getImage(key, res);
   } else {
-    return res.status(422).send({ error: "Bad query." });
+    return getLocations(words, res);
   }
 };
