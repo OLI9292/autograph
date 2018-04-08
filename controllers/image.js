@@ -34,7 +34,7 @@ const saveLocations = res => {
 const getLocations = res => {
   cache.lrange("images", 0, -1, async (error, reply) => {
     return reply
-      ? res.status(200).send(reply)
+      ? res.status(200).send({ imageKeys: reply })
       : res.status(404).send({ error: error || "Not found." });
   });  
 }
