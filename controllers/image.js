@@ -63,6 +63,6 @@ exports.read = (req, res, next) => {
   } else if (key) {
     return getImage(key, res);
   } else {
-    return getLocations(words, res);
+    return getLocations(res);
   }
 };
