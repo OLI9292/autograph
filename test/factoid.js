@@ -30,7 +30,7 @@ describe("Factoids", () => {
         });
     });
 
-    it.only("it should GET all the factoids filtered by words", done => {
+    it("it should GET all the factoids filtered by words", done => {
       const words = ["carnivore", "herbivore"];
       chai
         .request(server)

@@ -11,6 +11,7 @@ const User = require("../models/user");
 const { Question } = require("../models/question");
 
 const demoWords = require("../lib/demoWords");
+const factoidDemoWords = require("../lib/factoidDemoWords");
 
 // look in models/question
 const SPELL_TYPES = [6, 7, 8, 10];
@@ -88,6 +89,11 @@ const questions = {
     return await getQuestions(data);
   },
 
+  forFactoidDemoLevel: async () => {
+    const data = wordsAndLevels(factoidDemoWords, null, 1);
+    return await getQuestions(data);
+  },  
+
   forTrainLevel: async params => {
     const { level, user, stage } = params;
     const words = await Word.find({});
@@ -148,6 +154,8 @@ exports.read = async (req, res, next) => {
     switch (req.query.type) {
       case "demo":
         return await questions.forDemoLevel();
+      case "factoidDemo":
+        return await questions.forFactoidDemoLevel();
       case "train":
         return await questions.forTrainLevel(params);
       case "explore":
