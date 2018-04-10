@@ -29,10 +29,10 @@ const classRanks = async classId => {
   const students = await _class.studentDocs();
   if (students.error) { return { error: error.message }; }
 
-  return {
-    weekly: ranksFor(students, true, true),
-    allTime: ranksFor(students, false, true)
-  };
+  return _.union(
+    ranksFor(students, true, true),
+    ranksFor(students, false, true)
+  );
 }
 
 const worldRanks = async () => {
@@ -59,15 +59,15 @@ const filterRanks = (ranks, userId, position, isWeekly) => {
   } = ranks;
   
   if (userId) {
-    return {
-      weekly: filter(weekly, "userId", userId),
-      allTime: filter(allTime, "userId", userId)
-    };
+    return _.union(
+      filter(weekly, "userId", userId),
+      filter(allTime, "userId", userId)
+    );
   } else {
-    return {
-      weekly: isWeekly ? filter(weekly, "position", position) : [],
-      allTime: isWeekly ? [] : filter(allTime, "position", position)
-    };    
+    return _.union(
+      isWeekly ? filter(weekly, "position", position) : [],
+      isWeekly ? [] : filter(allTime, "position", position)
+    );    
   }
 }
 
