@@ -6,7 +6,7 @@ const LeaderboardController = require("../controllers/leaderboard");
 
 module.exports.cache = async () => {
   // Cache ranks
-  const ranks = _.flatten(await LeaderboardController.allRanks());
+  /*const ranks = _.flatten(await LeaderboardController.allRanks());
   OLOG.log({ level: "info", message: `Caching ${ranks.length} ranks.` });
   const stringified = JSON.stringify({ ranks: ranks });
   await cache.set("leaderboards", stringified);
@@ -17,5 +17,5 @@ module.exports.cache = async () => {
   }
   cache.unref();
 
-  return;
+  return;*/
 };
