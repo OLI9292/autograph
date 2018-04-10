@@ -94,7 +94,7 @@ exports.read = async (req, res, next) => {
   } else if (req.query.classId) {
     ranks = await classRanks(req.query.classId);
     return ranks.error
-      ? res.status(404).send({ error: error })
+      ? res.status(404).send({ error: ranks.error })
       : res.status(200).send(ranks);    
   } else {
     cache.get("ranks", async (error, reply) => {
