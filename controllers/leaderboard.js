@@ -87,9 +87,9 @@ exports.read = async (req, res, next) => {
   if (save) {
     ranks = await worldRanks();
     if (ranks.error) { return res.status(422).send({ error: error }); }
-    const stringified = JSON.stringify(ranks);
+    /*const stringified = JSON.stringify(ranks);
     await cache.set("ranks", stringified);
-    console.log("Cached ranks.");
+    console.log("Cached ranks.");*/
     return res.status(200).send({ success: true });
   } else if (req.query.classId) {
     ranks = await classRanks(req.query.classId);
