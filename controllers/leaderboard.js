@@ -97,10 +97,6 @@ const cachedWorldRanks = async (next, cb) => {
   });      
 }
 
-const findPositions = (userId, ranksClass, ranksWorld) => _.compact(
-  _.map([ranksClass, ranksWorld], ranks => _.find(ranks, rank => !rank.isWeekly && rank.userId === userId))
-);
-
 exports.read = async (req, res, next) => {
   recordEvent(req.userId, req.sessionId, req.ip, req.path);
 
@@ -122,7 +118,7 @@ exports.read = async (req, res, next) => {
       if (ranksWorld.error) { return res.status(422).send({ error: ranksWorld.error }); }
       const ranksClass = await classRanks(classId);
       if (ranksClass.error) { return res.status(422).send({ error: ranksClass.error }); }
-      const positions = findPositions(userId, ranksClass, ranksWorld.allTime);
+      const positions = _.filter(_.union(ranksClass, ..._.values(ranksWorld)), r => r.userId === userId);
       return res.status(200).send(positions);
     });
 
