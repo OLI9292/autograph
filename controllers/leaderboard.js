@@ -22,6 +22,7 @@ const ranksFor = (userDocs, isWeekly, isClass) => {
   if (!isClass) { ranks = _.filter(ranks, rank => rank.points > 0); }
   ranks = _.sortBy(ranks, rank => -rank.points)
   ranks = _.map(ranks, (rank, idx) => _.extend({}, rank, { position: idx + 1 }));
+  ranks[ranks.length - 1].isLast = true;
 
   return ranks;
 }
