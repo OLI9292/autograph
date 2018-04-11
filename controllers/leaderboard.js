@@ -15,6 +15,7 @@ const ranksFor = (userDocs, isWeekly, isClass) => {
     userId: user._id,
     name: fullName(user.firstName, user.lastName),
     points: isWeekly ? user.weeklyStarCount : user.totalStarCount,
+    school: user.nameOfSchool,
     isWeekly: isWeekly,
     isClass: isClass
   }));
@@ -43,7 +44,7 @@ const worldRanks = async () => {
   try {
     let students = await User.find(
       { isTeacher: false },
-      { weeklyStarCount: 1, totalStarCount: 1, firstName: 1, lastName: 1 }
+      { weeklyStarCount: 1, totalStarCount: 1, firstName: 1, lastName: 1, nameOfSchool: 1 }
     );
 
     return {
