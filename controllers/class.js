@@ -18,7 +18,7 @@ const addAttributesToUser = (user, classId, usernames) => {
   user.classes = [{ id: classId, role: role }];
   // generate a unique username and random password for students (not teacher)
   if (!user.isTeacher) {
-    const base = (user.firstName + user.lastName.charAt(0)).toLowerCase();
+    const base = user.firstName.toLowerCase();
     user.email = usernameWithIndex(base, usernames);
     user.password = generatePassword();
   }
