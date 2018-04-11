@@ -1,123 +1,140 @@
+const mongoose = require('mongoose');
 const _ = require("underscore");
 
 const cache = require("../cache");
 const School = require("../models/school");
 const User = require("../models/user");
+const Class = require("../models/class");
 
 const recordEvent = require("../middlewares/recordEvent");
 
-exports.allRanks = async () => {
-  const schools = await School.find();
-  return await Promise.all(
-    _.flatten([schools.map(ranksFor), ranksFor(schools)])
-  );
-};
+const ranksFor = (userDocs, isWeekly, isClass) => {
+  const fullName = (first, last) => last ? `${first} ${last}` : first;
 
-const ranksFor = async school => {
-  if (!school) {
-    return [];
-  }
-  const isAggregated = _.isArray(school);
-  const students = await User.find(
-    isAggregated
-      ? { isTeacher: false }
-      : { isTeacher: false, school: school._id }
-  );
+  let ranks = _.map(userDocs, user => ({
+    userId: user._id.toString(),
+    name: fullName(user.firstName, user.lastName),
+    points: isWeekly ? user.weeklyStarCount : user.totalStarCount,
+    school: user.nameOfSchool,
+    isWeekly: isWeekly,
+    isClass: isClass
+  }));
 
-  return _.flatten(
-    [true, false].map(isWeekly => {
-      const ranks = students
-        .map(u => rankFor(u, school, isAggregated, isWeekly))
-        .filter(student => student.score > 0);
-
-      const sorted = _.sortBy(ranks, "score").reverse();
-      return sorted.map((s, idx) =>
-        _.extend({}, s, {
-          position: idx + 1,
-          isLast: idx + 1 === sorted.length
-        })
-      );
-    })
-  );
-};
-
-const rankFor = (student, school, isAggregated, isWeekly) => ({
-  id: `${student._id}-${isAggregated ? "Earth" : school._id}-${
-    isWeekly ? "weekly" : "all"
-  }`,
-  _id: student._id,
-  name: isAggregated ? student.initials() : student.firstNameLastInitial(),
-  score: isWeekly ? student.weeklyStarCount : student.starCount(),
-  schoolName: isAggregated ? student.schoolName(school) : school.name,
-  schoolId: !isAggregated && student.school,
-  group: isAggregated ? "Earth" : school.name,
-  period: isWeekly ? "weekly" : "all"
-});
-
-const filterRanks = (ranks, query) => {
-  if (query.user) {
-    const grouped = _.values(_.groupBy(ranks, r => `${r.group}-${r.period}`));
-
-    ranks = _.flatten(
-      grouped
-        .filter(g => _.contains(g.map(r => r._id.toString()), query.user))
-        .map(g => {
-          const index = Math.max(
-            _.findIndex(g, g => g._id.toString() === query.user) - 2,
-            0
-          );
-          return g.slice(index, index + 20);
-        })
-    );
-  } else {
-    const start = parseInt(query.start);
-
-    if (query.school) {
-      ranks =
-        query.school === "Earth"
-          ? ranks.filter(r => r.group === "Earth")
-          : ranks.filter(r => r.schoolId.toString() === query.school);
-    }
-
-    if (query.period) {
-      ranks = ranks.filter(r => r.period === query.period);
-    }
-
-    if (start > 0) {
-      ranks = ranks.slice(start, start + 20);
-    }
-  }
+  if (!isClass) { ranks = _.filter(ranks, rank => rank.points > 0); }
+  ranks = _.sortBy(ranks, rank => -rank.points)
+  ranks = _.map(ranks, (rank, idx) => _.extend({}, rank, { position: idx + 1 }));
+  ranks[ranks.length - 1].isLast = true;
 
   return ranks;
-};
+}
 
-/**
- * QUERY:
- *     - user (id)
- *     - start (int)
- *     - period (weekly or all)
- *     - school (id)
- *
- * RETURNS:
- *     - [_id, name, score, position, period, group]
- */
+const classRanks = async classId => {
+  const _class = await Class.findById(classId);
+  if (!_class) { return { error: "Class not found." }; }
+  const students = await _class.studentDocs();
+  if (students.error) { return { error: error.message }; }
+
+  return _.union(
+    ranksFor(students, true, true),
+    ranksFor(students, false, true)
+  );
+}
+
+const worldRanks = async () => {
+  try {
+    let students = await User.find(
+      { isTeacher: false },
+      { weeklyStarCount: 1, totalStarCount: 1, firstName: 1, lastName: 1, nameOfSchool: 1 }
+    );
+
+    return {
+      weekly: ranksFor(students, true, false),
+      allTime: ranksFor(students, false, false)
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+const filterRanks = (ranks, userId, position, isWeekly) => {
+  const filter = (ranks, attr, value) => {
+    const index = _.findIndex(ranks, rank => rank[attr] === value);
+    return index > -1 ? ranks.slice(index, index + 20) : [];
+  };
+
+  let {
+    weekly,
+    allTime
+  } = ranks;
+
+  if (userId) {
+    return _.union(
+      filter(weekly, "userId", userId),
+      filter(allTime, "userId", userId)
+    );
+  } else {
+    return _.union(
+      isWeekly ? filter(weekly, "position", position) : [],
+      isWeekly ? [] : filter(allTime, "position", position)
+    );    
+  }
+}
+
+exports.saveRanks = async () => {
+  const ranks = await worldRanks();
+  if (ranks.error) { return { error: error }; }
+  const stringified = JSON.stringify(ranks);
+  await cache.set("ranks", stringified);
+  console.log("Cached ranks.");
+  return { success: true };
+}
+
+const cachedWorldRanks = async (next, cb) => {
+  cache.get("ranks", (error, reply) => {
+    error 
+      ? next()
+      : cb(reply ? JSON.parse(reply) : { error: "Not found." });
+  });      
+}
 
 exports.read = async (req, res, next) => {
   recordEvent(req.userId, req.sessionId, req.ip, req.path);
 
-  cache.get("leaderboards", async (error, reply) => {
-    if (error) {
-      next();
-    } else if (reply) {
-      let ranks = JSON.parse(reply).ranks;
+  let {
+    classId,
+    userId,
+    position,
+    isWeekly,
+    save
+  } = req.query;
 
-      if (req.query) {
-        ranks = filterRanks(ranks, req.query);
-      }
+  if (save) {
+    
+    const result = await exports.saveRanks();
+    return res.status(result.error ? 422 : 200).send(result)
+  
+  } else if (classId && userId) {
 
-      return res.status(200).send(ranks);
-    } else {
-      return res.status(404).send({ error: "Not found." });
-    }
-  });
+    await cachedWorldRanks(next, async ranksWorld => {
+      if (ranksWorld.error) { return res.status(422).send({ error: ranksWorld.error }); }
+      const ranksClass = await classRanks(classId);
+      if (ranksClass.error) { return res.status(422).send({ error: ranksClass.error }); }
+      const positions = _.filter(_.union(ranksClass, ..._.values(ranksWorld)), r => r.userId === userId);
+      return res.status(200).send(positions);
+    });
+
+  } else if (classId) {
+
+    const ranks = await classRanks(classId);
+    return ranks.error
+      ? res.status(404).send({ error: ranks.error })
+      : res.status(200).send(ranks);    
+
+  } else {
+
+    await cachedWorldRanks(next, response => response.error
+      ? res.status(422).send({ error: response.error })
+      : res.status(200).send(filterRanks(response, userId, (parseInt(position, 10) || 1), isWeekly)));
+
+  }
 };
