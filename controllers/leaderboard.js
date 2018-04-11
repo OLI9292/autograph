@@ -80,6 +80,7 @@ const filterRanks = (ranks, userId, position, isWeekly) => {
   }
 }
 
+<<<<<<< HEAD
 exports.saveRanks = async () => {
   const ranks = await worldRanks();
   if (ranks.error) { return { error: error }; }
@@ -87,6 +88,15 @@ exports.saveRanks = async () => {
   await cache.set("ranks", stringified);
   console.log("Cached ranks.");
   return { success: true };
+=======
+const saveRanks = async () => {
+  const ranks = await worldRanks();
+  if (ranks.error) { return res.status(422).send({ error: error }); }
+  const stringified = JSON.stringify(ranks);
+  await cache.set("ranks", stringified);
+  console.log("Cached ranks.");
+  return res.status(200).send({ success: true });  
+>>>>>>> 2e6d75b474a8bfe4c8b653967d77693a744006b0
 }
 
 const cachedWorldRanks = async (next, cb) => {
@@ -110,8 +120,12 @@ exports.read = async (req, res, next) => {
 
   if (save) {
     
+<<<<<<< HEAD
     const result = await exports.saveRanks();
     return res.status(result.error ? 422 : 200).send(result)
+=======
+    return saveRanks();
+>>>>>>> 2e6d75b474a8bfe4c8b653967d77693a744006b0
   
   } else if (classId && userId) {
 

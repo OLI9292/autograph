@@ -65,6 +65,22 @@ describe("Classes", () => {
     });
   });
 
+  describe("/GET class/:id/students", () => {
+    beforeEach(async () => await seedDB());
+
+    it.only("it should GET all the students in a class", done => {
+      chai
+        .request(server)
+        .get(`/api/v2/auth/class/${classMock._id}/students`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("array");
+          res.body.length.should.be.eql(classMock.students.length);
+          done();
+        });
+    });
+  });  
+
   describe("/POST class", () => {
     beforeEach(async () => await seedDB());
     const data = [

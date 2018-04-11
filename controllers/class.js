@@ -124,21 +124,12 @@ exports.read = async (req, res, next) => {
 
 exports.readStudents = async (req, res, next) => {
   Class.findById(req.params.id, async (error, _class) => {
-    if (error) {
-      return res.status(422).send({ error: error.message });
-    }
-
-    if (_class) {
-      User.find({ _id: { $in: _class.students } }, async (err, students) => {
-        if (error) {
-          return res.status(422).send({ error: error.message });
-        }
-
-        return res.status(201).send(students);
-      });
-    } else {
-      return res.status(422).send({ error: "Class not found." });
-    }
+    if (error) { return res.status(422).send({ error: error.message }); }
+    if (!_class) { return res.status(422).send({ error: "Class not found" }); }
+    const students = await _class.studentDocs();
+    return students.error
+      ? res.status(422).send({ error: students.error })
+      : res.status(200).send(students);
   });
 };
 
