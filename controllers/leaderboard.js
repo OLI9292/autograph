@@ -58,14 +58,14 @@ const worldRanks = async () => {
 const filterRanks = (ranks, userId, position, isWeekly) => {
   const filter = (ranks, attr, value) => {
     const index = _.findIndex(ranks, rank => rank[attr] === value);
-    return index ? ranks.slice(index, index + 20) : [];
+    return index > -1 ? ranks.slice(index, index + 20) : [];
   };
 
   let {
     weekly,
     allTime
   } = ranks;
-  
+
   if (userId) {
     return _.union(
       filter(weekly, "userId", userId),
