@@ -99,7 +99,7 @@ exports.read = async (req, res, next) => {
     console.log("Cached ranks.");
     return res.status(200).send({ success: true });
   } else if (classId) {
-    ranks = await classRanks(req.query.classId);
+    ranks = await classRanks(classId);
     return ranks.error
       ? res.status(404).send({ error: ranks.error })
       : res.status(200).send(ranks);    
@@ -110,7 +110,7 @@ exports.read = async (req, res, next) => {
       } else if (reply) {
         return res.status(200).send(filterRanks(
           JSON.parse(reply), 
-          mongoose.Types.ObjectId(userId),
+          userId,
           (parseInt(position, 10) || 1),
           isWeekly
         ));
