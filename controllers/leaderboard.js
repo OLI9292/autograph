@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const _ = require("underscore");
 
 const cache = require("../cache");
@@ -8,10 +9,12 @@ const Class = require("../models/class");
 const recordEvent = require("../middlewares/recordEvent");
 
 const ranksFor = (userDocs, isWeekly, isClass) => {
+  const fullName = (first, last) => last ? `${first} ${last}` : first;
+
   let ranks = _.map(userDocs, user => ({
-    userId: user._id.toString(),
-    name: user.fullName(),
-    points: isWeekly ? user.weeklyStarCount : user.starCount(),
+    userId: user._id,
+    name: fullName(user.firstName, user.lastName),
+    points: isWeekly ? user.weeklyStarCount : user.totalStarCount,
     isWeekly: isWeekly,
     isClass: isClass
   }));
@@ -37,7 +40,11 @@ const classRanks = async classId => {
 
 const worldRanks = async () => {
   try {
-    const students = await User.find({ isTeacher: false });
+    let students = await User.find(
+      { isTeacher: false },
+      { weeklyStarCount: 1, totalStarCount: 1, firstName: 1, lastName: 1 }
+    );
+
     return {
       weekly: ranksFor(students, true, false),
       allTime: ranksFor(students, false, false)
@@ -87,11 +94,11 @@ exports.read = async (req, res, next) => {
   if (save) {
     ranks = await worldRanks();
     if (ranks.error) { return res.status(422).send({ error: error }); }
-    /*const stringified = JSON.stringify(ranks);
+    const stringified = JSON.stringify(ranks);
     await cache.set("ranks", stringified);
-    console.log("Cached ranks.");*/
+    console.log("Cached ranks.");
     return res.status(200).send({ success: true });
-  } else if (req.query.classId) {
+  } else if (classId) {
     ranks = await classRanks(req.query.classId);
     return ranks.error
       ? res.status(404).send({ error: ranks.error })
@@ -101,9 +108,12 @@ exports.read = async (req, res, next) => {
       if (error) {
         next();
       } else if (reply) {
-        ranks = JSON.parse(reply);
-        ranks = filterRanks(ranks, userId, (parseInt(position, 10) || 1), isWeekly);
-        return res.status(200).send(ranks);
+        return res.status(200).send(filterRanks(
+          JSON.parse(reply), 
+          mongoose.Types.ObjectId(userId),
+          (parseInt(position, 10) || 1),
+          isWeekly
+        ));
       } else {
         return res.status(404).send({ error: "Not found." });
       }

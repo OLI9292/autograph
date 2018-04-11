@@ -220,6 +220,9 @@ const updateFromWeb = async (req, res, next) => {
       // Update weekly experience
       user.weeklyStarCount = user.weeklyStarCount + user.starCount() - oldExperience;
 
+      // Update total experience
+      user.totalStarCount = users.starCount();
+
       try {
         await user.save();
         return res.status(200).send(user);

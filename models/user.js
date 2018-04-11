@@ -35,6 +35,7 @@ const userSchema = new Schema({
     required: true
   },
   weeklyStarCount: { type: Number, default: 0 },
+  totalStarCount: { type: Number, default: 0 },
   wordListsCompleted: [Schema.Types.ObjectId],
   words: {
     type: [
