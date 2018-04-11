@@ -12,7 +12,7 @@ const ranksFor = (userDocs, isWeekly, isClass) => {
   const fullName = (first, last) => last ? `${first} ${last}` : first;
 
   let ranks = _.map(userDocs, user => ({
-    userId: user._id,
+    userId: user._id.toString(),
     name: fullName(user.firstName, user.lastName),
     points: isWeekly ? user.weeklyStarCount : user.totalStarCount,
     school: user.nameOfSchool,
@@ -80,6 +80,27 @@ const filterRanks = (ranks, userId, position, isWeekly) => {
   }
 }
 
+const saveRanks = async () => {
+  const ranks = await worldRanks();
+  if (ranks.error) { return res.status(422).send({ error: error }); }
+  const stringified = JSON.stringify(ranks);
+  await cache.set("ranks", stringified);
+  console.log("Cached ranks.");
+  return res.status(200).send({ success: true });  
+}
+
+const cachedWorldRanks = async (next, cb) => {
+  cache.get("ranks", (error, reply) => {
+    error 
+      ? next()
+      : cb(reply ? JSON.parse(reply) : { error: "Not found." });
+  });      
+}
+
+const findPositions = (userId, ranksClass, ranksWorld) => _.compact(
+  _.map([ranksClass, ranksWorld], ranks => _.find(ranks, rank => !rank.isWeekly && rank.userId === userId))
+);
+
 exports.read = async (req, res, next) => {
   recordEvent(req.userId, req.sessionId, req.ip, req.path);
 
@@ -91,34 +112,32 @@ exports.read = async (req, res, next) => {
     save
   } = req.query;
 
-  let ranks;
-
   if (save) {
-    ranks = await worldRanks();
-    if (ranks.error) { return res.status(422).send({ error: error }); }
-    const stringified = JSON.stringify(ranks);
-    await cache.set("ranks", stringified);
-    console.log("Cached ranks.");
-    return res.status(200).send({ success: true });
+    
+    return saveRanks();
+  
+  } else if (classId && userId) {
+
+    await cachedWorldRanks(next, async ranksWorld => {
+      if (ranksWorld.error) { return res.status(422).send({ error: ranksWorld.error }); }
+      const ranksClass = await classRanks(classId);
+      if (ranksClass.error) { return res.status(422).send({ error: ranksClass.error }); }
+      const positions = findPositions(userId, ranksClass, ranksWorld.allTime);
+      return res.status(200).send(positions);
+    });
+
   } else if (classId) {
-    ranks = await classRanks(classId);
+
+    const ranks = await classRanks(classId);
     return ranks.error
       ? res.status(404).send({ error: ranks.error })
       : res.status(200).send(ranks);    
+
   } else {
-    cache.get("ranks", async (error, reply) => {
-      if (error) {
-        next();
-      } else if (reply) {
-        return res.status(200).send(filterRanks(
-          JSON.parse(reply), 
-          userId,
-          (parseInt(position, 10) || 1),
-          isWeekly
-        ));
-      } else {
-        return res.status(404).send({ error: "Not found." });
-      }
-    });    
+
+    await cachedWorldRanks(next, response => response.error
+      ? res.status(422).send({ error: response.error })
+      : res.status(200).send(filterRanks(response, userId, (parseInt(position, 10) || 1), isWeekly)));
+
   }
 };
