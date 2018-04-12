@@ -68,7 +68,7 @@ describe("Classes", () => {
   describe("/GET class/:id/students", () => {
     beforeEach(async () => await seedDB());
 
-    it.only("it should GET all the students in a class", done => {
+    it("it should GET all the students in a class", done => {
       chai
         .request(server)
         .get(`/api/v2/auth/class/${classMock._id}/students`)

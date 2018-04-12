@@ -7,6 +7,7 @@ const Class = require("../models/class");
 const User = require("../models/user");
 const { login } = require("./login");
 const { send } = require("./mail");
+const { randomPassword } = require("../lib/helpers");
 
 //
 // CREATE
@@ -20,13 +21,10 @@ const addAttributesToUser = (user, classId, usernames) => {
   if (!user.isTeacher) {
     const base = user.firstName.toLowerCase();
     user.email = usernameWithIndex(base, usernames);
-    user.password = generatePassword();
+    user.password = randomPassword();
   }
   return user;
 }
-
-const generatePassword = () =>
-  sampleSize("abcdefghkmnpqrstuvwxyz23456789", 10).join("");
 
 const teacherAndStudents = users => [_.find(users, u => u.isTeacher), _.reject(users, u => u.isTeacher)];
 
@@ -55,12 +53,19 @@ exports.create = async (req, res, next) => {
       .send({ error: "Classes require 1 teacher and multiple students." });
   }
 
-  const usernames = await User.existingUsernames();
+  let usernames = await User.existingUsernames();
   const _class = new Class();
   const classId = _class.id;
-  users = _.map(users, user => addAttributesToUser(user, classId, usernames));
 
-  User.create(users, (error, docs) => {
+  const usersWithLogin = [];
+  
+  for (let user of users) {
+    usernames = usernames.concat(_.pluck(usersWithLogin, "email"));
+    const updatedUser = addAttributesToUser(user, classId, usernames);
+    usersWithLogin.push(updatedUser);
+  }
+
+  User.create(usersWithLogin, (error, docs) => {
     if (error) { return res.status(422).send({ error: error.message }); }
 
     const [teacherDoc, studentDocs] = teacherAndStudents(docs)
@@ -78,7 +83,7 @@ exports.create = async (req, res, next) => {
             password: teacher.password,
             name: teacher.firstName,
             type: "welcome",
-            students: teacherAndStudents(users)[1]
+            students: teacherAndStudents(usersWithLogin)[1]
           };
 
           send(params, result =>

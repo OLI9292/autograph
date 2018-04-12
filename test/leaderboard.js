@@ -21,11 +21,10 @@ chai.use(chaiHttp);
 describe("Leaderboards", () => {
   before(async () => {
     await seedDB();
-    await leaderboard.cache();
   });
 
   describe("/GET leaderboard", () => {
-    it.only("it should GET all the ranks", done => {
+    it("it should GET all the ranks", done => {
       chai
         .request(server)
         .get("/api/v2/auth/leaderboard")
@@ -38,7 +37,7 @@ describe("Leaderboards", () => {
         });
     });
 
-    it.only("it should GET all the ranks for a class", done => {
+    it("it should GET all the ranks for a class", done => {
       chai
         .request(server)
         .get(`/api/v2/auth/leaderboard?classId=${classMock._id}`)
