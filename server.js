@@ -18,7 +18,7 @@ mongoose.connect(CONFIG.MONGODB_URI, { promiseLibrary: global.Promise });
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
 
-app.use(morgan("combined", { stream: OLOG.stream }));
+// app.use(morgan("combined", { stream: OLOG.stream }));
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
