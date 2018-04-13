@@ -16,6 +16,7 @@ const primaryMock = {
   email: "willow@gmail.com",
   password: "super-secret-password",
   weeklyStarCount: 6,
+  totalStarCount: 32,
   words: [
     { name: "carnivore", correct: 0, seen: 0, timeSpent: 0, experience: 8 },
     { name: "herbivore", correct: 0, seen: 0, timeSpent: 0, experience: 8 },

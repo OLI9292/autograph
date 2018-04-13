@@ -4,8 +4,6 @@ const _ = require("underscore");
 const Word = require("../models/word");
 const Root = require("../models/root");
 
-const logger = require("../config/logger");
-
 //
 // CREATE
 //

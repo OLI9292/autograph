@@ -76,14 +76,14 @@ rootSchema.statics.createOrUpdateMultiple = async words => {
     const error = _.find(roots, r => r && r.message);
 
     if (error) {
-      OLOG.error(error.message);
+      console.log(error.message);
     } else {
       word.set({ roots: _.pluck(roots, "_id") });
       try {
         await word.save();
       } catch (error) {
         // TODO: - look into error here
-        OLOG.error(error.message);
+        console.log(error.message);
       }
     }
   }

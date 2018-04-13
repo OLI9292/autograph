@@ -122,11 +122,7 @@ exports.parse = (req, res, next) => {
       const saveTo = path.join(".", filename);
 
       file.pipe(fs.createWriteStream(saveTo)).on("finish", async () => {
-        OLOG.log({
-          level: "info",
-          message: `File ${filename} is ${fs.statSync(saveTo).size /
-            1000000} mb.`
-        });
+        console.log(`File ${filename} is ${fs.statSync(saveTo).size / 1000000} mb.`);
 
         search(saveTo, result => {
           fs.unlink(saveTo);
