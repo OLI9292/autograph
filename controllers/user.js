@@ -8,6 +8,7 @@ const Level = require("../models/level");
 const User = require("../models/user");
 
 const recordEvent = require("../middlewares/recordEvent");
+const cache = require("../cache");
 
 //
 // CREATE
@@ -179,59 +180,50 @@ exports.update = async (req, res, next) => {
 };
 
 const updateFromWeb = async (req, res, next) => {
-  const [id, stats] = [req.body.id, req.body.stats];
+  const {
+    id,
+    stats
+  } = req.body;
 
-  if (!id || !_.isArray(stats)) {
-    return res.status(422).send({ error: "Id and stats required." });
-  }
-
-  User.findById(req.body.id, async (error, user) => {
-    if (error) {
-      return res.status(422).send({ error: error.message });
+  User.findById(id, async (error, user) => {
+    if (error || !user) {
+      return res.status(422).send({ error: error ? error.message : "User not found." }); 
     }
 
-    if (user) {
-      const oldExperience = user.starCount();
+    // Update user word list
+    for (const stat of stats) {
+      const index = _.findIndex(user.words, word => stat.word === word.name);
 
-      stats.forEach(s => {
-        const idx = _.findIndex(user.words, w => s.word === w.name);
-
-        if (idx >= 0) {
-          // Update old words
-          const copy = user.words[idx];
-          copy.seen += 1;
-          copy.correct += s.correct ? 1 : 0;
-          copy.experience = Math.min(
-            10,
-            s.correct ? copy.experience + 1 : copy.experience
-          );
-          copy.timeSpent += s.time || 0;
-          user.words[idx] = copy;
-        } else {
-          // Add new words
-          user.words.push({
-            name: s.word,
-            correct: s.correct ? 1 : 0,
-            timeSpent: s.time
-          });
-        }
-      });
-
-      // Update weekly experience
-      user.weeklyStarCount = user.weeklyStarCount + user.starCount() - oldExperience;
-
-      // Update total experience
-      user.totalStarCount = user.starCount();
-
-      try {
-        await user.save();
-        return res.status(200).send(user);
-      } catch (error) {
-        return res.status(422).send({ error: error.message });
+      if (index > -1) {
+        const copy = user.words[index];
+        copy.seen += 1;
+        copy.correct += stat.correct ? 1 : 0;
+        copy.experience = Math.min(
+          10,
+          stat.correct ? copy.experience + 1 : copy.experience
+        );
+        copy.timeSpent += stat.time || 0;        
+      } else {
+        user.words.push({ 
+          name: stat.word,
+          correct: stat.correct ? 1 : 0,
+          timeSpent: stat.time
+        });        
       }
-    } else {
-      return res.status(404).send({ error: "User not found." });
     }
+
+    // Update weekly / total star counts
+    const newTotalStarCount = user.starCount();    
+    user.weeklyStarCount = user.weeklyStarCount + newTotalStarCount - user.totalStarCount;
+    user.totalStarCount = newTotalStarCount;
+
+    cache.zadd(['weekly_leaderboard', user.weeklyStarCount, user._id.toString()]);
+    cache.zadd(['all_time_leaderboard', user.totalStarCount, user._id.toString()]);
+
+    user.save(error => error
+      ? res.status(422).send({ error: error.message })
+      : res.status(200).send(user)
+    );
   });
 };
 
