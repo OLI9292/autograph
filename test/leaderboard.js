@@ -12,6 +12,7 @@ const { seedDB } = require("../scripts/seedDB");
 const userMock = require("./mocks/user").mock;
 const userData = require("./mocks/user");
 const schoolMock = require("./mocks/school").mock;
+const classMock = require("./mocks/class").mock;
 
 const leaderboard = require("../scripts/leaderboard");
 
@@ -20,7 +21,6 @@ chai.use(chaiHttp);
 describe("Leaderboards", () => {
   before(async () => {
     await seedDB();
-    await leaderboard.cache();
   });
 
   describe("/GET leaderboard", () => {
@@ -30,10 +30,25 @@ describe("Leaderboards", () => {
         .get("/api/v2/auth/leaderboard")
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.should.be.a("array");
+          res.body.should.be.a("object");
+          res.body.weekly.should.be.a("array");
+          res.body.allTime.should.be.a("array");
           done();
         });
     });
+
+    it("it should GET all the ranks for a class", done => {
+      chai
+        .request(server)
+        .get(`/api/v2/auth/leaderboard?classId=${classMock._id}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.weekly.should.be.a("array");
+          res.body.allTime.should.be.a("array");
+          done();
+        });
+    });    
 
     it("it should filter by school", done => {
       chai

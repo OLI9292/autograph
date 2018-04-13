@@ -23,7 +23,7 @@ const ranksFor = (userDocs, isWeekly, isClass) => {
   if (!isClass) { ranks = _.filter(ranks, rank => rank.points > 0); }
   ranks = _.sortBy(ranks, rank => -rank.points)
   ranks = _.map(ranks, (rank, idx) => _.extend({}, rank, { position: idx + 1 }));
-  ranks[ranks.length - 1].isLast = true;
+  if (ranks.length > 0) { ranks[ranks.length - 1].isLast = true; }
 
   return ranks;
 }
@@ -82,7 +82,7 @@ const filterRanks = (ranks, userId, position, isWeekly) => {
 
 exports.saveRanks = async () => {
   const ranks = await worldRanks();
-  if (ranks.error) { return { error: error }; }
+  if (ranks.error) { return { error: ranks.error }; }
   const stringified = JSON.stringify(ranks);
   await cache.set("ranks", stringified);
   console.log("Cached ranks.");

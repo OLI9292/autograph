@@ -2,6 +2,7 @@ require("../databases/accounts/index");
 const _ = require("underscore");
 const mongoose = require("mongoose");
 
+const CONFIG = require("../config/main");
 const Class = require("../models/class");
 const School = require("../models/school");
 const User = require("../models/user");
@@ -25,8 +26,10 @@ const collections = [
   { model: Root, mocks: rootData.mocks }
 ];
 
-const cleanCollections = async () =>
-  Promise.all(_.pluck(collections, "model").map(coll => coll.remove()));
+const cleanCollections = async () => {
+  if (!CONFIG.MONGODB_URI.includes("localhost")) { throw new Error("Not connected to localhost database."); }
+  return Promise.all(_.pluck(collections, "model").map(coll => coll.remove()));
+}
 
 const seedCollections = async () => {
   const docs = _.flatten(
@@ -36,6 +39,7 @@ const seedCollections = async () => {
 };
 
 const seedDB = async () => {
+  if (!CONFIG.MONGODB_URI.includes("localhost")) { throw new Error("Not connected to localhost database."); }
   await cleanCollections();
   await seedCollections();
   return;

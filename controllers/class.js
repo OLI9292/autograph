@@ -7,6 +7,7 @@ const Class = require("../models/class");
 const User = require("../models/user");
 const { login } = require("./login");
 const { send } = require("./mail");
+const { randomPassword } = require("../lib/helpers");
 
 //
 // CREATE
@@ -18,15 +19,12 @@ const addAttributesToUser = (user, classId, usernames) => {
   user.classes = [{ id: classId, role: role }];
   // generate a unique username and random password for students (not teacher)
   if (!user.isTeacher) {
-    const base = (user.firstName + user.lastName.charAt(0)).toLowerCase();
+    const base = user.firstName.toLowerCase();
     user.email = usernameWithIndex(base, usernames);
-    user.password = generatePassword();
+    user.password = randomPassword();
   }
   return user;
 }
-
-const generatePassword = () =>
-  sampleSize("abcdefghkmnpqrstuvwxyz23456789", 10).join("");
 
 const teacherAndStudents = users => [_.find(users, u => u.isTeacher), _.reject(users, u => u.isTeacher)];
 
@@ -55,12 +53,19 @@ exports.create = async (req, res, next) => {
       .send({ error: "Classes require 1 teacher and multiple students." });
   }
 
-  const usernames = await User.existingUsernames();
+  let usernames = await User.existingUsernames();
   const _class = new Class();
   const classId = _class.id;
-  users = _.map(users, user => addAttributesToUser(user, classId, usernames));
 
-  User.create(users, (error, docs) => {
+  const usersWithLogin = [];
+  
+  for (let user of users) {
+    usernames = usernames.concat(_.pluck(usersWithLogin, "email"));
+    const updatedUser = addAttributesToUser(user, classId, usernames);
+    usersWithLogin.push(updatedUser);
+  }
+
+  User.create(usersWithLogin, (error, docs) => {
     if (error) { return res.status(422).send({ error: error.message }); }
 
     const [teacherDoc, studentDocs] = teacherAndStudents(docs)
@@ -78,7 +83,7 @@ exports.create = async (req, res, next) => {
             password: teacher.password,
             name: teacher.firstName,
             type: "welcome",
-            students: teacherAndStudents(users)[1]
+            students: teacherAndStudents(usersWithLogin)[1]
           };
 
           send(params, result =>
@@ -124,21 +129,12 @@ exports.read = async (req, res, next) => {
 
 exports.readStudents = async (req, res, next) => {
   Class.findById(req.params.id, async (error, _class) => {
-    if (error) {
-      return res.status(422).send({ error: error.message });
-    }
-
-    if (_class) {
-      User.find({ _id: { $in: _class.students } }, async (err, students) => {
-        if (error) {
-          return res.status(422).send({ error: error.message });
-        }
-
-        return res.status(201).send(students);
-      });
-    } else {
-      return res.status(422).send({ error: "Class not found." });
-    }
+    if (error) { return res.status(422).send({ error: error.message }); }
+    if (!_class) { return res.status(422).send({ error: "Class not found" }); }
+    const students = await _class.studentDocs();
+    return students.error
+      ? res.status(422).send({ error: students.error })
+      : res.status(200).send(students);
   });
 };
 
