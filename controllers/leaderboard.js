@@ -2,139 +2,126 @@ const mongoose = require('mongoose');
 const _ = require("underscore");
 
 const cache = require("../cache");
-const School = require("../models/school");
 const User = require("../models/user");
-const Class = require("../models/class");
 
 const recordEvent = require("../middlewares/recordEvent");
 
-const ranksFor = (userDocs, isWeekly, isClass) => {
-  const fullName = (first, last) => last ? `${first} ${last}` : first;
+const WEEKLY_LEADERBOARD = "weekly_leaderboard";
+const ALL_TIME_LEADERBOARD = "all_time_leaderboard";
 
-  let ranks = _.map(userDocs, user => ({
-    userId: user._id.toString(),
-    name: fullName(user.firstName, user.lastName),
-    points: isWeekly ? user.weeklyStarCount : user.totalStarCount,
-    school: user.nameOfSchool,
-    isWeekly: isWeekly,
-    isClass: isClass
-  }));
+const RANKS_QUERY_COUNT = 20;
 
-  if (!isClass) { ranks = _.filter(ranks, rank => rank.points > 0); }
-  ranks = _.sortBy(ranks, rank => -rank.points)
-  ranks = _.map(ranks, (rank, idx) => _.extend({}, rank, { position: idx + 1 }));
-  if (ranks.length > 0) { ranks[ranks.length - 1].isLast = true; }
-
-  return ranks;
-}
-
-const classRanks = async classId => {
-  const _class = await Class.findById(classId);
-  if (!_class) { return { error: "Class not found." }; }
-  const students = await _class.studentDocs();
-  if (students.error) { return { error: error.message }; }
-
-  return _.union(
-    ranksFor(students, true, true),
-    ranksFor(students, false, true)
+const saveCurrentRanks = async cb => {
+  const users = await User.find(
+    { isTeacher: false },
+    { _id: 1, weeklyStarCount: 1, totalStarCount: 1 }
   );
+
+  let [ weeklyRanks, allTimeRanks ] = _.map(["weeklyStarCount", "totalStarCount"], attr => {
+    return _.flatten(_.map(users, user => [ user[attr], user._id.toString() ]))
+  });
+
+  weeklyRanks.unshift(WEEKLY_LEADERBOARD);
+  allTimeRanks.unshift(ALL_TIME_LEADERBOARD);
+
+  cache.zadd(weeklyRanks, (error1, response1) => {
+    cache.zadd(allTimeRanks, (error2, response2) => {
+      cb({
+        weekly: error1 || `Added ${response1} ranks.`,
+        allTime: error2 || `Added ${response2} ranks.`
+      });
+    });
+  });  
 }
 
-const worldRanks = async () => {
-  try {
-    let students = await User.find(
-      { isTeacher: false },
-      { weeklyStarCount: 1, totalStarCount: 1, firstName: 1, lastName: 1, nameOfSchool: 1 }
-    );
+const ranksAroundUser = (userId, onlyUser, cb) => {
+  const weeklyQuery = [WEEKLY_LEADERBOARD, userId];
+  const allTimeQuery = [ALL_TIME_LEADERBOARD, userId];
 
-    return {
-      weekly: ranksFor(students, true, false),
-      allTime: ranksFor(students, false, false)
-    };
-  } catch (error) {
-    return { error: error.message };
+  cache.zrevrank(weeklyQuery, (error, weeklyRank) => {
+    if (error) { return cb({ error: error.message }); }
+
+    cache.zrevrank(allTimeQuery, (error, allTimeRank) => {
+      if (error) { return cb({ error: error.message }); }
+      if (onlyUser) { return cb({ weekly: weeklyRank, allTime: allTimeRank }); }
+
+      ranksForRange(weeklyRank, allTimeRank, response => cb(response));
+    });
+  });  
+}
+
+const ranksForRange = async (weeklyRank, allTimeRank, cb) => {
+  const weeklyRangeQuery = [WEEKLY_LEADERBOARD, weeklyRank, weeklyRank + RANKS_QUERY_COUNT];
+  const allTimeRangeQuery = [ALL_TIME_LEADERBOARD, allTimeRank, allTimeRank + RANKS_QUERY_COUNT];
+
+  cache.zrevrange(weeklyRangeQuery, async (error, weeklyRanks) => {
+    if (error) { return cb({ error: error.message }); }
+
+    cache.zrevrange(allTimeRangeQuery, async (error, allTimeRanks) => {
+      if (error) { return cb({ error: error.message }); }
+
+      const userDocs = await usersForIds(_.union(weeklyRanks, allTimeRanks));
+
+      weeklyRanks = _.map(weeklyRanks, (userId, idx) => addAttributesToRank(userId, weeklyRank + idx, true, userDocs));
+      allTimeRanks = _.map(allTimeRanks, (userId, idx) => addAttributesToRank(userId, allTimeRank + idx, false, userDocs));
+
+      cb({
+        weekly: weeklyRanks,
+        allTime: allTimeRanks
+      });
+    });
+  });
+}
+
+const usersForIds = async ids => await User.find(
+  { _id: { $in: ids } },
+  { firstName: 1, lastName: 1, nameOfSchool: 1, weeklyStarCount: 1, totalStarCount: 1 }
+);
+
+const addAttributesToRank = (userId, rank, isWeekly, users) => {
+  const user = _.find(users, user => user._id.equals(userId));
+  const obj = { userId: userId, rank: rank };
+  if (user) {
+    obj.school = user.nameOfSchool;
+    obj.firstName = user.firstName;
+    obj.lastName = user.lastName;
+    obj.points = isWeekly ? user.weeklyStarCount : user.totalStarCount;
   }
+  return obj;
 }
 
-const filterRanks = (ranks, userId, position, isWeekly) => {
-  const filter = (ranks, attr, value) => {
-    const index = _.findIndex(ranks, rank => rank[attr] === value);
-    return index > -1 ? ranks.slice(index, index + 20) : [];
-  };
+const specificRanks = async (position, isWeekly, cb) => {
+  const leaderboard = isWeekly ? WEEKLY_LEADERBOARD : ALL_TIME_LEADERBOARD;
+  const beginning = Math.max(0, parseInt(position, 10));
+  const end = beginning + 20;
 
-  let {
-    weekly,
-    allTime
-  } = ranks;
+  cache.zrevrange([ leaderboard, beginning, end ], async (error, ranks) => {
+    if (error) { return cb({ error: error.message }); }
 
-  if (userId) {
-    return _.union(
-      filter(weekly, "userId", userId),
-      filter(allTime, "userId", userId)
-    );
-  } else {
-    return _.union(
-      isWeekly ? filter(weekly, "position", position) : [],
-      isWeekly ? [] : filter(allTime, "position", position)
-    );    
-  }
-}
-
-exports.saveRanks = async () => {
-  const ranks = await worldRanks();
-  if (ranks.error) { return { error: ranks.error }; }
-  const stringified = JSON.stringify(ranks);
-  await cache.set("ranks", stringified);
-  console.log("Cached ranks.");
-  return { success: true };
-}
-
-const cachedWorldRanks = async (next, cb) => {
-  cache.get("ranks", (error, reply) => {
-    error 
-      ? next()
-      : cb(reply ? JSON.parse(reply) : { error: "Not found." });
-  });      
+    const userDocs = await usersForIds(ranks);
+    ranks = _.map(ranks, (userId, idx) => addAttributesToRank(userId, beginning + idx, isWeekly, userDocs));
+    cb(isWeekly ? { weekly: ranks } : { allTime: ranks })
+  });
 }
 
 exports.read = async (req, res, next) => {
   recordEvent(req.userId, req.sessionId, req.ip, req.path);
 
   let {
-    classId,
+    save,
     userId,
+    onlyUser,
     position,
-    isWeekly,
-    save
+    isWeekly
   } = req.query;
 
   if (save) {
-    
-    const result = await exports.saveRanks();
-    return res.status(result.error ? 422 : 200).send(result)
-  
-  } else if (classId && userId) {
-
-    await cachedWorldRanks(next, async ranksWorld => {
-      if (ranksWorld.error) { return res.status(422).send({ error: ranksWorld.error }); }
-      const ranksClass = await classRanks(classId);
-      if (ranksClass.error) { return res.status(422).send({ error: ranksClass.error }); }
-      const positions = _.filter(_.union(ranksClass, ..._.values(ranksWorld)), r => r.userId === userId);
-      return res.status(200).send(positions);
-    });
-
-  } else if (classId) {
-
-    const ranks = await classRanks(classId);
-    return ranks.error
-      ? res.status(404).send({ error: ranks.error })
-      : res.status(200).send(ranks);    
-
+    saveCurrentRanks(response => res.status(200).send(response));
+  } else if (userId) {    
+    ranksAroundUser(userId, onlyUser, response => res.status(response.error ? 422 : 200).send(response));
+  } else if (position) {
+    specificRanks(position, isWeekly, response => res.status(response.error ? 422 : 200).send(response));
   } else {
-
-    await cachedWorldRanks(next, response => response.error
-      ? res.status(422).send({ error: response.error })
-      : res.status(200).send(filterRanks(response, userId, (parseInt(position, 10) || 1), isWeekly)));
-
+    return res.status(422).send({ error: "Invalid params." });
   }
 };
