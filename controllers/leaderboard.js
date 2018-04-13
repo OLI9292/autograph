@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const _ = require("underscore");
+const get = require("lodash/get");
 
 const cache = require("../cache");
 const User = require("../models/user");
+const Class = require("../models/class");
 
 const recordEvent = require("../middlewares/recordEvent");
 
@@ -43,7 +45,7 @@ const ranksAroundUser = (userId, onlyUser, cb) => {
 
     cache.zrevrank(allTimeQuery, (error, allTimeRank) => {
       if (error) { return cb({ error: error.message }); }
-      if (onlyUser) { return cb({ weekly: weeklyRank, allTime: allTimeRank }); }
+      if (onlyUser) { return cb({ weeklyEarth: weeklyRank, allTimeEarth: allTimeRank }); }
 
       ranksForRange(weeklyRank, allTimeRank, response => cb(response));
     });
@@ -66,17 +68,23 @@ const ranksForRange = async (weeklyRank, allTimeRank, cb) => {
       allTimeRanks = _.map(allTimeRanks, (userId, idx) => addAttributesToRank(userId, allTimeRank + idx, false, userDocs));
 
       cb({
-        weekly: weeklyRanks,
-        allTime: allTimeRanks
+        weeklyEarth: weeklyRanks,
+        allTimeEarth: allTimeRanks
       });
     });
   });
 }
 
-const usersForIds = async ids => await User.find(
-  { _id: { $in: ids } },
-  { firstName: 1, lastName: 1, nameOfSchool: 1, weeklyStarCount: 1, totalStarCount: 1 }
-);
+const userFieldsToQuery = {
+  firstName: 1,
+  lastName: 1,
+  nameOfSchool: 1,
+  weeklyStarCount: 1,
+  totalStarCount: 1
+};
+
+const usersForIds = async ids => await User.find({ _id: { $in: ids } }, userFieldsToQuery);
+const usersForClassId = async id => await User.find({ "classes.0.id": id }, userFieldsToQuery);
 
 const addAttributesToRank = (userId, rank, isWeekly, users) => {
   const user = _.find(users, user => user._id.equals(userId));
@@ -100,8 +108,33 @@ const specificRanks = async (position, isWeekly, cb) => {
 
     const userDocs = await usersForIds(ranks);
     ranks = _.map(ranks, (userId, idx) => addAttributesToRank(userId, beginning + idx, isWeekly, userDocs));
-    cb(isWeekly ? { weekly: ranks } : { allTime: ranks })
+    cb(isWeekly ? { weeklyEarth: ranks } : { allTimeEarth: ranks });
   });
+}
+
+const ranksForClass = async (classId, userId, onlyUser) => {
+  try {
+    const users = await usersForClassId(classId);
+    
+    const [weekly, allTime] = _.map([false, true], isWeekly => {
+      return _.map(_.sortBy(_.map(users, user => ({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        school: user.nameOfSchool,
+        points: user[isWeekly ? "weeklyStarCount" : "totalStarCount"],
+        userId: user._id
+      })), user => -user.points), (user, idx) => _.extend({}, user, { rank: idx + 1 }));
+    });
+
+    const userRank = ranks => get(_.find(ranks, rank => rank.userId.equals(userId)), "rank");
+
+    return {
+      weeklyClass: onlyUser ? userRank(weekly) : weekly,
+      allTimeClass: onlyUser ? userRank(allTime) : allTime
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
 }
 
 exports.read = async (req, res, next) => {
@@ -110,18 +143,36 @@ exports.read = async (req, res, next) => {
   let {
     save,
     userId,
+    classId,
     onlyUser,
     position,
     isWeekly
   } = req.query;
 
   if (save) {
+
     saveCurrentRanks(response => res.status(200).send(response));
-  } else if (userId) {    
-    ranksAroundUser(userId, onlyUser, response => res.status(response.error ? 422 : 200).send(response));
+
+  } else if (userId && classId) {    
+
+    const classRanks = await ranksForClass(classId, userId, onlyUser);
+    if (classRanks.error) { return res.status(422).send({ error: classRanks.error }); }
+
+    ranksAroundUser(userId, onlyUser, earthRanks =>
+      res
+        .status(earthRanks.error ? 422 : 200)
+        .send({ ranks: _.extend(earthRanks, classRanks) }));
+
   } else if (position) {
-    specificRanks(position, isWeekly, response => res.status(response.error ? 422 : 200).send(response));
+
+    specificRanks(position, isWeekly, earthRanks => 
+      res
+        .status(earthRanks.error ? 422 : 200)
+        .send(earthRanks));
+
   } else {
+
     return res.status(422).send({ error: "Invalid params." });
+
   }
 };
