@@ -8,33 +8,55 @@ const Class = require("../models/class");
 
 const recordEvent = require("../middlewares/recordEvent");
 
+// Constants
+
 const WEEKLY_LEADERBOARD = "weekly_leaderboard";
 const ALL_TIME_LEADERBOARD = "all_time_leaderboard";
-
 const RANKS_QUERY_COUNT = 20;
 
+
+// Mongo user queries
+
+const userFieldsToQuery = {
+  firstName: 1,
+  lastName: 1,
+  nameOfSchool: 1,
+  weeklyStarCount: 1,
+  totalStarCount: 1
+};
+
+const allUsers = async () => await User.find({ isTeacher: false }, userFieldsToQuery);
+const usersForIds = async ids => await User.find({ _id: { $in: ids } }, userFieldsToQuery);
+const usersForClassId = async id => await User.find({ "classes.0.id": id, isTeacher: false }, userFieldsToQuery);
+
+
+// Saves weekly and total star counts for students in redis sorted sets
+
 const saveCurrentRanks = async cb => {
-  const users = await User.find(
-    { isTeacher: false },
-    { _id: 1, weeklyStarCount: 1, totalStarCount: 1 }
-  );
+  try {
+    const users = await allUsers();
 
-  let [ weeklyRanks, allTimeRanks ] = _.map(["weeklyStarCount", "totalStarCount"], attr => {
-    return _.flatten(_.map(users, user => [ user[attr], user._id.toString() ]))
-  });
-
-  weeklyRanks.unshift(WEEKLY_LEADERBOARD);
-  allTimeRanks.unshift(ALL_TIME_LEADERBOARD);
-
-  cache.zadd(weeklyRanks, (error1, response1) => {
-    cache.zadd(allTimeRanks, (error2, response2) => {
-      cb({
-        weekly: error1 || `Added ${response1} ranks.`,
-        allTime: error2 || `Added ${response2} ranks.`
-      });
+    let [ weeklyRanks, allTimeRanks ] = _.map(["weeklyStarCount", "totalStarCount"], attr => {
+      return _.flatten(_.map(users, user => [ user[attr], user._id.toString() ]))
     });
-  });  
+
+    weeklyRanks.unshift(WEEKLY_LEADERBOARD);
+    allTimeRanks.unshift(ALL_TIME_LEADERBOARD);
+
+    cache.zadd(weeklyRanks, (error1, response1) => {
+      cache.zadd(allTimeRanks, (error2, response2) => {
+        cb({
+          weekly: error1 || `Added ${response1} ranks.`,
+          allTime: error2 || `Added ${response2} ranks.`
+        });
+      });
+    }); 
+  } catch(error) {
+    cb({ error: error.message });
+  }
 }
+
+// Finds the rank for a user, and returns ranksForRange
 
 const ranksAroundUser = (userId, onlyUser, cb) => {
   const weeklyQuery = [WEEKLY_LEADERBOARD, userId];
@@ -51,6 +73,8 @@ const ranksAroundUser = (userId, onlyUser, cb) => {
     });
   });  
 }
+
+// Returns the next 20 ranks
 
 const ranksForRange = async (weeklyRank, allTimeRank, cb) => {
   const weeklyRangeQuery = [WEEKLY_LEADERBOARD, weeklyRank, weeklyRank + RANKS_QUERY_COUNT];
@@ -75,16 +99,7 @@ const ranksForRange = async (weeklyRank, allTimeRank, cb) => {
   });
 }
 
-const userFieldsToQuery = {
-  firstName: 1,
-  lastName: 1,
-  nameOfSchool: 1,
-  weeklyStarCount: 1,
-  totalStarCount: 1
-};
-
-const usersForIds = async ids => await User.find({ _id: { $in: ids } }, userFieldsToQuery);
-const usersForClassId = async id => await User.find({ "classes.0.id": id }, userFieldsToQuery);
+// Adds attributes from user documents to ranks
 
 const addAttributesToRank = (userId, rank, isWeekly, users) => {
   const user = _.find(users, user => user._id.equals(userId));
@@ -97,6 +112,8 @@ const addAttributesToRank = (userId, rank, isWeekly, users) => {
   }
   return obj;
 }
+
+// Returns the next 20 ranks
 
 const specificRanks = async (position, isWeekly, cb) => {
   const leaderboard = isWeekly ? WEEKLY_LEADERBOARD : ALL_TIME_LEADERBOARD;
@@ -111,6 +128,8 @@ const specificRanks = async (position, isWeekly, cb) => {
     cb(isWeekly ? { weeklyEarth: ranks } : { allTimeEarth: ranks });
   });
 }
+
+// Returns the ranks for a class
 
 const ranksForClass = async (classId, userId, onlyUser) => {
   try {
@@ -151,7 +170,8 @@ exports.read = async (req, res, next) => {
 
   if (save) {
 
-    saveCurrentRanks(response => res.status(200).send(response));
+    saveCurrentRanks(response =>
+      res.status(response.error ? 422 : 200).send(response));
 
   } else if (userId && classId) {    
 
