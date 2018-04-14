@@ -118,7 +118,7 @@ const addAttributesToRank = (userId, rank, isWeekly, users) => {
 const specificRanks = async (position, isWeekly, cb) => {
   const leaderboard = isWeekly ? WEEKLY_LEADERBOARD : ALL_TIME_LEADERBOARD;
   const beginning = Math.max(0, parseInt(position, 10));
-  const end = beginning + 20;
+  const end = beginning + RANKS_QUERY_COUNT;
 
   cache.zrevrange([ leaderboard, beginning, end ], async (error, ranks) => {
     if (error) { return cb({ error: error.message }); }
