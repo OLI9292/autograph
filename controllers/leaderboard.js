@@ -12,7 +12,7 @@ const recordEvent = require("../middlewares/recordEvent");
 
 const WEEKLY_LEADERBOARD = "weekly_leaderboard";
 const ALL_TIME_LEADERBOARD = "all_time_leaderboard";
-const RANKS_QUERY_COUNT = 20;
+const RANKS_QUERY_COUNT = 19;
 
 
 // Mongo user queries
@@ -26,7 +26,9 @@ const userFieldsToQuery = {
 };
 
 const allUsers = async () => await User.find({ isTeacher: false }, userFieldsToQuery);
+
 const usersForIds = async ids => await User.find({ _id: { $in: ids } }, userFieldsToQuery);
+
 const usersForClassId = async id => await User.find({ "classes.0.id": id, isTeacher: false }, userFieldsToQuery);
 
 
@@ -56,6 +58,7 @@ const saveCurrentRanks = async cb => {
   }
 }
 
+
 // Finds the rank for a user, and returns ranksForRange
 
 const ranksAroundUser = (userId, onlyUser, cb) => {
@@ -73,6 +76,7 @@ const ranksAroundUser = (userId, onlyUser, cb) => {
     });
   });  
 }
+
 
 // Returns the next 20 ranks
 
@@ -99,6 +103,7 @@ const ranksForRange = async (weeklyRank, allTimeRank, cb) => {
   });
 }
 
+
 // Adds attributes from user documents to ranks
 
 const addAttributesToRank = (userId, rank, isWeekly, users) => {
@@ -113,12 +118,13 @@ const addAttributesToRank = (userId, rank, isWeekly, users) => {
   return obj;
 }
 
+
 // Returns the next 20 ranks
 
 const specificRanks = async (position, isWeekly, cb) => {
   const leaderboard = isWeekly ? WEEKLY_LEADERBOARD : ALL_TIME_LEADERBOARD;
   const beginning = Math.max(0, parseInt(position, 10));
-  const end = beginning + 20;
+  const end = beginning + RANKS_QUERY_COUNT;
 
   cache.zrevrange([ leaderboard, beginning, end ], async (error, ranks) => {
     if (error) { return cb({ error: error.message }); }
@@ -128,6 +134,7 @@ const specificRanks = async (position, isWeekly, cb) => {
     cb(isWeekly ? { weeklyEarth: ranks } : { allTimeEarth: ranks });
   });
 }
+
 
 // Returns the ranks for a class
 
@@ -156,6 +163,7 @@ const ranksForClass = async (classId, userId, onlyUser) => {
   }
 }
 
+
 exports.read = async (req, res, next) => {
   recordEvent(req.userId, req.sessionId, req.ip, req.path);
 
@@ -173,10 +181,14 @@ exports.read = async (req, res, next) => {
     saveCurrentRanks(response =>
       res.status(response.error ? 422 : 200).send(response));
 
-  } else if (userId && classId) {    
+  } else if (classId) {    
 
     const classRanks = await ranksForClass(classId, userId, onlyUser);
     if (classRanks.error) { return res.status(422).send({ error: classRanks.error }); }
+
+    // No userId passed for teachers on client, so we set it to the highest scoring student
+    if (!userId) { userId = get(_.first(classRanks.allTimeClass), "userId"); }
+    if (!userId) { return res.status(422).send({ error: "No class ranks found." }); }
 
     ranksAroundUser(userId, onlyUser, earthRanks =>
       res
@@ -188,7 +200,7 @@ exports.read = async (req, res, next) => {
     specificRanks(position, isWeekly, earthRanks => 
       res
         .status(earthRanks.error ? 422 : 200)
-        .send(earthRanks));
+        .send({ ranks: earthRanks }));
 
   } else {
 
