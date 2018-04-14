@@ -26,7 +26,9 @@ const userFieldsToQuery = {
 };
 
 const allUsers = async () => await User.find({ isTeacher: false }, userFieldsToQuery);
+
 const usersForIds = async ids => await User.find({ _id: { $in: ids } }, userFieldsToQuery);
+
 const usersForClassId = async id => await User.find({ "classes.0.id": id, isTeacher: false }, userFieldsToQuery);
 
 
@@ -56,6 +58,7 @@ const saveCurrentRanks = async cb => {
   }
 }
 
+
 // Finds the rank for a user, and returns ranksForRange
 
 const ranksAroundUser = (userId, onlyUser, cb) => {
@@ -73,6 +76,7 @@ const ranksAroundUser = (userId, onlyUser, cb) => {
     });
   });  
 }
+
 
 // Returns the next 20 ranks
 
@@ -99,6 +103,7 @@ const ranksForRange = async (weeklyRank, allTimeRank, cb) => {
   });
 }
 
+
 // Adds attributes from user documents to ranks
 
 const addAttributesToRank = (userId, rank, isWeekly, users) => {
@@ -112,6 +117,7 @@ const addAttributesToRank = (userId, rank, isWeekly, users) => {
   }
   return obj;
 }
+
 
 // Returns the next 20 ranks
 
@@ -128,6 +134,7 @@ const specificRanks = async (position, isWeekly, cb) => {
     cb(isWeekly ? { weeklyEarth: ranks } : { allTimeEarth: ranks });
   });
 }
+
 
 // Returns the ranks for a class
 
@@ -155,6 +162,7 @@ const ranksForClass = async (classId, userId, onlyUser) => {
     return { error: error.message };
   }
 }
+
 
 exports.read = async (req, res, next) => {
   recordEvent(req.userId, req.sessionId, req.ip, req.path);
