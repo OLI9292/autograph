@@ -173,10 +173,14 @@ exports.read = async (req, res, next) => {
     saveCurrentRanks(response =>
       res.status(response.error ? 422 : 200).send(response));
 
-  } else if (userId && classId) {    
+  } else if (classId) {    
 
     const classRanks = await ranksForClass(classId, userId, onlyUser);
     if (classRanks.error) { return res.status(422).send({ error: classRanks.error }); }
+
+    // No userId passed for teachers on client, so we set it to the highest scoring student
+    if (!userId) { userId = get(_.first(classRanks.allTimeClass), "userId"); }
+    if (!userId) { return res.status(422).send({ error: "No class ranks found." }); }
 
     ranksAroundUser(userId, onlyUser, earthRanks =>
       res
