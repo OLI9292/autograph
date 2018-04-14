@@ -12,7 +12,7 @@ const recordEvent = require("../middlewares/recordEvent");
 
 const WEEKLY_LEADERBOARD = "weekly_leaderboard";
 const ALL_TIME_LEADERBOARD = "all_time_leaderboard";
-const RANKS_QUERY_COUNT = 20;
+const RANKS_QUERY_COUNT = 19;
 
 
 // Mongo user queries
@@ -188,7 +188,7 @@ exports.read = async (req, res, next) => {
     specificRanks(position, isWeekly, earthRanks => 
       res
         .status(earthRanks.error ? 422 : 200)
-        .send(earthRanks));
+        .send({ ranks: earthRanks }));
 
   } else {
 
