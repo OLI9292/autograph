@@ -28,8 +28,8 @@ ref.once('value').then((snap) => {
   })
 
   Promise.all(newSubmissions.map(postToSlack)).then((res) => {
-    firebaseApp.delete()
-    return
+    firebaseApp.delete();
+    process.exit(0);
   })
 });
 
