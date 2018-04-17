@@ -85,7 +85,7 @@ const ranksAroundUser = (userId, onlyUser, cb) => {
       if (error) { return cb({ error: error.message }); }
       if (onlyUser) { return cb({ weeklyEarth: weeklyRank, allTimeEarth: allTimeRank }); }
 
-      ranksForRange(weeklyRank, allTimeRank, response => cb(response));
+      ranksForRange(weeklyRank || 0, allTimeRank || 0, response => cb(response));
     });
   });  
 }
@@ -94,14 +94,14 @@ const ranksAroundUser = (userId, onlyUser, cb) => {
 // Returns the next 20 ranks
 
 const ranksForRange = async (weeklyRank, allTimeRank, cb) => {
-  const weeklyRangeQuery = [WEEKLY_LEADERBOARD, weeklyRank, weeklyRank + RANKS_QUERY_COUNT];
   const allTimeRangeQuery = [ALL_TIME_LEADERBOARD, allTimeRank, allTimeRank + RANKS_QUERY_COUNT];
+  const weeklyRangeQuery = [WEEKLY_LEADERBOARD, weeklyRank, weeklyRank + RANKS_QUERY_COUNT];
 
-  cache.zrevrange(weeklyRangeQuery, async (error, weeklyRanks) => {
-    if (error) { return cb({ error: error.message }); }
+  cache.zrevrange(allTimeRangeQuery, async (error, allTimeRanks) => {
+    if (error) { return cb({ allTimeEarth: [], weeklyEarth: [] }); }
 
-    cache.zrevrange(allTimeRangeQuery, async (error, allTimeRanks) => {
-      if (error) { return cb({ error: error.message }); }
+    cache.zrevrange(weeklyRangeQuery, async (error, weeklyRanks) => {  
+      if (error) { return cb({ allTimeEarth: allTimeRanks, weeklyEarth: [] }); }
 
       const userDocs = await usersForIds(_.union(weeklyRanks, allTimeRanks));
 
@@ -109,8 +109,8 @@ const ranksForRange = async (weeklyRank, allTimeRank, cb) => {
       allTimeRanks = _.map(allTimeRanks, (userId, idx) => addAttributesToRank(userId, allTimeRank + idx, false, userDocs));
 
       cb({
-        weeklyEarth: weeklyRanks,
-        allTimeEarth: allTimeRanks
+        allTimeEarth: allTimeRanks,
+        weeklyEarth: weeklyRanks
       });
     });
   });
@@ -155,7 +155,7 @@ const ranksForClass = async (classId, userId, onlyUser) => {
   try {
     const users = await usersForClassId(classId);
     
-    const [weekly, allTime] = _.map([false, true], isWeekly => {
+    const [weekly, allTime] = _.map([true, false], isWeekly => {
       return _.map(_.sortBy(_.map(users, user => ({
         firstName: user.firstName,
         lastName: user.lastName,
