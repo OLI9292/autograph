@@ -59,6 +59,19 @@ const saveCurrentRanks = async cb => {
 }
 
 
+// Resets weeklyStarCount for all users and weekly records in redis
+
+const clearWeeklyRanks = async cb => {
+  User.updateMany({}, { weeklyStarCount: 0 }, (error, response) => {
+    if (error) { return cb({ error: error.message }); }
+
+    cache.del(WEEKLY_LEADERBOARD);
+    
+    cb({ success: true });
+  });
+}
+
+
 // Finds the rank for a user, and returns ranksForRange
 
 const ranksAroundUser = (userId, onlyUser, cb) => {
@@ -169,6 +182,7 @@ exports.read = async (req, res, next) => {
 
   let {
     save,
+    clearWeekly,
     userId,
     classId,
     onlyUser,
@@ -179,6 +193,11 @@ exports.read = async (req, res, next) => {
   if (save) {
 
     saveCurrentRanks(response =>
+      res.status(response.error ? 422 : 200).send(response));
+
+  } else if (clearWeekly) {
+
+    clearWeeklyRanks(response =>
       res.status(response.error ? 422 : 200).send(response));
 
   } else if (classId) {    
