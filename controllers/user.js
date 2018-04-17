@@ -191,7 +191,7 @@ const updateFromWeb = async (req, res, next) => {
     }
 
     // Update user word list
-    for (const stat of stats) {
+    _.forEach(stats, stat => {
       const index = _.findIndex(user.words, word => stat.word === word.name);
 
       if (index > -1) {
@@ -202,7 +202,8 @@ const updateFromWeb = async (req, res, next) => {
           10,
           stat.correct ? copy.experience + 1 : copy.experience
         );
-        copy.timeSpent += stat.time || 0;        
+        copy.timeSpent += stat.time || 0;      
+        user.words[index] = copy;  
       } else {
         user.words.push({ 
           name: stat.word,
@@ -210,7 +211,7 @@ const updateFromWeb = async (req, res, next) => {
           timeSpent: stat.time
         });        
       }
-    }
+    });
 
     // Update weekly / total star counts
     const newTotalStarCount = user.starCount();    
