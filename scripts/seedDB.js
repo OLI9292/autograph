@@ -9,7 +9,9 @@ const User = require("../models/user");
 const Root = require("../models/root");
 const Word = require("../models/word");
 const Level = require("../models/level");
+const Factoid = require("../models/factoid");
 
+const factoidData = require("../test/mocks/factoid");
 const classData = require("../test/mocks/class");
 const schoolData = require("../test/mocks/school");
 const userData = require("../test/mocks/user");
@@ -19,6 +21,7 @@ const rootData = require("../test/mocks/root");
 
 const collections = [
   { model: School, mocks: schoolData.mocks },
+  { model: Factoid, mocks: factoidData.mocks },
   { model: Class, mocks: classData.mocks },
   { model: User, mocks: userData.mocks },
   { model: Word, mocks: wordData.mocks },

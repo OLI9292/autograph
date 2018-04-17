@@ -1,9 +1,0 @@
-#!/usr/bin/env node
-
-const redis = require('redis');
-const client = redis.createClient();
-
-client.flushdb((error, success) => {
-  console.log(`Redis flush all: ${success}`);
-  client.quit();
-});

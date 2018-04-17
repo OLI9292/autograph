@@ -42,11 +42,35 @@ exports.create = async (req, res, next) => {
 //
 
 exports.read = (req, res, next) => {
-  Factoid.find({}, (error, factoids) => {
-    return error
-      ? res.status(422).send({ error: error.message })
-      : res.status(201).send(factoids);
-  });
+  const {
+    words
+  } = req.query;
+
+  if (words) {
+
+    Factoid.aggregate([ 
+      { "$redact": { 
+        "$cond": [
+          { "$gte": [ { "$size": { "$setIntersection": [ "$words", words.split(",") ] } }, 1 ]},
+          "$$KEEP", 
+          "$$PRUNE" 
+        ]
+      }}
+    ], (error, factoids) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(factoids);
+    })
+
+  } else {
+  
+    Factoid.find({}, (error, factoids) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(factoids);
+  
+    });    
+  }
 };
 
 //
