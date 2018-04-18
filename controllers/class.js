@@ -228,8 +228,6 @@ exports.update = async (req, res, next) => {
 
   } else {
 
-    console.log(1)
-
     Class.findOneAndUpdate(
       { _id: req.params.id },
       req.body,

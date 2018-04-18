@@ -7,6 +7,7 @@ const School = require("../models/school");
 const Level = require("../models/level");
 const User = require("../models/user");
 
+const { login } = require("./login");
 const recordEvent = require("../middlewares/recordEvent");
 const cache = require("../cache");
 
@@ -21,9 +22,14 @@ exports.create = async (req, res, next) => {
     const results = await Promise.all(data.map(createUser));
     return res.status(201).send(results);
   } else {
-    let response = await createUser(data);
-    return response.error
-      ? res.status(422).send(response)
+    const response = await createUser(data);
+
+    if (response.error) {
+      return res.status(422).send(response);
+    }
+
+    return req.query.login
+      ? login(req.body.email, req.body.password, result => res.status(result.error ? 422 : 201).send(result))
       : res.status(201).send(response);
   }
 };
@@ -191,7 +197,7 @@ const updateFromWeb = async (req, res, next) => {
     }
 
     // Update user word list
-    for (const stat of stats) {
+    _.forEach(stats, stat => {
       const index = _.findIndex(user.words, word => stat.word === word.name);
 
       if (index > -1) {
@@ -202,7 +208,8 @@ const updateFromWeb = async (req, res, next) => {
           10,
           stat.correct ? copy.experience + 1 : copy.experience
         );
-        copy.timeSpent += stat.time || 0;        
+        copy.timeSpent += stat.time || 0;      
+        user.words[index] = copy;  
       } else {
         user.words.push({ 
           name: stat.word,
@@ -210,7 +217,7 @@ const updateFromWeb = async (req, res, next) => {
           timeSpent: stat.time
         });        
       }
-    }
+    });
 
     // Update weekly / total star counts
     const newTotalStarCount = user.starCount();    
