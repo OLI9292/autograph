@@ -37,15 +37,18 @@ exports.create = async (req, res, next) => {
 const createUser = async data => {
   try {
     const existing = await User.findOne({ email: data.email });
-
-    if (existing) {
-      return {
-        error: "There is already an account associated with this email."
-      };
-    }
+    if (existing) { return { error: "There is already an account associated with this email." }; }
 
     const user = new User(data);
     await user.save();
+
+    // For Spring Competition growth test
+    if (data.referrer) {
+      User.findByIdAndUpdate(data.referrer, { inSpringCompetition: true }, (error, res) => {
+        if (!error) { console.log(data.email + " was signed up by " + data.referrer)}
+      });
+    }
+
     return user;
   } catch (error) {
     return { error: error.message };
@@ -71,7 +74,17 @@ exports.read = async (req, res, next) => {
         ? res.status(422).send({ error: error.message })
         : res.status(200).send(user);
     });
+
+  } else if (req.query.inSpringCompetition) {
+    
+    User.find({ inSpringCompetition: true }, { firstName: 1, lastName: 1, nameOfSchool: 1 }, (error, users) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(users);
+    });
+
   } else if (!_.isEmpty(req.query)) {
+    
     const query = userIdQuery(req.query);
 
     if (query) {
@@ -87,12 +100,15 @@ exports.read = async (req, res, next) => {
     } else {
       return res.status(422).send({ error: "Unsupported user query." });
     }
+
   } else {
+
     User.find({}, (error, users) => {
       return error
         ? res.status(422).send({ error: error.message })
         : res.status(200).send(users);
     });
+
   }
 };
 

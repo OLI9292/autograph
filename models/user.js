@@ -27,8 +27,10 @@ const userSchema = new Schema({
   nameOfSchool: String,
   optedIntoEmail: Boolean,
   password: String,
+  referrer: Schema.Types.ObjectId,
   roundsCompleted: { type: Number, required: true, default: 0 },
   role: String,
+  inSpringCompetition: { type: Boolean, default: false },
   school: Schema.Types.ObjectId,
   signUpMethod: {
     type: String,
