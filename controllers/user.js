@@ -7,6 +7,7 @@ const School = require("../models/school");
 const Level = require("../models/level");
 const User = require("../models/user");
 
+const { login } = require("./login");
 const recordEvent = require("../middlewares/recordEvent");
 const cache = require("../cache");
 
@@ -21,9 +22,14 @@ exports.create = async (req, res, next) => {
     const results = await Promise.all(data.map(createUser));
     return res.status(201).send(results);
   } else {
-    let response = await createUser(data);
-    return response.error
-      ? res.status(422).send(response)
+    const response = await createUser(data);
+
+    if (response.error) {
+      return res.status(422).send(response);
+    }
+
+    return req.query.login
+      ? login(req.body.email, req.body.password, result => res.status(result.error ? 422 : 201).send(result))
       : res.status(201).send(response);
   }
 };
