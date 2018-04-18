@@ -87,6 +87,12 @@ exports.read = async (req, res, next) => {
     } else {
       return res.status(422).send({ error: "Unsupported user query." });
     }
+  } else if (req.query.inSpringCompetition) {
+    User.find({ inSpringCompetition: true }, { firstName: 1, lastName: 1, school: 1 }, (error, users) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(users);
+    });
   } else {
     User.find({}, (error, users) => {
       return error

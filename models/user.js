@@ -29,6 +29,7 @@ const userSchema = new Schema({
   password: String,
   roundsCompleted: { type: Number, required: true, default: 0 },
   role: String,
+  inSpringCompetition: { type: Boolean, default: false },
   school: Schema.Types.ObjectId,
   signUpMethod: {
     type: String,
