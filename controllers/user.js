@@ -43,7 +43,11 @@ const createUser = async data => {
     await user.save();
 
     // For Spring Competition growth test
-    if (data.referrer) { User.findByIdAndUpdate(data.referrer, { inSpringCompetition: true }); }
+    if (data.referrer) {
+      User.findByIdAndUpdate(data.referrer, { inSpringCompetition: true }, (error, res) => {
+        if (!error) { console.log(data.email + " was signed up by " + data.referrer)}
+      });
+    }
 
     return user;
   } catch (error) {
