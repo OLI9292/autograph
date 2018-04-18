@@ -74,7 +74,7 @@ exports.read = async (req, res, next) => {
 
   } else if (req.query.inSpringCompetition) {
     
-    User.find({ inSpringCompetition: true }, { firstName: 1, lastName: 1, school: 1 }, (error, users) => {
+    User.find({ inSpringCompetition: true }, { firstName: 1, lastName: 1, nameOfSchool: 1 }, (error, users) => {
       return error
         ? res.status(422).send({ error: error.message })
         : res.status(200).send(users);
