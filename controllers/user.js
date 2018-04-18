@@ -37,15 +37,14 @@ exports.create = async (req, res, next) => {
 const createUser = async data => {
   try {
     const existing = await User.findOne({ email: data.email });
-
-    if (existing) {
-      return {
-        error: "There is already an account associated with this email."
-      };
-    }
+    if (existing) { return { error: "There is already an account associated with this email." }; }
 
     const user = new User(data);
     await user.save();
+
+    // For Spring Competition growth test
+    if (data.referrer) { User.findByIdAndUpdate(data.referrer, { inSpringCompetition: true }); }
+
     return user;
   } catch (error) {
     return { error: error.message };
