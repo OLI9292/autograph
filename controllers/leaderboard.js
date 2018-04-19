@@ -200,9 +200,9 @@ exports.read = async (req, res, next) => {
     clearWeeklyRanks(response =>
       res.status(response.error ? 422 : 200).send(response));
 
-  } else if (classId) {    
+  } else if (userId || classId) {    
 
-    const classRanks = await ranksForClass(classId, userId, onlyUser);
+    const classRanks = classId ? (await ranksForClass(classId, userId, onlyUser)) : {};
     if (classRanks.error) { return res.status(422).send({ error: classRanks.error }); }
 
     // No userId passed for teachers on client, so we set it to the highest scoring student
