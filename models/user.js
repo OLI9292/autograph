@@ -40,6 +40,8 @@ const userSchema = new Schema({
   weeklyStarCount: { type: Number, default: 0 },
   totalStarCount: { type: Number, default: 0 },
   wordListsCompleted: [Schema.Types.ObjectId],
+  totalWordsLearned: { type: Number, default: 0 },
+  totalTimeSpent: { type: Number, default: 0 },
   words: {
     type: [
       {

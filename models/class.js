@@ -14,10 +14,11 @@ const classSchema = new Schema({
   }
 });
 
-classSchema.methods.studentDocs = async function() {
-  return User.find({ _id: { $in: this.students } }, (error, students) => {
-    return error ? { error: error.message } : students;
-  });  
+classSchema.methods.studentDocs = async function() { 
+  return await User.find(
+    { _id: { $in: this.students } },
+    { firstName: 1, lastName: 1, totalWordsLearned: 1, totalTimeSpent: 1 }
+  );
 };
 
 const Class = db.model("Class", classSchema);
