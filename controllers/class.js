@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const _ = require("underscore");
 const sampleSize = require("lodash/sampleSize");
+const moment = require("moment");
 const get = require("lodash/get");
 
 const Class = require("../models/class");
@@ -128,14 +129,14 @@ exports.read = async (req, res, next) => {
 };
 
 exports.readStudents = async (req, res, next) => {
-  Class.findById(req.params.id, async (error, _class) => {
-    if (error) { return res.status(422).send({ error: error.message }); }
+  try {
+    const _class = await Class.findById(req.params.id);
     if (!_class) { return res.status(422).send({ error: "Class not found" }); }
     const students = await _class.studentDocs();
-    return students.error
-      ? res.status(422).send({ error: students.error })
-      : res.status(200).send(students);
-  });
+    return res.status(200).send(students);
+  } catch (error) {
+    return res.status(422).send({ error: error.message })
+  }
 };
 
 exports.join = async (req, res, next) => {

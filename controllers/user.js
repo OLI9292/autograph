@@ -1,6 +1,7 @@
 const jwt = require("jwt-simple");
 const mongoose = require("mongoose");
 const _ = require("underscore");
+const sumBy = require("lodash/sumBy");
 
 const Class = require("../models/class");
 const School = require("../models/school");
@@ -207,10 +208,9 @@ const updateFromWeb = async (req, res, next) => {
     stats
   } = req.body;
 
-  User.findById(id, async (error, user) => {
-    if (error || !user) {
-      return res.status(422).send({ error: error ? error.message : "User not found." }); 
-    }
+  try {
+    const user = await User.findById(id);
+    if (!user) { return res.status(422).send({ error: "User not found." }) }
 
     // Update user word list
     _.forEach(stats, stat => {
@@ -235,19 +235,22 @@ const updateFromWeb = async (req, res, next) => {
       }
     });
 
-    // Update weekly / total star counts
+    // Update other attributes
     const newTotalStarCount = user.starCount();    
     user.weeklyStarCount = user.weeklyStarCount + newTotalStarCount - user.totalStarCount;
     user.totalStarCount = newTotalStarCount;
+    user.totalWordsLearned = user.words.length;
+    user.totalTimeSpent = sumBy(user.words, "timeSpent");
 
+    // Save scores
     cache.zadd(['weekly_leaderboard', user.weeklyStarCount, user._id.toString()]);
     cache.zadd(['all_time_leaderboard', user.totalStarCount, user._id.toString()]);
 
-    user.save(error => error
-      ? res.status(422).send({ error: error.message })
-      : res.status(200).send(user)
-    );
-  });
+    await user.save();
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(422).send({ error: error.message })
+  };
 };
 
 const updateFromMobile = async (req, res, next) => {
