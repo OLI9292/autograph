@@ -24,27 +24,23 @@ const randomWordCounts = (level, hardcoded) => {
 };
 
 const addWordTo = (words, pool, daisyChain = false) => {
-  const values = _.pluck(words, "value");
+  const available = _.shuffle(_.reject(pool, word => _.pluck(words, "value").includes(word.value)));
 
-  const filtered = _.reject(pool, w => _.contains(values, w.value));
-  if (_.isEmpty(filtered)) {
-    console.log("Pool is empty");
+  if (_.isEmpty(available)) {
+    console.log("Pool is empty.");
     return words;
   }
 
   const lastWord = _.last(words);
 
-  if (daisyChain && lastWord) {
-    const matches = lastWord.sharesRoot;
-    const match = _.find(matches, m =>
-      _.contains(_.pluck(filtered, "value"), m.value)
-    );
-    if (match) {
-      return words.concat(match);
-    }
-  }
+  let nextWord =
+    daisyChain &&
+    lastWord && 
+    _.find(available, word => lastWord.sharesRoot.includes(word.value));
 
-  return words.concat(_.sample(filtered));
+  if (!nextWord) { nextWord = _.sample(available); }
+
+  return words.concat(nextWord);
 };
 
 const wordPool = (user, wordDocs) => {
@@ -84,17 +80,13 @@ const wordsForStage = (level, stage) => {
   return chunk(level.words, wordsPerStage)[stage - 1];
 };
 
-// wordsAndLevels
-// randomWords
-// getQuestions
-
 const trainData = async (level, stage, user) => {
   const hardcoded = wordsForStage(level, stage);
 
   return new Promise(resolve => {
     cache.get("words", async (error, reply) => {
       if (error || !reply) {
-        return { error: error ? error.message : "No reply for words." };
+        resolve({ error: error ? error.message : "No reply for words." });
       }
       
       const words = reply
