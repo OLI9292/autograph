@@ -81,12 +81,15 @@ const wordsForStage = (level, stage) => {
 };
 
 const trainData = async (level, stage, user) => {
+  if (!stage) { console.log("No stage provided."); return; }
+
   const hardcoded = wordsForStage(level, stage);
 
   return new Promise(resolve => {
     cache.get("words", async (error, reply) => {
       if (error || !reply) {
-        resolve({ error: error ? error.message : "No reply for words." });
+        console.log(get(error, "message") || "No reply for words.");
+        return;
       }
       
       const words = reply
@@ -143,6 +146,10 @@ const questionParams = async query => {
   try {
     const level = await Level.findById(id);
     const user = await User.findById(user_id);
+    
+    if (id && !level) { return { error: "Level not found."}; }
+    if (user_id && !user) { return { error: "User not found."}; }
+    
     return { 
       level: level,
       questionLevel: questionLevel,
