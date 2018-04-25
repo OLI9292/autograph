@@ -37,7 +37,8 @@ var wordSchema = new Schema({
   },
   categories: [String],
   obscurity: Number,
-  roots: [Schema.Types.ObjectId]
+  roots: [Schema.Types.ObjectId],
+  sharesRoot: { type: [String], default: [], required: true },
 });
 
 wordSchema.methods.fullDefinition = function() {

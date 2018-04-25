@@ -9,6 +9,7 @@ const Level = require("../models/level");
 const Root = require("../models/root");
 const User = require("../models/user");
 const { Question } = require("../models/question");
+const cache = require("../cache");
 
 const demoWords = require("../lib/demoWords");
 
@@ -22,35 +23,32 @@ const randomWordCounts = (level, hardcoded) => {
   return _.map([seen, unseen], r => Math.round(r * totalCount));
 };
 
-const wordPool = (user, wordDocs) => {
-  const userWords = _.pluck(user.words, "name");
-  return _.partition(wordDocs, w => _.contains(userWords, w.value));
-};
+const addWordTo = (words, pool, daisyChain = false) => {
+  const available = _.shuffle(_.reject(pool, word => _.pluck(words, "value").includes(word.value)));
 
-const addWordTo = async (words, pool, daisyChain = false) => {
-  const values = _.pluck(words, "value");
-  const filtered = _.reject(pool, w => _.contains(values, w.value));
-  if (_.isEmpty(filtered)) {
-    console.log("Pool is empty");
+  if (_.isEmpty(available)) {
+    console.log("Pool is empty.");
     return words;
   }
 
   const lastWord = _.last(words);
 
-  if (daisyChain && lastWord) {
-    const matches = await lastWord.sharesRootWith();
-    const match = _.find(matches, m =>
-      _.contains(_.pluck(filtered, "value"), m.value)
-    );
-    if (match) {
-      return words.concat(match);
-    }
-  }
+  let nextWord =
+    daisyChain &&
+    lastWord && 
+    _.find(available, word => lastWord.sharesRoot.includes(word.value));
 
-  return words.concat(_.sample(filtered));
+  if (!nextWord) { nextWord = _.sample(available); }
+
+  return words.concat(nextWord);
 };
 
-const randomWords = async (user, level, hardcoded, wordDocs) => {
+const wordPool = (user, wordDocs) => {
+  const userWords = _.pluck(user.words, "name");
+  return _.partition(wordDocs, w => _.contains(userWords, w.value));
+};
+
+const randomWords = (user, level, hardcoded, wordDocs) => {
   const [seenCount, unseenCount] = randomWordCounts(level, hardcoded);
   const totalCount = seenCount + unseenCount;
   const [seenWords, unseenWords] = wordPool(user, wordDocs);
@@ -60,7 +58,7 @@ const randomWords = async (user, level, hardcoded, wordDocs) => {
 
   for (let n of range) {
     const pool = n <= seenCount ? seenWords : unseenWords;
-    arr = await addWordTo(arr, pool, true);
+    arr = addWordTo(arr, pool, true);
     if (n === totalCount) {
       return _.pluck(arr, "value");
     }
@@ -82,84 +80,97 @@ const wordsForStage = (level, stage) => {
   return chunk(level.words, wordsPerStage)[stage - 1];
 };
 
-const questions = {
-  forDemoLevel: async () => {
-    const data = wordsAndLevels(demoWords, null, 1);
-    return await getQuestions(data);
-  },
+const trainData = async (level, stage, user) => {
+  if (!stage) { console.log("No stage provided."); return; }
 
-  forTrainLevel: async params => {
-    const { level, user, stage } = params;
-    const words = await Word.find({});
-    const hardcoded = wordsForStage(level, stage);
-    const random = await randomWords(user, level, hardcoded, words);
-    const all = _.union(hardcoded, random);
-    const data = wordsAndLevels(all, user);
-    return await getQuestions(data);
-  },
+  const hardcoded = wordsForStage(level, stage);
 
-  forExploreLevel: async params => {
-    const { level, questionLevel, user } = params;
-    const data = wordsAndLevels(_.shuffle(level.words), user, questionLevel);
-    return await getQuestions(data);
-  },
+  return new Promise(resolve => {
+    cache.get("words", async (error, reply) => {
+      if (error || !reply) {
+        console.log(get(error, "message") || "No reply for words.");
+        return;
+      }
+      
+      const words = reply
+        ? JSON.parse(reply)
+        : (await Word.find({}, { value: 1, sharesRoot: 1 }));
 
-  forSpeedLevel: async params => {
-    const { level, user } = params;
-    const hardcoded = level.words;
-    const random = _.sample(_.pluck(user.words, "name"), hardcoded.length);
-    const all = _.shuffle(_.uniq(_.union(hardcoded, random)));
-    const questionLevels =
-      get(level.speed, "inputType") === "spell" ? SPELL_TYPES : BUTTON_TYPES;
-    const data = wordsAndLevels(level.words, user, questionLevels);
-    return await getQuestions(data);
-  },
+      if (!reply) {
+        cache.set("words", JSON.stringify(words));
+      }
+      
+      const random = await randomWords(user, level, hardcoded, words);
+      const all = _.union(hardcoded, random);
+      const data = wordsAndLevels(all, user);
+      resolve(data);
+    })
+  });  
+};
 
-  forMultiplayerLevel: async params => {
-    const { seed, user } = params;
-    const data = wordsAndLevels(_.shuffle(seed.split(",")), user);
-    return await getQuestions(data);
+const speedData = (level, user) => {
+  const hardcoded = level.words;
+  const random = _.sample(_.pluck(user.words, "name"), hardcoded.length);
+  const all = _.shuffle(_.uniq(_.union(hardcoded, random)));
+  const questionLevels = get(level.speed, "inputType") === "spell" ? SPELL_TYPES : BUTTON_TYPES;
+  return wordsAndLevels(level.words, user, questionLevels);  
+}
+
+const questions = async params => {
+  const {
+    level,
+    questionLevel,
+    stage,
+    seed,
+    user,
+    type
+  } = params;
+
+  if (!["demo", "train", "speed", "multiplayer"].includes(type)) { 
+    return { error: "Invalid type."};
   }
+
+  let data;
+
+  if (type === "demo")        { data = wordsAndLevels(demoWords, null, 1); }
+  if (type === "train")       { data = await trainData(level, stage, user); }
+  if (type === "speed")       { data = speedData(level, user); }
+  if (type === "multiplayer") { data = wordsAndLevels(_.shuffle(seed.split(",")), user); }
+
+  return await getQuestions(data);
 };
 
 const questionParams = async query => {
-  const { id, questionLevel, seed, stage, user_id } = query;
+  const { id, questionLevel, seed, stage, user_id, type } = query;
 
-  const level = await Level.doc(id);
-  const user = await User.doc(user_id);
-
-  return {
-    level: level,
-    questionLevel: questionLevel,
-    stage: stage,
-    seed: seed,
-    user: user
-  };
+  try {
+    const level = await Level.findById(id);
+    const user = await User.findById(user_id);
+    
+    if (id && !level) { return { error: "Level not found."}; }
+    if (user_id && !user) { return { error: "User not found."}; }
+    
+    return { 
+      level: level,
+      questionLevel: questionLevel,
+      stage: stage,
+      seed: seed,
+      user: user,
+      type: type
+    };    
+  } catch (error) {
+    return { error: error.message };
+  }
 };
 
-const timeSince = start => moment.duration(moment().diff(start))._data;
+const timeSince = start => moment.duration(moment().diff(start)).asMilliseconds();
 
 exports.read = async (req, res, next) => {
-  const start = moment();
-
   const params = await questionParams(req.query);
 
-  const result = await (async () => {
-    switch (req.query.type) {
-      case "demo":
-        return await questions.forDemoLevel();
-      case "train":
-        return await questions.forTrainLevel(params);
-      case "explore":
-        return await questions.forExploreLevel(params, start);
-      case "speed":
-        return await questions.forSpeedLevel(params);
-      case "multiplayer":
-        return await questions.forMultiplayerLevel(params);
-      default:
-        return { error: "Invalid type." };
-    }
-  })();
+  if (params.error) { return res.status(422).send(params); }
+
+  const result = await questions(params);
 
   return result.length
     ? res.status(200).send(result)
