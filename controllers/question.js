@@ -116,6 +116,11 @@ const speedData = (level, user) => {
   return wordsAndLevels(level.words, user, questionLevels);  
 }
 
+const randomWordsAndLevels = async user => {
+  const words = await Word.find({}, { value: 1 }).limit(15);
+  return wordsAndLevels(_.pluck(words, "value"), user);
+}
+
 const questions = async params => {
   const {
     level,
@@ -126,7 +131,7 @@ const questions = async params => {
     type
   } = params;
 
-  if (!["demo", "train", "speed", "multiplayer"].includes(type)) { 
+  if (!["demo", "train", "speed", "multiplayer", "battle"].includes(type)) { 
     return { error: "Invalid type."};
   }
 
@@ -136,6 +141,7 @@ const questions = async params => {
   if (type === "train")       { data = await trainData(level, stage, user); }
   if (type === "speed")       { data = speedData(level, user); }
   if (type === "multiplayer") { data = wordsAndLevels(_.shuffle(seed.split(",")), user); }
+  if (type === "battle")      { data = await randomWordsAndLevels(user); }
 
   return await getQuestions(data);
 };
