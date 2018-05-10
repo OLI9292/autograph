@@ -37,7 +37,7 @@ const scanForGame = (userId, cursor, cb) => {
     if (!gameKey) {
 
       if (cursor !== '0') {
-        return scanForGame(userId, cursor);
+        return scanForGame(userId, cursor, cb);
       }
 
       const gameKey = `game:${guid()}`;
