@@ -40,7 +40,7 @@ module.exports = app => {
   //
   // GAME
   //
-  apiRoutes.get("/v2/auth/game/join", GameController.join);
+  apiRoutes.get("/v2/auth/game", GameController.read);
 
   //
   // FACTOID

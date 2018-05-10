@@ -205,7 +205,8 @@ exports.update = async (req, res, next) => {
 const updateFromWeb = async (req, res, next) => {
   const {
     id,
-    stats
+    stats,
+    elo
   } = req.body;
 
   try {
@@ -241,6 +242,8 @@ const updateFromWeb = async (req, res, next) => {
     user.totalStarCount = newTotalStarCount;
     user.totalWordsLearned = user.words.length;
     user.totalTimeSpent = sumBy(user.words, "timeSpent");
+
+    if (elo) { user.elo = elo };
 
     // Save scores
     cache.zadd(['weekly_leaderboard', user.weeklyStarCount, user._id.toString()]);

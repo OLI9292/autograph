@@ -42,6 +42,7 @@ const userSchema = new Schema({
   wordListsCompleted: [Schema.Types.ObjectId],
   totalWordsLearned: { type: Number, default: 0 },
   totalTimeSpent: { type: Number, default: 0 },
+  elo: { type: Number, default: 2000, min: 0 },
   words: {
     type: [
       {

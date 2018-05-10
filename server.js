@@ -2,6 +2,7 @@ require("newrelic");
 require("dotenv").config();
 require("./databases/accounts/index");
 
+const get = require("lodash/get")
 const app = require("express")();
 
 const server = require("http").Server(app);
@@ -49,26 +50,28 @@ server.listen(CONFIG.PORT, () =>
 
 io.sockets.on("connection", socket => {
   const {
-   player1,
-   player2
+    gameId,
+    username,
+    userId,
+    userElo
   } = url.parse(socket.handshake.url, true).query;
 
-  console.log("joining room: " + player1);
-  socket.join(player1);
+  console.log("joining room: " + gameId);
 
-  if (player2) {
-    io.to(player1).emit("joined", player2);
-    io.to(player1).emit("start", Date.now());
+  socket.join(gameId);
+
+  if (username) {
+    io.to(gameId).emit("joined", { opponentUsername: username, opponentId: userId, opponentElo: userElo });
   }
 
   socket.on("score", msg => {
     const {
-      score,
+      progress,
       room,
-      user
+      userId
     } = msg;
 
-    io.to(room).emit("score", { user: user, score: score });
+    io.to(room).emit("score", { userId: userId, progress: progress });
   })
 })
 

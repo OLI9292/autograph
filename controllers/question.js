@@ -17,6 +17,8 @@ const demoWords = require("../lib/demoWords");
 const SPELL_TYPES = [6, 7, 8, 10];
 const BUTTON_TYPES = _.difference(_.range(1, 11), SPELL_TYPES);
 
+const BATTLE_SEEN_WORDS_RATIO = 0.75;
+
 const randomWordCounts = (level, hardcoded) => {
   const { seen, unseen } = level.ratios;
   const totalCount = hardcoded.length / (1 - seen - unseen);
@@ -116,15 +118,23 @@ const speedData = (level, user) => {
   return wordsAndLevels(level.words, user, questionLevels);  
 }
 
-const randomWordsAndLevels = async user => {
-  const words = await Word.find({}, { value: 1 }).limit(15);
-  return wordsAndLevels(_.pluck(words, "value"), user);
+const randomWordsAndLevels = async (user, questionsCount) => {
+  const seenWords = _.pluck(_.sample(user.words, Math.round(questionsCount * BATTLE_SEEN_WORDS_RATIO)), "name")
+  const unseenWordsCount = questionsCount - seenWords.length;
+  const unseenWords = unseenWordsCount.length > 0 ?
+    await Word.find(
+      { value: { $nin: seenWords }},
+      { value: 1 }
+    ).limit(unseenWordsCount) : [];
+  const words = seenWords.concat(_.pluck(unseenWords, "value"));
+  return wordsAndLevels(words, user);
 }
 
 const questions = async params => {
   const {
     level,
     questionLevel,
+    questionsCount,
     stage,
     seed,
     user,
@@ -141,13 +151,13 @@ const questions = async params => {
   if (type === "train")       { data = await trainData(level, stage, user); }
   if (type === "speed")       { data = speedData(level, user); }
   if (type === "multiplayer") { data = wordsAndLevels(_.shuffle(seed.split(",")), user); }
-  if (type === "battle")      { data = await randomWordsAndLevels(user); }
+  if (type === "battle")      { data = await randomWordsAndLevels(user, questionsCount); }
 
   return await getQuestions(data);
 };
 
 const questionParams = async query => {
-  const { id, questionLevel, seed, stage, user_id, type } = query;
+  const { id, questionLevel, seed, stage, user_id, type, questions_count } = query;
 
   try {
     const level = await Level.findById(id);
@@ -159,6 +169,7 @@ const questionParams = async query => {
     return { 
       level: level,
       questionLevel: questionLevel,
+      questionsCount: parseInt(questions_count, 10) || 15,
       stage: stage,
       seed: seed,
       user: user,

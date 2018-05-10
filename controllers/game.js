@@ -3,35 +3,94 @@ const get = require("lodash/get");
 
 const User = require("../models/user");
 const cache = require("../cache");
+const { guid } = require("../lib/helpers");
 
-//
-// CREATE
-//
+const randomQuestionsCount = () => _.sample(_.flatten([
+  Array(2).fill(15),
+  Array(4).fill(30),
+  Array(1).fill(40),
+  Array(1).fill(50)
+]));
 
-exports.join = async (req, res, next) => {
+/**
+ * Searches for a multiplayer game.
+ * @param {string} userId - User ID. 
+ * @param {string} cursor - Redis 'scan' cursor.
+ * @param {callback} cb - Callback w/ api response.
+ *
+ * @returns {object} empty object if no available games, opponent user doc if game found, otherwise an error
+ */
+const scanForGame = (userId, cursor, cb) => {
+  cache.scan(
+    cursor,
+    'MATCH', 'game:*',
+    'COUNT', '10',
+    (error, response) => { 
 
-  const {
-    userId
-  } = req.query;
-
-  return await cache.rpop("lobby", (error, reply) => {
     if (error) {
-      return res.status(200).send(error.message);
-    } else if (!reply) {
-      console.log(get(error, "message") || "No players in game lobby.");
-      const timestamp = new Date().getTime();
-      cache.lpush("lobby", `${userId}:${timestamp}`);
-      return res.status(200).send({});
-    } else {
-      const [opponentId, timestamp] = reply.split(":");
+      return cb({ error: error.message });
+    } 
+
+    cursor = response[0];
+    const gameKey = _.sample(response[1]);
+
+    if (!gameKey) {
+
+      if (cursor !== '0') {
+        return scanForGame(userId, cursor);
+      }
+
+      const gameKey = `game:${guid()}`;
+      const questionsCount = randomQuestionsCount();
+
+      cache.hmset(
+        gameKey,
+        "opponentId", userId,
+        "questionsCount", questionsCount
+      );
       
-      User.findById(opponentId, (error, user) => {
-        if (error || !user) {
-          return res.status(422).send({ error: get(error, "message") || "Opponent doc not found." });
+      cache.expire(gameKey, 3);
+      console.log(`Setting game key: ${gameKey}.`)
+      return cb({ id: gameKey.slice(5), questionsCount: questionsCount });
+
+    } else {
+      cache.hmget(gameKey, "opponentId", "questionsCount", (error, result) => {
+        cache.del(gameKey);
+        
+        const [opponentId, questionsCount] = result;
+        console.log(`Found game against ${opponentId} (# questions: ${questionsCount}).`);
+        
+        if (error || !opponentId) {
+          return cb({ error: get(error, "message") || "Game key not found." });
         }
 
-        return res.status(200).send(user);
-      });
+        User.findById(opponentId, (error, user) => {
+          if (error || !user) {
+            return cb({ error: get(error, "message") || "Opponent doc not found." });
+          }
+
+          const game = {
+            id: gameKey.slice(5),
+            opponentUsername: user.firstName,
+            opponentElo: user.elo,
+            opponentId: opponentId,
+            questionsCount: questionsCount
+          };
+
+          return cb(game);
+        });        
+      });      
     }
+  });  
+}
+
+exports.read = async (req, res, next) => {
+  const userId = req.query.userId;
+  const cursor = "0";
+
+  scanForGame(userId, cursor, result => {
+    return res
+      .status(result.error ? 422 : 200)
+      .send(result);
   });
-};
+}
