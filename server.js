@@ -6,8 +6,7 @@ const get = require("lodash/get")
 const app = require("express")();
 
 const server = require("http").Server(app);
-const io = require("socket.io")(server);
-const url = require('url');
+require("./socketManager").listen(server);
 
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
@@ -15,6 +14,7 @@ const bodyParser = require("body-parser");
 
 const CONFIG = require("./config/main");
 const router = require("./router");
+
 
 mongoose.Promise = global.Promise;
 mongoose.connect(CONFIG.MONGODB_URI, { promiseLibrary: global.Promise });
@@ -47,33 +47,6 @@ server.listen(CONFIG.PORT, () =>
     message: `App listening on port ${CONFIG.PORT}`
   })
 );
-
-io.sockets.on("connection", socket => {
-  const {
-    gameId,
-    username,
-    userId,
-    userElo
-  } = url.parse(socket.handshake.url, true).query;
-
-  console.log("joining room: " + gameId);
-
-  socket.join(gameId);
-
-  if (username) {
-    io.to(gameId).emit("joined", { opponentUsername: username, opponentId: userId, opponentElo: userElo });
-  }
-
-  socket.on("score", msg => {
-    const {
-      progress,
-      room,
-      userId
-    } = msg;
-
-    io.to(room).emit("score", { userId: userId, progress: progress });
-  })
-})
 
 router(app);
 

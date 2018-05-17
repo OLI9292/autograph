@@ -143,6 +143,10 @@ module.exports = app => {
     UserController.completedLevel
   );
   apiRoutes.patch(
+    "/v2/auth/user/:id/friends",
+    UserController.addFriend
+  );  
+  apiRoutes.patch(
     "/v2/admin/user/resetStarCounts",
     UserController.resetStarCounts
   );
