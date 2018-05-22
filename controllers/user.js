@@ -8,6 +8,7 @@ const Class = require("../models/class");
 const School = require("../models/school");
 const Level = require("../models/level");
 const User = require("../models/user");
+const ObjectId = require('mongodb').ObjectID;
 
 const { login } = require("./login");
 const recordEvent = require("../middlewares/recordEvent");
@@ -87,9 +88,11 @@ exports.read = async (req, res, next) => {
 
   } else if (req.query.notRequestingUser) {
 
-    User.find(
-      { _id: { $in: req.query.ids.split(',') } },
-      { username: 1, elo: 1 }, (error, users) => {
+    const query = req.query.ids
+      ? { _id: { $in: req.query.ids.split(',') } }
+      : { username: { $regex: "^" + req.query.startsWith } };
+    
+    User.find(query, { username: 1, elo: 1 }, { limit: 15 }, (error, users) => {
       return error
         ? res.status(422).send({ error: error.message })
         : res.status(200).send(users);
@@ -135,6 +138,21 @@ exports.addFriend = async (req, res, next) => {
     { new: true },
     async (error, user) => {
     
+    if (error || !user) {
+      return res.status(422).send({ error: get(error, "message") || "User not found." });
+    }
+
+    return res.status(200).send(user);
+  })
+}
+
+exports.removeFriend = async (req, res, next) => {
+  User.findByIdAndUpdate(
+    req.params.id,
+    { $pull: { friends : { id : ObjectId(req.query.id) } } },
+    { new: true },
+    async (error, user) => {
+
     if (error || !user) {
       return res.status(422).send({ error: get(error, "message") || "User not found." });
     }

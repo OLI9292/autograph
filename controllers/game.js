@@ -20,7 +20,7 @@ const randomQuestionsCount = () => _.sample(_.flatten([
  *
  * @returns {object} empty object if no available games, opponent user doc if game found, otherwise an error
  */
-const scanForGame = (userId, cursor, cb) => {
+const scanForGame = (user, cursor, cb) => {
   cache.scan(
     cursor,
     'MATCH', 'game:*',
@@ -37,7 +37,7 @@ const scanForGame = (userId, cursor, cb) => {
     if (!gameKey) {
 
       if (cursor !== '0') {
-        return scanForGame(userId, cursor, cb);
+        return scanForGame(user, cursor, cb);
       }
 
       const gameKey = `game:${guid()}`;
@@ -45,50 +45,46 @@ const scanForGame = (userId, cursor, cb) => {
 
       cache.hmset(
         gameKey,
-        "opponentId", userId,
+        "id", user.id,
+        "elo", user.elo,
+        "username", user.username,
         "questionsCount", questionsCount
       );
       
       cache.expire(gameKey, 3);
+
       console.log(`Setting game key: ${gameKey}.`)
-      return cb({ id: gameKey.slice(5), questionsCount: questionsCount });
+      return cb({ id: gameKey.slice(5), foundOpponent: false });
 
     } else {
-      cache.hmget(gameKey, "opponentId", "questionsCount", (error, result) => {
-        cache.del(gameKey);
-        
-        const [opponentId, questionsCount] = result;
-        console.log(`Found game against ${opponentId} (# questions: ${questionsCount}).`);
-        
-        if (error || !opponentId) {
+
+      cache.hmget(gameKey, "id", "elo", "username", "questionsCount", (error, result) => {
+        cache.del(gameKey);      
+
+        const game = {
+          id: result[0],
+          elo: result[1],
+          username: result[2],
+          questionsCount: result[3],
+          foundOpponent: true
+        };
+
+        if (error || !game.id) {
           return cb({ error: get(error, "message") || "Game key not found." });
         }
 
-        User.findById(opponentId, (error, user) => {
-          if (error || !user) {
-            return cb({ error: get(error, "message") || "Opponent doc not found." });
-          }
-
-          const game = {
-            id: gameKey.slice(5),
-            opponentUsername: user.firstName,
-            opponentElo: user.elo,
-            opponentId: opponentId,
-            questionsCount: questionsCount
-          };
-
-          return cb(game);
-        });        
+        console.log(`Found game against ${game.username}.`);
+        return cb(game);
       });      
+
     }
   });  
 }
 
 exports.read = async (req, res, next) => {
-  const userId = req.query.userId;
   const cursor = "0";
 
-  scanForGame(userId, cursor, result => {
+  scanForGame(req.query, cursor, result => {
     return res
       .status(result.error ? 422 : 200)
       .send(result);

@@ -29,8 +29,7 @@ const userSchema = new Schema({
         id: { type: Schema.Types.ObjectId, required: true },
         username: { type: String, required: true },
         wins: { type: Number, required: true, min: 0, default: 0 },
-        losses: { type: Number, required: true, min: 0, default: 0 },
-        deleted: { type: Boolean, required: true, default: false }
+        losses: { type: Number, required: true, min: 0, default: 0 }
       }
     ],
     default: []

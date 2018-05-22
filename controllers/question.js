@@ -121,7 +121,7 @@ const speedData = (level, user) => {
 const randomWordsAndLevels = async (user, questionsCount) => {
   const seenWords = _.pluck(_.sample(user.words, Math.round(questionsCount * BATTLE_SEEN_WORDS_RATIO)), "name")
   const unseenWordsCount = questionsCount - seenWords.length;
-  const unseenWords = unseenWordsCount.length > 0 ?
+  const unseenWords = unseenWordsCount > 0 ?
     await Word.find(
       { value: { $nin: seenWords }},
       { value: 1 }

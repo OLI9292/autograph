@@ -146,6 +146,10 @@ module.exports = app => {
     "/v2/auth/user/:id/friends",
     UserController.addFriend
   );  
+  apiRoutes.delete(
+    "/v2/auth/user/:id/friends",
+    UserController.removeFriend
+  );    
   apiRoutes.patch(
     "/v2/admin/user/resetStarCounts",
     UserController.resetStarCounts
