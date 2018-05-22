@@ -21,7 +21,6 @@ const addAttributesToUser = (user, classId, usernames) => {
   // generate a unique username and random password for students (not teacher)
   if (!user.isTeacher) {
     const base = user.firstName.toLowerCase();
-    console.log(user);
     user.email = usernameWithIndex(base, usernames);
     user.password = randomPassword();
   }
@@ -69,17 +68,13 @@ exports.create = async (req, res, next) => {
 
 
   User.create(usersWithLogin, (error, docs) => {
-    console.log(error);
     if (error) { return res.status(422).send({ error: error.message }); }
 
     const [teacherDoc, studentDocs] = teacherAndStudents(docs)
     _class.teacher = get(teacherDoc, "_id");
     _class.students = _.pluck(studentDocs, "_id");
 
-    console.log("docs");
-
     _class.save(error => {
-      console.log(error);
       if (error) {
         User.remove({ _id: { $in: _.pluck(docs, "_id") } });
         return res.status(422).send({ error: error.message });
@@ -92,8 +87,6 @@ exports.create = async (req, res, next) => {
             type: "welcome",
             students: teacherAndStudents(usersWithLogin)[1]
           };
-
-
 
           send(params, result =>
             console.log(result.error || `Sent ${result.subject} email to ${result.to}.`)
@@ -205,7 +198,6 @@ exports.update = async (req, res, next) => {
 
   if (req.body.students && req.body.email) {
     const usernames = await User.existingUsernames();
-    console.log(usernames)
     const users = _.map(req.body.students, user => addAttributesToUser(user, id, usernames));
 
     User.create(users, (error, userDocs) => {
