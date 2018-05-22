@@ -15,6 +15,7 @@ const WordController = require("./controllers/word");
 const RootController = require("./controllers/root");
 const ImageController = require("./controllers/image");
 const QuestionController = require("./controllers/question");
+const GameController = require("./controllers/game");
 const TextController = require("./controllers/text");
 
 module.exports = app => {
@@ -35,6 +36,11 @@ module.exports = app => {
   apiRoutes.get("/v2/auth/class/:id/students", ClassController.readStudents);
   apiRoutes.patch("/v2/auth/class/:id", ClassController.update);
   apiRoutes.delete("/v2/admin/class/:id", ClassController.delete);
+
+  //
+  // GAME
+  //
+  apiRoutes.get("/v2/auth/game", GameController.read);
 
   //
   // FACTOID
@@ -136,6 +142,14 @@ module.exports = app => {
     "/v2/auth/user/:id/completedLevel",
     UserController.completedLevel
   );
+  apiRoutes.patch(
+    "/v2/auth/user/:id/friends",
+    UserController.addFriend
+  );  
+  apiRoutes.delete(
+    "/v2/auth/user/:id/friends",
+    UserController.removeFriend
+  );    
   apiRoutes.patch(
     "/v2/admin/user/resetStarCounts",
     UserController.resetStarCounts

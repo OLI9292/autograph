@@ -9,6 +9,8 @@ const ID_3 = "5a4aea2c8293e0305e30ebc9";
 
 const primaryMock = {
   _id: ID_1,
+  friends: [],
+  username: "willow-g",
   firstName: "Willow",
   lastName: "Glenn",
   signUpMethod: "email",
@@ -44,6 +46,8 @@ const primaryMock = {
 const secondaryMocks = [
   {
     _id: ID_2,
+    friends: [],
+    username: "alejandro-b",
     firstName: "Alejandro",
     lastName: "Baptista",
     signUpMethod: "email",
@@ -59,6 +63,8 @@ const secondaryMocks = [
   },
   {
     _id: ID_3,
+    friends: [],
+    username: "akiva-s",
     firstName: "Akiva",
     lastName: "S",
     signUpMethod: "email",
@@ -71,6 +77,7 @@ const secondaryMocks = [
 
 const invalidMocks = [
   {
+    username: "joe-s",
     firstName: "Joe",
     lastName: "Shmoe"
   }

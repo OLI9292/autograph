@@ -23,6 +23,17 @@ const userSchema = new Schema({
   mobileIapUnlocked: { type: Boolean, default: false },
   ranking: { type: Number, default: 100 },
   firstName: { type: String, required: true, default: "" },
+  friends: {
+    type: [
+      {
+        id: { type: Schema.Types.ObjectId, required: true },
+        username: { type: String, required: true },
+        wins: { type: Number, required: true, min: 0, default: 0 },
+        losses: { type: Number, required: true, min: 0, default: 0 }
+      }
+    ],
+    default: []
+  },
   lastName: String,
   nameOfSchool: String,
   optedIntoEmail: Boolean,
@@ -42,6 +53,8 @@ const userSchema = new Schema({
   wordListsCompleted: [Schema.Types.ObjectId],
   totalWordsLearned: { type: Number, default: 0 },
   totalTimeSpent: { type: Number, default: 0 },
+  elo: { type: Number, default: 2000, min: 0 },
+  username: { type: String },
   words: {
     type: [
       {

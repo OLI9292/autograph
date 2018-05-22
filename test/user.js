@@ -208,6 +208,28 @@ describe("Users", () => {
     });
   });
 
+  describe("PATCH /friends", () => {
+    before(async () => await seedDB());
+
+    const id = mongoose.Types.ObjectId();
+    const username = "akiva-sauce";
+
+    it.only("it should add a friend to a users friend list", done => {
+      chai
+        .request(server)
+        .patch("/api/v2/auth/user/" + userMock._id + "/friends")
+        .send({ id: id, username: username })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.should.have.property("friends").lengthOf(1);
+          res.body.friends[0].should.have.property("id").eql(id.toString());
+          res.body.friends[0].should.have.property("username").eql(username);
+          done();
+        });
+    });
+  });
+
   describe("PATCH /completedLevel", () => {
     beforeEach(async () => await seedDB());
 

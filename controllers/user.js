@@ -2,11 +2,13 @@ const jwt = require("jwt-simple");
 const mongoose = require("mongoose");
 const _ = require("underscore");
 const sumBy = require("lodash/sumBy");
+const get = require("lodash/get");
 
 const Class = require("../models/class");
 const School = require("../models/school");
 const Level = require("../models/level");
 const User = require("../models/user");
+const ObjectId = require('mongodb').ObjectID;
 
 const { login } = require("./login");
 const recordEvent = require("../middlewares/recordEvent");
@@ -84,6 +86,18 @@ exports.read = async (req, res, next) => {
         : res.status(200).send(users);
     });
 
+  } else if (req.query.notRequestingUser) {
+
+    const query = req.query.ids
+      ? { _id: { $in: req.query.ids.split(',') } }
+      : { username: { $regex: "^" + req.query.startsWith } };
+    
+    User.find(query, { username: 1, elo: 1 }, { limit: 15 }, (error, users) => {
+      return error
+        ? res.status(422).send({ error: error.message })
+        : res.status(200).send(users);
+    });
+
   } else if (!_.isEmpty(req.query)) {
     
     const query = userIdQuery(req.query);
@@ -116,6 +130,36 @@ exports.read = async (req, res, next) => {
 //
 // UPDATE
 //
+
+exports.addFriend = async (req, res, next) => {
+  User.findByIdAndUpdate(
+    req.params.id,
+    { $push: { friends: req.body } },
+    { new: true },
+    async (error, user) => {
+    
+    if (error || !user) {
+      return res.status(422).send({ error: get(error, "message") || "User not found." });
+    }
+
+    return res.status(200).send(user);
+  })
+}
+
+exports.removeFriend = async (req, res, next) => {
+  User.findByIdAndUpdate(
+    req.params.id,
+    { $pull: { friends : { id : ObjectId(req.query.id) } } },
+    { new: true },
+    async (error, user) => {
+
+    if (error || !user) {
+      return res.status(422).send({ error: get(error, "message") || "User not found." });
+    }
+
+    return res.status(200).send(user);
+  })
+}
 
 exports.completedLevel = async (req, res, next) => {
   const { levelId, stage, accuracy, time, score, type } = req.body;
@@ -205,7 +249,8 @@ exports.update = async (req, res, next) => {
 const updateFromWeb = async (req, res, next) => {
   const {
     id,
-    stats
+    stats,
+    elo
   } = req.body;
 
   try {
@@ -241,6 +286,8 @@ const updateFromWeb = async (req, res, next) => {
     user.totalStarCount = newTotalStarCount;
     user.totalWordsLearned = user.words.length;
     user.totalTimeSpent = sumBy(user.words, "timeSpent");
+
+    if (elo) { user.elo = elo };
 
     // Save scores
     cache.zadd(['weekly_leaderboard', user.weeklyStarCount, user._id.toString()]);
