@@ -214,7 +214,7 @@ describe("Users", () => {
     const id = mongoose.Types.ObjectId();
     const username = "akiva-sauce";
 
-    it.only("it should add a friend to a users friend list", done => {
+    it("it should add a friend to a users friend list", done => {
       chai
         .request(server)
         .patch("/api/v2/auth/user/" + userMock._id + "/friends")

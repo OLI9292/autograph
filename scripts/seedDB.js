@@ -10,6 +10,7 @@ const Root = require("../models/root");
 const Word = require("../models/word");
 const Level = require("../models/level");
 const Factoid = require("../models/factoid");
+const Question2 = require("../models/question2");
 
 const factoidData = require("../test/mocks/factoid");
 const classData = require("../test/mocks/class");
@@ -18,6 +19,7 @@ const userData = require("../test/mocks/user");
 const wordData = require("../test/mocks/word");
 const levelData = require("../test/mocks/level");
 const rootData = require("../test/mocks/root");
+const question2Data = require("../test/mocks/question2");
 
 const collections = [
   { model: School, mocks: schoolData.mocks },
@@ -26,7 +28,8 @@ const collections = [
   { model: User, mocks: userData.mocks },
   { model: Word, mocks: wordData.mocks },
   { model: Level, mocks: levelData.mocks },
-  { model: Root, mocks: rootData.mocks }
+  { model: Root, mocks: rootData.mocks },
+  { model: Question2, mocks: question2Data.mocks }
 ];
 
 const cleanCollections = async () => {
