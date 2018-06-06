@@ -17,6 +17,7 @@ const ImageController = require("./controllers/image");
 const QuestionController = require("./controllers/question");
 const GameController = require("./controllers/game");
 const TextController = require("./controllers/text");
+const Question2Controller = require("./controllers/question2");
 
 module.exports = app => {
   const apiRoutes = express.Router();
@@ -71,6 +72,15 @@ module.exports = app => {
   apiRoutes.get("/v2/level/:id", LevelController.read);
   apiRoutes.patch("/v2/level/:id", LevelController.update); // TODO: > admin
   apiRoutes.delete("/v2/level/:id", LevelController.delete); // TODO: > admin
+
+  //
+  // QUESTION2
+  //
+  apiRoutes.post("/v2/question2", Question2Controller.create); // TODO: > admin
+  apiRoutes.get("/v2/question2", Question2Controller.read);
+  apiRoutes.get("/v2/question2/:id", Question2Controller.read);
+  apiRoutes.patch("/v2/question2/:id", Question2Controller.update); // TODO: > admin
+  apiRoutes.delete("/v2/question2/:id", Question2Controller.delete); // TODO: > admin
 
   //
   // LOGGED QUESTION
