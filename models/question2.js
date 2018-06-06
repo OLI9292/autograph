@@ -47,8 +47,8 @@ const question2Schema = new Schema({
     ],
     required: true,
     validate: {
-      validator: objs => _.every(objs, obj => obj.filter(c => c.correct).length > 0),
-      message: "Choice layers require one correct answer."
+      validator: objs => objs.length > 0 && _.every(objs, obj => obj.filter(c => c.correct).length > 0),
+      message: "1 choice layer required, with at least one correct answer each."
     }    
   },
 });
