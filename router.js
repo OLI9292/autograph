@@ -18,6 +18,8 @@ const QuestionController = require("./controllers/question");
 const GameController = require("./controllers/game");
 const TextController = require("./controllers/text");
 const Question2Controller = require("./controllers/question2");
+const ChoiceSetController = require("./controllers/choiceSet");
+const ChoiceTreeController = require("./controllers/choiceTree");
 
 module.exports = app => {
   const apiRoutes = express.Router();
@@ -81,6 +83,24 @@ module.exports = app => {
   apiRoutes.get("/v2/question2/:id", Question2Controller.read);
   apiRoutes.patch("/v2/question2/:id", Question2Controller.update); // TODO: > admin
   apiRoutes.delete("/v2/question2/:id", Question2Controller.delete); // TODO: > admin
+
+  //
+  // CHOICESET
+  //
+  apiRoutes.post("/v2/choiceSet", ChoiceSetController.create); // TODO: > admin
+  apiRoutes.get("/v2/choiceSet", ChoiceSetController.read);
+  apiRoutes.get("/v2/choiceSet/:id", ChoiceSetController.read);
+  apiRoutes.patch("/v2/choiceSet/:id", ChoiceSetController.update); // TODO: > admin
+  apiRoutes.delete("/v2/choiceSet/:id", ChoiceSetController.delete); // TODO: > admin
+
+  //
+  // CHOICETREE
+  //
+  apiRoutes.post("/v2/choiceTree", ChoiceTreeController.create); // TODO: > admin
+  apiRoutes.get("/v2/choiceTree", ChoiceTreeController.read);
+  apiRoutes.get("/v2/choiceTree/:id", ChoiceTreeController.read);
+  apiRoutes.patch("/v2/choiceTree/:id", ChoiceTreeController.update); // TODO: > admin
+  apiRoutes.delete("/v2/choiceTree/:id", ChoiceTreeController.delete); // TODO: > admin  
 
   //
   // LOGGED QUESTION
