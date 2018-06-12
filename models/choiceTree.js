@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const choiceTreeSchema = new Schema({
   name: { type: String, required: true },
+  level: { type: Number, required: true, min: 1, max: 20 },
   json: { type: String, required: true }
 });
 
