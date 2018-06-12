@@ -3,9 +3,20 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const _ = require("underscore");
 
+const identifierValidator = objs => {
+  const split = objs.split(".");
+  return split.length === 3 && _.every(split, str => parseInt(str, 10) > 0);
+}
 
 const question2Schema = new Schema({
-  identifier: { type: String, required: true },
+  identifier: {
+    type: String,
+    required: true,
+    validate: {
+      validator: identifierValidator,
+      message: "Identifier requires a #.#.# format."
+    }       
+  },
   category: { type: String, required: true },
   subCategory: { type: String, required: true },
   prompt: { 
@@ -34,7 +45,11 @@ const question2Schema = new Schema({
         }
       ]
     ],
-    required: true
+    required: true,
+    validate: {
+      validator: objs => objs.length > 0 && _.every(objs, obj => obj.filter(c => c.correct).length > 0),
+      message: "1 choice layer required, with at least one correct answer each."
+    }    
   },
 });
 
