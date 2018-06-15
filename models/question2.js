@@ -1,11 +1,11 @@
-const db = require("../databases/accounts/index");
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const _ = require("underscore");
+const db = require("../databases/accounts/index")
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
+const _ = require("underscore")
 
 const identifierValidator = objs => {
-  const split = objs.split(".");
-  return split.length === 3 && _.every(split, str => parseInt(str, 10) > 0);
+  const split = objs.split(".")
+  return split.length === 3 && _.every(split, str => parseInt(str, 10) > 0)
 }
 
 const question2Schema = new Schema({
@@ -45,14 +45,22 @@ const question2Schema = new Schema({
         }
       ]
     ],
-    required: true,
     validate: {
-      validator: objs => objs.length > 0 && _.every(objs, obj => obj.filter(c => c.correct).length > 0),
-      message: "1 choice layer required, with at least one correct answer each."
+      validator: objs => _.every(objs, obj => obj.filter(c => c.correct).length > 0),
+      message: "Choice layers require at least one correct answer."
     }    
   },
-});
+  choiceTreeJson: String
+})
 
-const Question2 = db.model("Question2", question2Schema);
+question2Schema.pre("validate", function(next) {
+  if (this.choices.length || this.choiceTreeJson) {
+    next()
+  } else {
+    next(new Error("Choice layers or choice tree json required."))
+  }
+})
 
-module.exports = Question2;
+const Question2 = db.model("Question2", question2Schema)
+
+module.exports = Question2
