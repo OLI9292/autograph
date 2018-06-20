@@ -20,6 +20,7 @@ const TextController = require("./controllers/text");
 const Question2Controller = require("./controllers/question2");
 const ChoiceSetController = require("./controllers/choiceSet");
 const ChoiceTreeController = require("./controllers/choiceTree");
+const LoggedQuestion2Controller = require("./controllers/loggedQuestion2");
 
 module.exports = app => {
   const apiRoutes = express.Router();
@@ -83,6 +84,12 @@ module.exports = app => {
   apiRoutes.get("/v2/question2/:id", Question2Controller.read);
   apiRoutes.patch("/v2/question2/:id", Question2Controller.update); // TODO: > admin
   apiRoutes.delete("/v2/question2/:id", Question2Controller.delete); // TODO: > admin
+
+  //
+  // LOGGEDQUESTION2
+  //
+  apiRoutes.post("/v2/loggedQuestion2", LoggedQuestion2Controller.create); // TODO: > admin
+  apiRoutes.get("/v2/loggedQuestion2", LoggedQuestion2Controller.read);
 
   //
   // CHOICESET
