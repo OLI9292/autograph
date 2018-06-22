@@ -82,6 +82,14 @@ const userSchema = new Schema({
         ]
       }
     ]
+  },
+  question2History: {
+    type: [
+      {
+        id: { type: Schema.Types.ObjectId, required: true },
+        perfect: { type: Boolean, required: true }
+      }
+    ]
   }
 });
 
@@ -146,7 +154,7 @@ userSchema.methods.schoolName = function(schools) {
 };
 
 userSchema.statics.existingUsernames = async () => {
-  return _.pluck(await User.find({}, "email"), "email")
+  return _.pluck(await User.find({}, "email"), "email");
 };
 
 const User = db.model("User", userSchema);

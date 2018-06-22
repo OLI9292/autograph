@@ -107,7 +107,7 @@ module.exports = app => {
   apiRoutes.get("/v2/choiceTree", ChoiceTreeController.read);
   apiRoutes.get("/v2/choiceTree/:id", ChoiceTreeController.read);
   apiRoutes.patch("/v2/choiceTree/:id", ChoiceTreeController.update); // TODO: > admin
-  apiRoutes.delete("/v2/choiceTree/:id", ChoiceTreeController.delete); // TODO: > admin  
+  apiRoutes.delete("/v2/choiceTree/:id", ChoiceTreeController.delete); // TODO: > admin
 
   //
   // LOGGED QUESTION
@@ -179,17 +179,15 @@ module.exports = app => {
     "/v2/auth/user/:id/completedLevel",
     UserController.completedLevel
   );
-  apiRoutes.patch(
-    "/v2/auth/user/:id/friends",
-    UserController.addFriend
-  );  
-  apiRoutes.delete(
-    "/v2/auth/user/:id/friends",
-    UserController.removeFriend
-  );    
+  apiRoutes.patch("/v2/auth/user/:id/friends", UserController.addFriend);
+  apiRoutes.delete("/v2/auth/user/:id/friends", UserController.removeFriend);
   apiRoutes.patch(
     "/v2/admin/user/resetStarCounts",
     UserController.resetStarCounts
+  );
+  apiRoutes.patch(
+    "/v2/admin/user/completedQuestions",
+    UserController.completedQuestions
   );
   apiRoutes.patch("/v2/auth/user/:id", UserController.update2);
   apiRoutes.patch("/v2/auth/user/joinClass", UserController.joinClass);

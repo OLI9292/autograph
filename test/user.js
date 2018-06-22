@@ -357,6 +357,30 @@ describe("Users", () => {
     });
   });
 
+  describe("/PATCH/completedQuestions user", () => {
+    before(async () => await seedDB());
+
+    it.only("it should UPDATE question2History for a user", done => {
+      chai
+        .request(server)
+        .patch("/api/v2/admin/user/completedQuestions")
+        .send({
+          _id: userMock._id,
+          question2History: [
+            { id: userMock.question2History[0].id, perfect: true },
+            { id: mongoose.Types.ObjectId(), perfect: false }
+          ]
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.question2History.should.be.a("array").lengthOf(3);
+          res.body.question2History.filter(q => q.perfect).length.should.eq(1);
+          done();
+        });
+    });
+  });
+
   describe("/PATCH user/stats", () => {
     before(async () => await seedDB());
 

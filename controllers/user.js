@@ -8,7 +8,7 @@ const Class = require("../models/class");
 const School = require("../models/school");
 const Level = require("../models/level");
 const User = require("../models/user");
-const ObjectId = require('mongodb').ObjectID;
+const ObjectId = require("mongodb").ObjectID;
 
 const { login } = require("./login");
 const recordEvent = require("../middlewares/recordEvent");
@@ -32,7 +32,9 @@ exports.create = async (req, res, next) => {
     }
 
     return req.query.login
-      ? login(req.body.email, req.body.password, result => res.status(result.error ? 422 : 201).send(result))
+      ? login(req.body.email, req.body.password, result =>
+          res.status(result.error ? 422 : 201).send(result)
+        )
       : res.status(201).send(response);
   }
 };
@@ -40,16 +42,26 @@ exports.create = async (req, res, next) => {
 const createUser = async data => {
   try {
     const existing = await User.findOne({ email: data.email });
-    if (existing) { return { error: "There is already an account associated with this email." }; }
+    if (existing) {
+      return {
+        error: "There is already an account associated with this email."
+      };
+    }
 
     const user = new User(data);
     await user.save();
 
     // For Spring Competition growth test
     if (data.referrer) {
-      User.findByIdAndUpdate(data.referrer, { inSpringCompetition: true }, (error, res) => {
-        if (!error) { console.log(data.email + " was signed up by " + data.referrer)}
-      });
+      User.findByIdAndUpdate(
+        data.referrer,
+        { inSpringCompetition: true },
+        (error, res) => {
+          if (!error) {
+            console.log(data.email + " was signed up by " + data.referrer);
+          }
+        }
+      );
     }
 
     return user;
@@ -77,29 +89,27 @@ exports.read = async (req, res, next) => {
         ? res.status(422).send({ error: error.message })
         : res.status(200).send(user);
     });
-
   } else if (req.query.inSpringCompetition) {
-    
-    User.find({ inSpringCompetition: true }, { firstName: 1, lastName: 1, nameOfSchool: 1 }, (error, users) => {
-      return error
-        ? res.status(422).send({ error: error.message })
-        : res.status(200).send(users);
-    });
-
+    User.find(
+      { inSpringCompetition: true },
+      { firstName: 1, lastName: 1, nameOfSchool: 1 },
+      (error, users) => {
+        return error
+          ? res.status(422).send({ error: error.message })
+          : res.status(200).send(users);
+      }
+    );
   } else if (req.query.notRequestingUser) {
-
     const query = req.query.ids
-      ? { _id: { $in: req.query.ids.split(',') } }
+      ? { _id: { $in: req.query.ids.split(",") } }
       : { username: { $regex: "^" + req.query.startsWith } };
-    
+
     User.find(query, { username: 1, elo: 1 }, { limit: 15 }, (error, users) => {
       return error
         ? res.status(422).send({ error: error.message })
         : res.status(200).send(users);
     });
-
   } else if (!_.isEmpty(req.query)) {
-    
     const query = userIdQuery(req.query);
 
     if (query) {
@@ -115,15 +125,12 @@ exports.read = async (req, res, next) => {
     } else {
       return res.status(422).send({ error: "Unsupported user query." });
     }
-
   } else {
-
     User.find({}, (error, users) => {
       return error
         ? res.status(422).send({ error: error.message })
         : res.status(200).send(users);
     });
-
   }
 };
 
@@ -137,29 +144,33 @@ exports.addFriend = async (req, res, next) => {
     { $push: { friends: req.body } },
     { new: true },
     async (error, user) => {
-    
-    if (error || !user) {
-      return res.status(422).send({ error: get(error, "message") || "User not found." });
-    }
+      if (error || !user) {
+        return res
+          .status(422)
+          .send({ error: get(error, "message") || "User not found." });
+      }
 
-    return res.status(200).send(user);
-  })
-}
+      return res.status(200).send(user);
+    }
+  );
+};
 
 exports.removeFriend = async (req, res, next) => {
   User.findByIdAndUpdate(
     req.params.id,
-    { $pull: { friends : { id : ObjectId(req.query.id) } } },
+    { $pull: { friends: { id: ObjectId(req.query.id) } } },
     { new: true },
     async (error, user) => {
+      if (error || !user) {
+        return res
+          .status(422)
+          .send({ error: get(error, "message") || "User not found." });
+      }
 
-    if (error || !user) {
-      return res.status(422).send({ error: get(error, "message") || "User not found." });
+      return res.status(200).send(user);
     }
-
-    return res.status(200).send(user);
-  })
-}
+  );
+};
 
 exports.completedLevel = async (req, res, next) => {
   const { levelId, stage, accuracy, time, score, type } = req.body;
@@ -225,6 +236,33 @@ exports.completedLevel = async (req, res, next) => {
   });
 };
 
+exports.completedQuestions = async (req, res, next) => {
+  User.findById(req.body._id, async (error, user) => {
+    if (error || !user) {
+      return res
+        .status(422)
+        .send({ error: get(error, "message") || "User not found." });
+    }
+
+    const question2History = user.question2History || [];
+
+    req.body.question2History.forEach(q => {
+      const idx = _.findIndex(question2History, _q => _q.id.equals(q.id));
+      const updateToPerfect = idx > -1 && q.perfect;
+      updateToPerfect
+        ? (question2History[idx].perfect = true)
+        : question2History.push(q);
+    });
+
+    try {
+      await user.save();
+      return res.status(200).send(user);
+    } catch (error) {
+      return res.status(422).send({ error: error.message });
+    }
+  });
+};
+
 exports.update2 = async (req, res, next) => {
   User.update({ _id: req.params.id }, req.body, async (error, result) => {
     if (error) {
@@ -247,15 +285,13 @@ exports.update = async (req, res, next) => {
 };
 
 const updateFromWeb = async (req, res, next) => {
-  const {
-    id,
-    stats,
-    elo
-  } = req.body;
+  const { id, stats, elo } = req.body;
 
   try {
     const user = await User.findById(id);
-    if (!user) { return res.status(422).send({ error: "User not found." }) }
+    if (!user) {
+      return res.status(422).send({ error: "User not found." });
+    }
 
     // Update user word list
     _.forEach(stats, stat => {
@@ -269,35 +305,46 @@ const updateFromWeb = async (req, res, next) => {
           10,
           stat.correct ? copy.experience + 1 : copy.experience
         );
-        copy.timeSpent += stat.time || 0;      
-        user.words[index] = copy;  
+        copy.timeSpent += stat.time || 0;
+        user.words[index] = copy;
       } else {
-        user.words.push({ 
+        user.words.push({
           name: stat.word,
           correct: stat.correct ? 1 : 0,
           timeSpent: stat.time
-        });        
+        });
       }
     });
 
     // Update other attributes
-    const newTotalStarCount = user.starCount();    
-    user.weeklyStarCount = user.weeklyStarCount + newTotalStarCount - user.totalStarCount;
+    const newTotalStarCount = user.starCount();
+    user.weeklyStarCount =
+      user.weeklyStarCount + newTotalStarCount - user.totalStarCount;
     user.totalStarCount = newTotalStarCount;
     user.totalWordsLearned = user.words.length;
     user.totalTimeSpent = sumBy(user.words, "timeSpent");
 
-    if (elo) { user.elo = elo };
+    if (elo) {
+      user.elo = elo;
+    }
 
     // Save scores
-    cache.zadd(['weekly_leaderboard', user.weeklyStarCount, user._id.toString()]);
-    cache.zadd(['all_time_leaderboard', user.totalStarCount, user._id.toString()]);
+    cache.zadd([
+      "weekly_leaderboard",
+      user.weeklyStarCount,
+      user._id.toString()
+    ]);
+    cache.zadd([
+      "all_time_leaderboard",
+      user.totalStarCount,
+      user._id.toString()
+    ]);
 
     await user.save();
     return res.status(200).send(user);
   } catch (error) {
-    return res.status(422).send({ error: error.message })
-  };
+    return res.status(422).send({ error: error.message });
+  }
 };
 
 const updateFromMobile = async (req, res, next) => {
