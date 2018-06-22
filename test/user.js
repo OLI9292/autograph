@@ -360,10 +360,10 @@ describe("Users", () => {
   describe("/PATCH/completedQuestions user", () => {
     before(async () => await seedDB());
 
-    it.only("it should UPDATE question2History for a user", done => {
+    it("it should UPDATE question2History for a user", done => {
       chai
         .request(server)
-        .patch("/api/v2/admin/user/completedQuestions")
+        .patch("/api/v2/auth/user/completedQuestions")
         .send({
           _id: userMock._id,
           question2History: [

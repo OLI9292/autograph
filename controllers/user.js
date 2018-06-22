@@ -247,7 +247,9 @@ exports.completedQuestions = async (req, res, next) => {
     const question2History = user.question2History || [];
 
     req.body.question2History.forEach(q => {
-      const idx = _.findIndex(question2History, _q => _q.id.equals(q.id));
+      const idx = _.findIndex(question2History, _q =>
+        ongoose.Types.ObjectId(_q.id).equals(q.id)
+      );
       const updateToPerfect = idx > -1 && q.perfect;
       updateToPerfect
         ? (question2History[idx].perfect = true)

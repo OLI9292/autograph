@@ -186,7 +186,7 @@ module.exports = app => {
     UserController.resetStarCounts
   );
   apiRoutes.patch(
-    "/v2/admin/user/completedQuestions",
+    "/v2/auth/user/completedQuestions",
     UserController.completedQuestions
   );
   apiRoutes.patch("/v2/auth/user/:id", UserController.update2);
