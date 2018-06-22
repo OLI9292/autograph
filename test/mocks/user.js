@@ -1,4 +1,5 @@
 const _ = require("underscore");
+const mongoose = require("mongoose");
 
 const schoolData = require("./school");
 const levelData = require("./level");
@@ -40,7 +41,11 @@ const primaryMock = {
     }
   ],
   school: schoolData.ID_1,
-  classes: [{ id: "5a4aea2c8293e0305e30ebc5", role: "student" }]
+  classes: [{ id: "5a4aea2c8293e0305e30ebc5", role: "student" }],
+  question2History: [
+    { id: mongoose.Types.ObjectId(), perfect: false },
+    { id: mongoose.Types.ObjectId(), perfect: false }
+  ]
 };
 
 const secondaryMocks = [
