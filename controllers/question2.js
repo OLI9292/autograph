@@ -45,9 +45,12 @@ exports.read = (req, res, next) => {
       return res.status(200).send(ids);
     });
   } else {
+    const fieldsToReturn = req.query.full
+      ? {}
+      : { category: 1, subCategory: 1, identifier: 1 };
     Question2.find(
       {},
-      { category: 1, subCategory: 1, identifier: 1 },
+      fieldsToReturn,
       (error, question2s) =>
         error
           ? res.status(422).send({ error: error.message })
