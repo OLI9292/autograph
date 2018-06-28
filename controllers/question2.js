@@ -33,12 +33,26 @@ exports.read = (req, res, next) => {
         ? res.status(200).send(question2)
         : res.status(422).send({ error: "Not found." });
     });
-  } else {
-    Question2.find({}, (error, question2s) => {
-      return error
-        ? res.status(422).send({ error: error.message })
-        : res.status(200).send(question2s);
+  } else if (req.query.ids) {
+    let ids = req.query.ids.split(",");
+    Question2.find({ _id: { $in: ids } }, (error, question2s) => {
+      if (error) {
+        return res.status(422).send({ error: error.message });
+      }
+      question2s.forEach(
+        q => (ids[_.findIndex(ids, id => q._id.equals(id))] = q)
+      );
+      return res.status(200).send(ids);
     });
+  } else {
+    Question2.find(
+      {},
+      { category: 1, subCategory: 1, identifier: 1 },
+      (error, question2s) =>
+        error
+          ? res.status(422).send({ error: error.message })
+          : res.status(200).send(question2s)
+    );
   }
 };
 
