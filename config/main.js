@@ -16,4 +16,4 @@ module.exports = {
   AWS_IDENTITY_POOL_ID: process.env.AWS_IDENTITY_POOL_ID,
   AWS_REGION: process.env.AWS_REGION,
   AWS_IMAGES_BUCKET: process.env.AWS_IMAGES_BUCKET
-};
+}
