@@ -1,8 +1,6 @@
 module.exports = {
   PORT: process.env.PORT || 3002,
-  MONGODB_URI:
-    "mongodb://heroku_zcgwk208:lsqsemsg7cbtljulvgua53dh6d@ds014378-a0.mlab.com:14378,ds014378-a1.mlab.com:14376/heroku_zcgwk208?replicaSet=rs-ds014378" ||
-    "mongodb://localhost:27017/wordcraft",
+  MONGODB_URI: process.env.MONGODB_URI || "mongodb://localhost:27017/wordcraft",
   VALIDATION_TOKEN: process.env.VALIDATION_TOKEN || "super-cool-token",
   QUESTION_DB_USERNAME: process.env.QUESTION_DB_USERNAME || "postgres",
   QUESTION_DB_PASSWORD: process.env.QUESTION_DB_PASSWORD || "",
