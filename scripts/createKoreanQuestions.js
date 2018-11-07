@@ -19,7 +19,7 @@ const data = [
   "bicycle = 두 발 자전거  = 바퀴가 두 개 달린 탈 것 = 바퀴가 (wheel) 두 (two) 개 달린 탈 것",
   "biped = 두 발 짐승 = 다리가 두 개인 동물= 다리가 (leg) 두 (two) 개인 동물",
   "quadruped = 네발 짐승 = 다리가 네 개인 동물 = 다리가 (leg) 네 (four) 개인 동물",
-  "centipede =  지네 = 다리가 (leg) 백 (hundred) 개인 벌레 = 다리가 (leg) 백 (hundred) 개인 벌레",
+  "centipede =  지네 = 다리가 백 개인 벌레 = 다리가 (leg) 백 (hundred) 개인 벌레",
   "century = 세기 = 백 년의 기간 = 백 (hundred) 년의 기간",
   "millipede = 노래기 = 다리가 천 개인 벌레 = 다리가 (leg) 천 (thousand) 개인 벌레",
   "millennium = 천년 = 천 년의 기간 = 천 (thousand) 년의 (year) 기간",
