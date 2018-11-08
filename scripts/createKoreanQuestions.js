@@ -12,7 +12,10 @@ const isKorean = str =>
     .length === 0
 
 const data = [
-  "carnivore = 육식 동물 = 고기를 먹는 동물 = 고기를 (meat) 먹는 (eats) 동물",
+  "thermometer = 온도계 = 온도를 재는 계기= 온도를 (heat) 재는 (measure) 계기",
+  "altimeter = 고도계 = 물체의 높이를 재는 장치 = 물체의 높이를 (height) 재는 (measure) 장치",
+  "equilateral = 등변 = 각 변의 길이가 같음 = 각 변의 (side) 길이가 같음 (equal)"
+  /*"carnivore = 육식 동물 = 고기를 먹는 동물 = 고기를 (meat) 먹는 (eats) 동물",
   "herbivore = 초식 동물 = 식물을 먹는 동물 = 식물을 (plants) 먹는 (eats) 동물",
   "omnivore = 잡식 동물 = 모든 것을 먹는 동물 = 모든 것을 (all) 먹는 (eats) 동물",
   "tricycle = 세 발 자전거 = 바퀴가 세 개 달린 탈 것 = 바퀴가 (wheel) 세 (three) 개 달린 탈 것",
@@ -31,7 +34,7 @@ const data = [
   "arthroscope = 관절경 = 관절을 관찰하기 위한 내시경 = 관절을 (joint) 관찰하기 (see) 위한 내시경",
   "telescope = 망원경 = 멀리 있는 물체 따위를 크고 정확하게 보도록 만든 장치 = 멀리 (distant) 있는 물체 따위를 크고 정확하게 보도록 (see) 만든 장치",
   "telephone = 전화기 = 멀리 있는 사람이 서로의 소리를 드를 수 있게 만든 기계 = 멀리 (distant) 있는 사람이 서로의 소리를 (sounds) 드를 수 있게 만든 기계",
-  "telepathy = 텔레파시 = 멀리 있는 다른 사람의 생각과 감정을 알수 있는 재능 = 멀리 (distant) 있는 다른 사람의 생각과 감정을 (feelings) 알수 있는 재능"
+  "telepathy = 텔레파시 = 멀리 있는 다른 사람의 생각과 감정을 알수 있는 재능 = 멀리 (distant) 있는 다른 사람의 생각과 감정을 (feelings) 알수 있는 재능"*/
 ].map(d => {
   if (d.split("=").length !== 4) {
     throw new Error("Bad length " + d)
@@ -83,8 +86,9 @@ const run = async () => {
   })
 
   const koreanKeys = questions.map(q => q.key)
-  await Question.deleteMany({ key: { $in: koreanKeys } })
+  // await Question.deleteMany({ key: { $in: koreanKeys } })
   const res = await Question.create(questions)
+  console.log(res)
 
   process.exit(0)
 }
