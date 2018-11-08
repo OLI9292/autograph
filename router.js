@@ -15,7 +15,12 @@ const WordController = require("./controllers/word");
 const RootController = require("./controllers/root");
 const ImageController = require("./controllers/image");
 const QuestionController = require("./controllers/question");
+const GameController = require("./controllers/game");
 const TextController = require("./controllers/text");
+const Question2Controller = require("./controllers/question2");
+const ChoiceSetController = require("./controllers/choiceSet");
+const ChoiceTreeController = require("./controllers/choiceTree");
+const LoggedQuestion2Controller = require("./controllers/loggedQuestion2");
 
 module.exports = app => {
   const apiRoutes = express.Router();
@@ -35,6 +40,11 @@ module.exports = app => {
   apiRoutes.get("/v2/auth/class/:id/students", ClassController.readStudents);
   apiRoutes.patch("/v2/auth/class/:id", ClassController.update);
   apiRoutes.delete("/v2/admin/class/:id", ClassController.delete);
+
+  //
+  // GAME
+  //
+  apiRoutes.get("/v2/auth/game", GameController.read);
 
   //
   // FACTOID
@@ -65,6 +75,39 @@ module.exports = app => {
   apiRoutes.get("/v2/level/:id", LevelController.read);
   apiRoutes.patch("/v2/level/:id", LevelController.update); // TODO: > admin
   apiRoutes.delete("/v2/level/:id", LevelController.delete); // TODO: > admin
+
+  //
+  // QUESTION2
+  //
+  apiRoutes.post("/v2/question2", Question2Controller.create); // TODO: > admin
+  apiRoutes.get("/v2/question2", Question2Controller.read);
+  apiRoutes.get("/v2/question2/:id", Question2Controller.read);
+  apiRoutes.patch("/v2/question2/:id", Question2Controller.update); // TODO: > admin
+  apiRoutes.delete("/v2/question2/:id", Question2Controller.delete); // TODO: > admin
+
+  //
+  // LOGGEDQUESTION2
+  //
+  apiRoutes.post("/v2/loggedQuestion2", LoggedQuestion2Controller.create); // TODO: > admin
+  apiRoutes.get("/v2/loggedQuestion2", LoggedQuestion2Controller.read);
+
+  //
+  // CHOICESET
+  //
+  apiRoutes.post("/v2/choiceSet", ChoiceSetController.create); // TODO: > admin
+  apiRoutes.get("/v2/choiceSet", ChoiceSetController.read);
+  apiRoutes.get("/v2/choiceSet/:id", ChoiceSetController.read);
+  apiRoutes.patch("/v2/choiceSet/:id", ChoiceSetController.update); // TODO: > admin
+  apiRoutes.delete("/v2/choiceSet/:id", ChoiceSetController.delete); // TODO: > admin
+
+  //
+  // CHOICETREE
+  //
+  apiRoutes.post("/v2/choiceTree", ChoiceTreeController.create); // TODO: > admin
+  apiRoutes.get("/v2/choiceTree", ChoiceTreeController.read);
+  apiRoutes.get("/v2/choiceTree/:id", ChoiceTreeController.read);
+  apiRoutes.patch("/v2/choiceTree/:id", ChoiceTreeController.update); // TODO: > admin
+  apiRoutes.delete("/v2/choiceTree/:id", ChoiceTreeController.delete); // TODO: > admin
 
   //
   // LOGGED QUESTION
@@ -136,9 +179,15 @@ module.exports = app => {
     "/v2/auth/user/:id/completedLevel",
     UserController.completedLevel
   );
+  apiRoutes.patch("/v2/auth/user/:id/friends", UserController.addFriend);
+  apiRoutes.delete("/v2/auth/user/:id/friends", UserController.removeFriend);
   apiRoutes.patch(
     "/v2/admin/user/resetStarCounts",
     UserController.resetStarCounts
+  );
+  apiRoutes.patch(
+    "/v2/auth/user/completedQuestions",
+    UserController.completedQuestions
   );
   apiRoutes.patch("/v2/auth/user/:id", UserController.update2);
   apiRoutes.patch("/v2/auth/user/joinClass", UserController.joinClass);

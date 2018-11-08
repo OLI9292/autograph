@@ -1,4 +1,5 @@
 const _ = require("underscore");
+const mongoose = require("mongoose");
 
 const schoolData = require("./school");
 const levelData = require("./level");
@@ -9,6 +10,8 @@ const ID_3 = "5a4aea2c8293e0305e30ebc9";
 
 const primaryMock = {
   _id: ID_1,
+  friends: [],
+  username: "willow-g",
   firstName: "Willow",
   lastName: "Glenn",
   signUpMethod: "email",
@@ -38,12 +41,18 @@ const primaryMock = {
     }
   ],
   school: schoolData.ID_1,
-  classes: [{ id: "5a4aea2c8293e0305e30ebc5", role: "student" }]
+  classes: [{ id: "5a4aea2c8293e0305e30ebc5", role: "student" }],
+  question2History: [
+    { id: mongoose.Types.ObjectId(), perfect: false },
+    { id: mongoose.Types.ObjectId(), perfect: false }
+  ]
 };
 
 const secondaryMocks = [
   {
     _id: ID_2,
+    friends: [],
+    username: "alejandro-b",
     firstName: "Alejandro",
     lastName: "Baptista",
     signUpMethod: "email",
@@ -59,6 +68,8 @@ const secondaryMocks = [
   },
   {
     _id: ID_3,
+    friends: [],
+    username: "akiva-s",
     firstName: "Akiva",
     lastName: "S",
     signUpMethod: "email",
@@ -71,6 +82,7 @@ const secondaryMocks = [
 
 const invalidMocks = [
   {
+    username: "joe-s",
     firstName: "Joe",
     lastName: "Shmoe"
   }

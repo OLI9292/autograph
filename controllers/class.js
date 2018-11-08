@@ -31,7 +31,7 @@ const teacherAndStudents = users => [_.find(users, u => u.isTeacher), _.reject(u
 
 // gives the user a unique username = firstName + first letter of lastName + index
 const usernameWithIndex = (base, usernames) => {
-  const matches = _.map(_.filter(usernames, u => u.startsWith(base)), u =>
+  const matches = _.map(_.filter(_.compact(usernames), u => u.startsWith(base)), u =>
     u.replace(base, "")
   );
   const numbers = _.filter(_.map(matches, m => parseInt(m, 10)), m =>
@@ -65,6 +65,7 @@ exports.create = async (req, res, next) => {
     const updatedUser = addAttributesToUser(user, classId, usernames);
     usersWithLogin.push(updatedUser);
   }
+
 
   User.create(usersWithLogin, (error, docs) => {
     if (error) { return res.status(422).send({ error: error.message }); }

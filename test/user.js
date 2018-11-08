@@ -208,6 +208,28 @@ describe("Users", () => {
     });
   });
 
+  describe("PATCH /friends", () => {
+    before(async () => await seedDB());
+
+    const id = mongoose.Types.ObjectId();
+    const username = "akiva-sauce";
+
+    it("it should add a friend to a users friend list", done => {
+      chai
+        .request(server)
+        .patch("/api/v2/auth/user/" + userMock._id + "/friends")
+        .send({ id: id, username: username })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.should.have.property("friends").lengthOf(1);
+          res.body.friends[0].should.have.property("id").eql(id.toString());
+          res.body.friends[0].should.have.property("username").eql(username);
+          done();
+        });
+    });
+  });
+
   describe("PATCH /completedLevel", () => {
     beforeEach(async () => await seedDB());
 
@@ -330,6 +352,30 @@ describe("Users", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("success");
+          done();
+        });
+    });
+  });
+
+  describe("/PATCH/completedQuestions user", () => {
+    before(async () => await seedDB());
+
+    it("it should UPDATE question2History for a user", done => {
+      chai
+        .request(server)
+        .patch("/api/v2/auth/user/completedQuestions")
+        .send({
+          _id: userMock._id,
+          question2History: [
+            { id: userMock.question2History[0].id, perfect: true },
+            { id: mongoose.Types.ObjectId(), perfect: false }
+          ]
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.question2History.should.be.a("array").lengthOf(3);
+          res.body.question2History.filter(q => q.perfect).length.should.eq(1);
           done();
         });
     });

@@ -1,9 +1,9 @@
-const db = require("../databases/accounts/index");
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const _ = require("underscore");
-const bcrypt = require("bcrypt");
-const SALT_WORK_FACTOR = 10;
+const db = require("../databases/accounts/index")
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
+const _ = require("underscore")
+const bcrypt = require("bcrypt")
+const SALT_WORK_FACTOR = 10
 
 const userSchema = new Schema({
   classes: {
@@ -23,6 +23,17 @@ const userSchema = new Schema({
   mobileIapUnlocked: { type: Boolean, default: false },
   ranking: { type: Number, default: 100 },
   firstName: { type: String, required: true, default: "" },
+  friends: {
+    type: [
+      {
+        id: { type: Schema.Types.ObjectId, required: true },
+        username: { type: String, required: true },
+        wins: { type: Number, required: true, min: 0, default: 0 },
+        losses: { type: Number, required: true, min: 0, default: 0 }
+      }
+    ],
+    default: []
+  },
   lastName: String,
   nameOfSchool: String,
   optedIntoEmail: Boolean,
@@ -34,14 +45,15 @@ const userSchema = new Schema({
   school: Schema.Types.ObjectId,
   signUpMethod: {
     type: String,
-    enum: ["email", "facebook", "google", "teacherSignUp", "individualSignUp"],
-    required: true
+    enum: ["email", "facebook", "google", "teacherSignUp", "individualSignUp"]
   },
   weeklyStarCount: { type: Number, default: 0 },
   totalStarCount: { type: Number, default: 0 },
   wordListsCompleted: [Schema.Types.ObjectId],
   totalWordsLearned: { type: Number, default: 0 },
   totalTimeSpent: { type: Number, default: 0 },
+  elo: { type: Number, default: 2000, min: 0 },
+  username: { type: String },
   words: {
     type: [
       {
@@ -69,73 +81,81 @@ const userSchema = new Schema({
         ]
       }
     ]
+  },
+  question2History: {
+    type: [
+      {
+        id: { type: Schema.Types.ObjectId, required: true },
+        perfect: { type: Boolean, required: true }
+      }
+    ]
   }
-});
+})
 
 userSchema.pre("save", function(next) {
-  const user = this;
+  const user = this
 
   if (!user.isModified("password")) {
-    return next();
+    return next()
   }
 
   bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
     if (err) {
-      return next(err);
+      return next(err)
     }
 
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) {
-        return next(err);
+        return next(err)
       }
 
-      user.password = hash;
-      next();
-    });
-  });
-});
+      user.password = hash
+      next()
+    })
+  })
+})
 
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) {
-      return cb(err);
+      return cb(err)
     }
 
-    cb(null, isMatch);
-  });
-};
+    cb(null, isMatch)
+  })
+}
 
 userSchema.methods.fullName = function() {
-  return this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName;
-};
+  return this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName
+}
 
 userSchema.methods.initials = function() {
-  let initials = this.firstName.charAt(0);
+  let initials = this.firstName.charAt(0)
   if (this.lastName) {
-    initials += this.lastName.charAt(0);
+    initials += this.lastName.charAt(0)
   }
-  return initials.toUpperCase();
-};
+  return initials.toUpperCase()
+}
 
 userSchema.methods.firstNameLastInitial = function() {
   return this.lastName
     ? `${this.firstName} ${this.lastName.charAt(0).toUpperCase()}`
-    : this.firstName;
-};
+    : this.firstName
+}
 
 userSchema.methods.starCount = function() {
-  return _.reduce(this.words, (acc, w) => acc + w.experience, 0);
-};
+  return _.reduce(this.words, (acc, w) => acc + w.experience, 0)
+}
 
 userSchema.methods.schoolName = function(schools) {
-  const school = _.find(schools, s => s._id.equals(this.school));
-  return school ? school.name : "";
-};
+  const school = _.find(schools, s => s._id.equals(this.school))
+  return school ? school.name : ""
+}
 
 userSchema.statics.existingUsernames = async () => {
   return _.pluck(await User.find({}, "email"), "email")
-};
+}
 
-const User = db.model("User", userSchema);
+const User = db.model("User", userSchema)
 
-module.exports = User;
+module.exports = User
